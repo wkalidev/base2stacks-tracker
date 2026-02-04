@@ -92,7 +92,7 @@ echo "   ${BLUE}gh repo create base2stacks-tracker --public --source=. --remote=
 echo "   or go to: https://github.com/new"
 echo ""
 echo "4️⃣  Push to GitHub:"
-echo "   ${BLUE}git remote add origin https://github.com/YOUR-USERNAME/base2stacks-tracker.git${NC}"
+echo "   ${BLUE}git remote add origin https://github.com/wkalidev/base2stacks-tracker.git${NC}"
 echo "   ${BLUE}git branch -M main${NC}"
 echo "   ${BLUE}git push -u origin main${NC}"
 echo ""

@@ -1,7 +1,7 @@
 [project]
 name = "base2stacks-tracker"
 description = "Cross-chain bridge tracker between Base Network and Stacks"
-authors = ["zcodebase <willywarrior@base2stacks.io>"]
+authors = ["wkalidev <wkalidev@base2stacks.io>"]
 telemetry = false
 cache_dir = "./.cache"
 requirements = []
