@@ -13,7 +13,7 @@ Make sure you have:
 
 ```bash
 # Clone the repository
-git clone https://github.com/zcodebase/base2stacks-tracker.git
+git clone https://github.com/wkalidev/base2stacks-tracker.git
 cd base2stacks-tracker
 
 # Install dependencies
@@ -78,7 +78,7 @@ clarinet deploy --mainnet
 
 ### Option A: One-Click Deploy
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/zcodebase/base2stacks-tracker)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/wkalidev/base2stacks-tracker)
 
 ### Option B: CLI Deploy
 
@@ -178,7 +178,7 @@ brew install clarinet
 - 📖 Full documentation: `/docs`
 - 💬 GitHub Discussions: Ask questions
 - 🐛 Bug reports: Open an issue
-- 🐦 Twitter: [@willywarrior](https://twitter.com/willywarrior)
+- 🐦 Twitter: [@willycodexwar](https://twitter.com/willycodexwar)
 
 ## 🏆 Stacks Builder Rewards
 
@@ -191,4 +191,4 @@ This project participates in Stacks Builder Rewards!
 
 **Ready to build? Let's go! 🚀**
 
-Made with ❤️ by Willy Warrior
+Made with ❤️ by Wkalidev(zcodebase)
