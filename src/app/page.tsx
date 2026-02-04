@@ -1,13 +1,53 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useWallet } from '@/hooks/useWallet'
+import { useContract } from '@/hooks/useContract'
 
 export default function Page() {
-  const [isConnected, setIsConnected] = useState(false)
+  const { mounted, connect, disconnect, isConnected, address } = useWallet()
+  const { claimDailyReward, stake, unstake, loading, error } = useContract()
+  
+  const [stakeAmount, setStakeAmount] = useState('')
+  const [txId, setTxId] = useState<string | null>(null)
+  const [showStakeModal, setShowStakeModal] = useState(false)
+
+  // Évite les problèmes d'hydratation
+  if (!mounted) {
+    return null
+  }
+
+  const handleClaim = async () => {
+    const result = await claimDailyReward()
+    if (result) {
+      setTxId(result)
+      alert(`✅ Claim successful! TX: ${result.slice(0, 10)}...`)
+    }
+  }
+
+  const handleStake = async () => {
+    if (!stakeAmount || parseFloat(stakeAmount) <= 0) {
+      alert('Please enter a valid amount')
+      return
+    }
+    
+    const result = await stake(parseFloat(stakeAmount))
+    if (result) {
+      setTxId(result)
+      alert(`✅ Staking successful! TX: ${result.slice(0, 10)}...`)
+      setShowStakeModal(false)
+      setStakeAmount('')
+    }
+  }
+
+  const shortAddress = (addr: string) => {
+    if (!addr) return ''
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`
+  }
 
   return (
     <div className="min-h-screen">
-      {/* Header avec VRAI LOGO */}
+      {/* Header */}
       <header className="container mx-auto px-4 py-4 sm:py-6">
         <nav className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -21,19 +61,26 @@ export default function Page() {
             </h1>
           </div>
           
-          <button 
-            onClick={() => setIsConnected(!isConnected)}
-            className="bg-gradient-to-r from-b2s-primary to-b2s-accent text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base hover:opacity-90 transition-all"
-          >
-            {isConnected ? '✅ Connected' : 'Connect'}
-          </button>
+          <div className="flex items-center gap-3">
+            {isConnected && address && (
+              <div className="hidden sm:block text-white/70 text-sm">
+                {shortAddress(address)}
+              </div>
+            )}
+            <button 
+              onClick={isConnected ? disconnect : connect}
+              className="bg-gradient-to-r from-b2s-primary to-b2s-accent text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base hover:opacity-90 transition-all"
+              disabled={loading}
+            >
+              {isConnected ? '🔓 Disconnect' : '🔒 Connect Wallet'}
+            </button>
+          </div>
         </nav>
       </header>
 
-      {/* Hero avec LOGO en grand */}
+      {/* Hero */}
       <section className="container mx-auto px-4 py-10 sm:py-20 text-center">
         <div className="max-w-4xl mx-auto">
-          {/* Logo centré en grand */}
           <div className="mb-8">
             <img 
               src="/android-chrome-512x512.png" 
@@ -57,67 +104,88 @@ export default function Page() {
           </p>
           
           <p className="text-base sm:text-lg md:text-xl text-white/70 mb-8 sm:mb-10 px-4">
-            Monitor bridge activity between Base Network and Stacks Blockchain
+            Connect your Stacks wallet to start earning rewards
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
+          {/* Action Buttons - Fonctionnels! */}
+          {isConnected ? (
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
+              <button 
+                onClick={handleClaim}
+                disabled={loading}
+                className="w-full sm:w-auto bg-gradient-to-r from-b2s-primary to-b2s-accent text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:opacity-90 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50"
+              >
+                {loading ? '⏳ Processing...' : '🎁 Claim Daily Reward (5 $B2S)'}
+              </button>
+              <button 
+                onClick={() => setShowStakeModal(true)}
+                className="w-full sm:w-auto bg-white/10 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold border border-white/20 hover:bg-white/20 transition-all"
+              >
+                💰 Stake $B2S
+              </button>
+            </div>
+          ) : (
             <button 
-              onClick={() => alert('🚧 Coming soon! Bridge tracking will be available in Phase 2')}
+              onClick={connect}
               className="w-full sm:w-auto bg-gradient-to-r from-b2s-primary to-b2s-accent text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:opacity-90 transition-all transform hover:scale-105 shadow-lg"
             >
-              Start Tracking
+              Connect Wallet to Start
             </button>
-            <a 
-              href="https://github.com/wkalidev/base2stacks-tracker"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto bg-white/10 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold border border-white/20 hover:bg-white/20 transition-all text-center"
-            >
-              View Docs
-            </a>
-          </div>
+          )}
 
-          {/* Token Info Badge */}
-          <div className="mt-8 sm:mt-12 bg-white/5 backdrop-blur-md rounded-xl p-4 sm:p-6 border border-white/10">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
-              <div className="flex items-center space-x-2">
-                <span className="text-b2s-accent text-xl">💰</span>
-                <span className="text-white font-semibold text-sm sm:text-base">$B2S Token</span>
-              </div>
-              <div className="hidden sm:block h-8 w-px bg-white/20"></div>
-              <div className="text-white/70 text-sm sm:text-base">
-                <span className="text-white font-semibold">100B</span> Total Supply
-              </div>
-              <div className="hidden sm:block h-8 w-px bg-white/20"></div>
-              <div className="text-white/70 text-sm sm:text-base">
-                <span className="text-white font-semibold">400M</span> Community Pool
+          {/* Error Display */}
+          {error && (
+            <div className="mt-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
+              ⚠️ {error}
+            </div>
+          )}
+
+          {/* Success Display */}
+          {txId && (
+            <div className="mt-4 p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-green-200 text-sm">
+              ✅ Transaction submitted! 
+              <a 
+                href={`https://explorer.hiro.so/txid/${txId}?chain=testnet`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline ml-2"
+              >
+                View on Explorer
+              </a>
+            </div>
+          )}
+
+          {/* Wallet Info */}
+          {isConnected && address && (
+            <div className="mt-8 sm:mt-12 bg-white/5 backdrop-blur-md rounded-xl p-4 sm:p-6 border border-white/10">
+              <h3 className="text-white font-semibold mb-3">Your Wallet</h3>
+              <div className="text-white/70 text-sm break-all">
+                {address}
               </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats */}
       <section className="container mx-auto px-4 py-8 sm:py-16">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {[
-            { label: 'Bridges Tracked', value: '1,247', color: 'from-blue-500 to-cyan-500', emoji: '🌉' },
-            { label: 'Active Trackers', value: '89', color: 'from-orange-500 to-red-500', emoji: '👥' },
-            { label: '$B2S Distributed', value: '156K', color: 'from-green-500 to-emerald-500', emoji: '🏆' },
-            { label: '$B2S Staked', value: '2.3M', color: 'from-purple-500 to-pink-500', emoji: '📈' }
+            { label: 'Bridges Tracked', value: '1,247', emoji: '🌉' },
+            { label: 'Active Trackers', value: '89', emoji: '👥' },
+            { label: '$B2S Distributed', value: '156K', emoji: '🏆' },
+            { label: '$B2S Staked', value: '2.3M', emoji: '📈' }
           ].map((stat, i) => (
-            <div key={i} className="bg-white/5 backdrop-blur-md rounded-xl p-4 sm:p-6 border border-white/10 text-center hover:bg-white/10 transition-all hover:transform hover:scale-105">
+            <div key={i} className="bg-white/5 backdrop-blur-md rounded-xl p-4 sm:p-6 border border-white/10 text-center hover:bg-white/10 transition-all">
               <div className="text-2xl sm:text-3xl mb-2">{stat.emoji}</div>
-              <div className={`text-2xl sm:text-3xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-1 sm:mb-2`}>
-                {stat.value}
-              </div>
+              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-1">{stat.value}</h3>
               <p className="text-white/60 text-xs sm:text-sm">{stat.label}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* How It Works Section */}
+      {/* How It Works */}
       <section className="container mx-auto px-4 py-8 sm:py-16">
         <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
           How It Works
@@ -125,31 +193,13 @@ export default function Page() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto">
           {[
-            { 
-              num: '1', 
-              title: 'Track Bridges', 
-              desc: 'Submit bridge transactions between Base and Stacks networks for verification',
-              gradient: 'from-blue-500 to-cyan-500',
-              emoji: '🔍'
-            },
-            { 
-              num: '2', 
-              title: 'Earn Rewards', 
-              desc: 'Get verified and receive $B2S tokens. Plus daily claim bonuses!',
-              gradient: 'from-orange-500 to-red-500',
-              emoji: '💰'
-            },
-            { 
-              num: '3', 
-              title: 'Stake & Govern', 
-              desc: 'Stake your $B2S to earn staking rewards and participate in governance',
-              gradient: 'from-purple-500 to-pink-500',
-              emoji: '🗳️'
-            }
+            { num: '1', title: 'Connect Wallet', desc: 'Connect your Leather or Xverse wallet', emoji: '🔗' },
+            { num: '2', title: 'Claim Rewards', desc: 'Claim 5 $B2S tokens daily', emoji: '💰' },
+            { num: '3', title: 'Stake & Earn', desc: 'Stake tokens to earn more rewards', emoji: '📈' }
           ].map((step, i) => (
-            <div key={i} className="bg-white/5 backdrop-blur-md rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all text-center group cursor-pointer">
+            <div key={i} className="bg-white/5 backdrop-blur-md rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all text-center">
               <div className="text-4xl mb-4">{step.emoji}</div>
-              <div className={`w-16 h-16 bg-gradient-to-r ${step.gradient} rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-white">{step.num}</span>
               </div>
               <h4 className="text-lg sm:text-xl font-semibold text-white mb-3">{step.title}</h4>
@@ -159,78 +209,71 @@ export default function Page() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="container mx-auto px-4 py-8 sm:py-20">
-        <div className="bg-gradient-to-r from-b2s-primary to-b2s-accent rounded-2xl p-6 sm:p-12 text-center max-w-3xl mx-auto shadow-2xl">
-          <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
-            Ready to Start Earning?
-          </h3>
-          <p className="text-white/90 text-sm sm:text-lg mb-6 sm:mb-8">
-            Join the Base2Stacks community and start tracking cross-chain bridges today
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-            <button 
-              onClick={() => setIsConnected(!isConnected)}
-              className="w-full sm:w-auto bg-white text-b2s-secondary px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:bg-white/90 transition-all transform hover:scale-105 shadow-lg"
-            >
-              Connect Wallet & Start
-            </button>
-            <a
-              href="https://github.com/wkalidev/base2stacks-tracker"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto bg-white/10 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold border border-white/30 hover:bg-white/20 transition-all backdrop-blur-sm text-center"
-            >
-              Learn More
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer avec LOGO */}
-      <footer className="container mx-auto px-4 py-8 sm:py-12 border-t border-white/10 mt-8 sm:mt-16">
+      {/* Footer */}
+      <footer className="container mx-auto px-4 py-8 sm:py-12 border-t border-white/10 mt-8">
         <div className="flex flex-col items-center gap-4 text-center">
           <div className="flex items-center space-x-3">
             <img 
               src="/android-chrome-192x192.png" 
               alt="Base2Stacks Logo" 
-              className="w-8 h-8 sm:w-10 sm:h-10"
+              className="w-8 h-8"
             />
             <span className="text-white font-semibold text-sm sm:text-base">Base2Stacks Tracker</span>
           </div>
           
           <p className="text-white/60 text-xs sm:text-sm">
-            Built with ❤️ by <span className="text-b2s-accent font-semibold">Zcodebase</span> for Stacks Builder Rewards
+            Built with ❤️ by <span className="text-b2s-accent">zcodebase</span> | Testnet Version
           </p>
 
           <div className="flex items-center gap-4 sm:gap-6">
-            <a 
-              href="https://github.com/wkalidev/base2stacks-tracker" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white/60 hover:text-white text-xs sm:text-sm transition-colors"
-            >
+            <a href="https://github.com/wkalidev/base2stacks-tracker" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white text-xs sm:text-sm">
               GitHub
             </a>
-            <a 
-              href="https://twitter.com/willycodexwar" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white/60 hover:text-white text-xs sm:text-sm transition-colors"
-            >
+            <a href="https://twitter.com/willycodexwar" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white text-xs sm:text-sm">
               Twitter
             </a>
-            <a 
-              href="https://github.com/wkalidev/base2stacks-tracker#readme" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white/60 hover:text-white text-xs sm:text-sm transition-colors"
-            >
-              Docs
+            <a href="https://warpcast.com/willywarrior" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white text-xs sm:text-sm">
+              Farcaster
             </a>
           </div>
         </div>
       </footer>
+
+      {/* Staking Modal */}
+      {showStakeModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-gradient-to-br from-base-dark to-stacks-dark border border-white/20 rounded-2xl p-6 sm:p-8 max-w-md w-full">
+            <h3 className="text-2xl font-bold text-white mb-4">Stake $B2S Tokens</h3>
+            
+            <div className="mb-6">
+              <label className="text-white/70 text-sm mb-2 block">Amount to Stake</label>
+              <input
+                type="number"
+                value={stakeAmount}
+                onChange={(e) => setStakeAmount(e.target.value)}
+                placeholder="Enter amount"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-b2s-accent"
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowStakeModal(false)}
+                className="flex-1 bg-white/10 text-white px-6 py-3 rounded-lg font-semibold border border-white/20 hover:bg-white/20 transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleStake}
+                disabled={loading}
+                className="flex-1 bg-gradient-to-r from-b2s-primary to-b2s-accent text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all disabled:opacity-50"
+              >
+                {loading ? 'Staking...' : 'Stake'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

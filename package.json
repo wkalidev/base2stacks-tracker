@@ -14,29 +14,30 @@
     "deploy:mainnet": "clarinet deploy --mainnet"
   },
   "dependencies": {
-    "@stacks/connect": "^7.8.3",
-    "@stacks/transactions": "^6.13.1",
-    "@stacks/network": "^6.13.0",
-    "@stacks/common": "^6.13.0",
+    "@stacks/common": "^6.16.0",
+    "@stacks/connect": "^7.10.2",
+    "@stacks/network": "^6.17.0",
     "@stacks/stacks-blockchain-api-types": "^7.11.0",
+    "@stacks/transactions": "^6.17.0",
+    "@stacks/wallet-sdk": "^7.2.0",
+    "clsx": "^2.1.0",
+    "date-fns": "^3.3.1",
+    "lucide-react": "^0.344.0",
     "next": "14.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "recharts": "^2.12.0",
-    "date-fns": "^3.3.1",
-    "lucide-react": "^0.344.0",
-    "clsx": "^2.1.0"
+    "recharts": "^2.12.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.16",
     "@types/react": "^18.2.52",
     "@types/react-dom": "^18.2.18",
-    "typescript": "^5.3.3",
-    "tailwindcss": "^3.4.1",
-    "postcss": "^8.4.35",
     "autoprefixer": "^10.4.17",
     "eslint": "^8.56.0",
-    "eslint-config-next": "14.1.0"
+    "eslint-config-next": "14.1.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3"
   },
   "keywords": [
     "stacks",
