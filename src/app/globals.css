@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-b2s text-white px-6 py-3 rounded-lg font-semibold 
+           hover:opacity-90 transition-all duration-200 transform hover:scale-105
+           shadow-lg hover:shadow-xl;
+  }
+
+  .btn-secondary {
+    @apply bg-white/10 text-white px-6 py-3 rounded-lg font-semibold
+           hover:bg-white/20 transition-all duration-200 backdrop-blur-sm
+           border border-white/20;
+  }
+
+  .card {
+    @apply bg-white/5 backdrop-blur-md rounded-xl p-6 border border-white/10
+           shadow-xl hover:shadow-2xl transition-all duration-300;
+  }
+
+  .card-hover {
+    @apply card hover:bg-white/10 hover:border-white/20 cursor-pointer
+           transform hover:-translate-y-1;
+  }
+
+  .stat-card {
+    @apply card flex flex-col items-center justify-center text-center;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-b2s;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg
+           text-white placeholder-white/40 focus:outline-none focus:border-b2s-accent
+           focus:ring-2 focus:ring-b2s-accent/20 transition-all;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Custom animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Loading spinner */
+.spinner {
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #FF6B35;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
