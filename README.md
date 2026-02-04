@@ -76,7 +76,7 @@ clarinet >= 1.7.x
 
 ```bash
 # Clone repository
-git clone https://github.com/zcodebase/base2stacks-tracker.git
+git clone https://github.com/wkalidev/base2stacks-tracker.git
 cd base2stacks-tracker
 
 # Install dependencies
@@ -209,8 +209,8 @@ MIT License - see [LICENSE](./LICENSE) for details
 ## 👤 Author
 
 **Willy Warrior** (zcodebase)
-- Twitter: [@willywarrior](https://twitter.com/willywarrior)
-- GitHub: [@zcodebase](https://github.com/zcodebase)
+- Twitter: [@willycodexwar](https://twitter.com/willycodexwar)
+- GitHub: [@wkalidev](https://github.com/wkalidev)
 - Farcaster: @willywarrior
 
 ---
