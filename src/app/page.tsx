@@ -86,7 +86,7 @@ export default function Page() {
               </div>
               <div className="hidden sm:block h-8 w-px bg-white/20"></div>
               <div className="text-white/70 text-sm sm:text-base">
-                <span className="text-white font-semibold">1B</span> Total Supply
+                <span className="text-white font-semibold">100B</span> Total Supply
               </div>
               <div className="hidden sm:block h-8 w-px bg-white/20"></div>
               <div className="text-white/70 text-sm sm:text-base">

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Base2Stacks Bridge Tracker | $B2S',
   description: 'Track cross-chain bridges between Base Network and Stacks. Earn $B2S tokens for tracking transactions.',
   keywords: ['Base', 'Stacks', 'Bridge', 'Tracker', 'B2S', 'Web3', 'Cross-chain', 'DeFi', 'Crypto'],
-  authors: [{ name: 'Willy Warrior', url: 'https://github.com/zcodebase' }],
+  authors: [{ name: 'zcodebase', url: 'https://github.com/wkalidev' }],
   
   // PWA & Mobile
   manifest: '/site.webmanifest',
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Base2Stacks Bridge Tracker',
     description: 'Track cross-chain bridges. Earn $B2S tokens. Built for Stacks Builder Rewards.',
-    creator: '@willywarrior',
+    creator: '@willycodexwar',
     images: ['/android-chrome-512x512.png'],
   },
   
