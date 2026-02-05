@@ -10,7 +10,7 @@ plan:
       transactions:
         - contract-publish:
             contract-name: b2s-token
-            expected-sender: ST21XBXAX5WN0HVH84R8SAZXFDT6SMM0N14XZKGD8
+            expected-sender: ST3BXYV49TDYRKHC6VRYZHENYZPHX6BBGNM4WXZ5P
             cost: 69920
             path: contracts/b2s-token.clar
             anchor-block-only: true
