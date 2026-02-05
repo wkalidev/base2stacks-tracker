@@ -2,7 +2,11 @@
 id: 0
 name: Testnet deployment
 network: testnet
+<<<<<<< HEAD
 stacks-node: "https://stacks-node-api.testnet.stacks.co"
+=======
+stacks-node: "https://api.testnet.hiro.so"
+>>>>>>> a0fb1e1 (feat: contract deployed to testnet - ST936...RQ96)
 bitcoin-node: "http://blockstack:blockstacksystem@bitcoind.testnet.stacks.co:18332"
 plan:
   batches:
@@ -10,9 +14,15 @@ plan:
       transactions:
         - contract-publish:
             contract-name: b2s-token
+<<<<<<< HEAD
             expected-sender: ST3BXYV49TDYRKHC6VRYZHENYZPHX6BBGNM4WXZ5P
             cost: 69920
             path: contracts/b2s-token.clar
+=======
+            expected-sender: ST936YWJPST8GB8FFRCN7CC6P2YR5K6NNB4JR1D6
+            cost: 69920
+            path: "contracts\\b2s-token.clar"
+>>>>>>> a0fb1e1 (feat: contract deployed to testnet - ST936...RQ96)
             anchor-block-only: true
             clarity-version: 2
       epoch: "2.5"

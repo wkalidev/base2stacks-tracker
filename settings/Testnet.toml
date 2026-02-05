@@ -1,0 +1,6 @@
+[network]
+name = "testnet"
+deployment_fee_rate = 10
+
+[accounts.deployer]
+mnemonic = "***REMOVED***"

@@ -14,7 +14,7 @@ import { StacksTestnet } from '@stacks/network'
 import { useWallet } from './useWallet'
 
 const network = new StacksTestnet()
-const contractAddress = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM' // Sera mis à jour après déploiement
+const contractAddress = 'ST936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96' // Sera mis à jour après déploiement
 const contractName = 'b2s-token'
 
 export function useContract() {
