@@ -134,4 +134,4 @@ This project was built for the Stacks Builder Rewards program (February 2026).
 
 ---
 
-Made with ❤️ by wkalidev(zcodebase) the Stacks community
+Made with ❤️ by wkalidev(zcodebase) for the Stacks community
