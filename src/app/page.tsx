@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useWallet } from '@/hooks/useWallet'
 import { useContract } from '@/hooks/useContract'
 import { useBalance } from '@/hooks/useBalance'
+import { TransactionHistory } from '@/components/TransactionHistory'
 
 export default function Page() {
   const { mounted, connect, disconnect, isConnected, address } = useWallet()
@@ -153,6 +154,12 @@ export default function Page() {
             </div>
           )}
         </div>
+         {isConnected && address && (
+          <div className="mt-8 bg-white/5 backdrop-blur-md rounded-xl p-6 border border-white/10">
+          <h3 className="text-white font-semibold text-xl mb-4">Recent Transactions</h3>
+         <TransactionHistory address={address} />
+  </div>
+  )}
       </section>
 
       {/* Stats */}
