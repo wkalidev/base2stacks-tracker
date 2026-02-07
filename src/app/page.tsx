@@ -232,7 +232,7 @@ export default function Page() {
           </div>
           
           <p className="text-white/60 text-xs sm:text-sm">
-            Built with ❤️ by <span className="text-b2s-accent">Willy Warrior</span> | Testnet Version
+            Built with ❤️ by <span className="text-b2s-accent">Wkalidev(zcodebase)</span> | Testnet Version
           </p>
 
           <div className="flex items-center gap-4 sm:gap-6">
