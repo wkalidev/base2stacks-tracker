@@ -1,15 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useWallet } from '@/hooks/useWallet'
 import { useContract } from '@/hooks/useContract'
+import { useBalance } from '@/hooks/useBalance'
 
 export default function Page() {
   const { mounted, connect, disconnect, isConnected, address } = useWallet()
-  const { claimDailyReward, stake, unstake, loading, error } = useContract()
+  const { claimDailyReward, stake, loading, error } = useContract()
+  const { balance, loading: balanceLoading } = useBalance(address)
   
   const [stakeAmount, setStakeAmount] = useState('')
-  const [txId, setTxId] = useState<string | null>(null)
   const [showStakeModal, setShowStakeModal] = useState(false)
 
   // Évite les problèmes d'hydratation
@@ -18,11 +19,7 @@ export default function Page() {
   }
 
   const handleClaim = async () => {
-    const result = await claimDailyReward()
-    if (result) {
-      setTxId(result)
-      alert(`✅ Claim successful! TX: ${result.slice(0, 10)}...`)
-    }
+    await claimDailyReward()
   }
 
   const handleStake = async () => {
@@ -31,13 +28,9 @@ export default function Page() {
       return
     }
     
-    const result = await stake(parseFloat(stakeAmount))
-    if (result) {
-      setTxId(result)
-      alert(`✅ Staking successful! TX: ${result.slice(0, 10)}...`)
-      setShowStakeModal(false)
-      setStakeAmount('')
-    }
+    await stake(parseFloat(stakeAmount))
+    setShowStakeModal(false)
+    setStakeAmount('')
   }
 
   const shortAddress = (addr: string) => {
@@ -140,27 +133,22 @@ export default function Page() {
             </div>
           )}
 
-          {/* Success Display */}
-          {txId && (
-            <div className="mt-4 p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-green-200 text-sm">
-              ✅ Transaction submitted! 
-              <a 
-                href={`https://explorer.hiro.so/txid/${txId}?chain=testnet`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline ml-2"
-              >
-                View on Explorer
-              </a>
-            </div>
-          )}
-
-          {/* Wallet Info */}
+          {/* Wallet Info avec Balance */}
           {isConnected && address && (
-            <div className="mt-8 sm:mt-12 bg-white/5 backdrop-blur-md rounded-xl p-4 sm:p-6 border border-white/10">
-              <h3 className="text-white font-semibold mb-3">Your Wallet</h3>
-              <div className="text-white/70 text-sm break-all">
-                {address}
+            <div className="mt-8 sm:mt-12 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 backdrop-blur-md rounded-xl p-4 sm:p-6 border border-blue-500/20">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <h3 className="text-white/70 text-sm mb-1">Wallet Address</h3>
+                  <div className="text-white font-mono text-sm break-all">
+                    {address}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-white/70 text-sm mb-1">$B2S Balance</h3>
+                  <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+                    {balanceLoading ? '⏳ Loading...' : `${balance.toFixed(2)} $B2S`}
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -222,7 +210,7 @@ export default function Page() {
           </div>
           
           <p className="text-white/60 text-xs sm:text-sm">
-            Built with ❤️ by <span className="text-b2s-accent">zcodebase</span> | Testnet Version
+            Built with ❤️ by <span className="text-b2s-accent">Willy Warrior</span> | Testnet Version
           </p>
 
           <div className="flex items-center gap-4 sm:gap-6">
