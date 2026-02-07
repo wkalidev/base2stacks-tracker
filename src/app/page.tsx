@@ -5,6 +5,7 @@ import { useWallet } from '@/hooks/useWallet'
 import { useContract } from '@/hooks/useContract'
 import { useBalance } from '@/hooks/useBalance'
 import { TransactionHistory } from '@/components/TransactionHistory'
+import { StakingStats } from '@/components/StakingStats'
 
 export default function Page() {
   const { mounted, connect, disconnect, isConnected, address } = useWallet()
@@ -101,7 +102,7 @@ export default function Page() {
             Connect your Stacks wallet to start earning rewards
           </p>
           
-          {/* Action Buttons - Fonctionnels! */}
+          {/* Action Buttons */}
           {isConnected ? (
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
               <button 
@@ -153,13 +154,27 @@ export default function Page() {
               </div>
             </div>
           )}
+
+          {/* Transaction History */}
+          {isConnected && address && (
+            <div className="mt-8 bg-white/5 backdrop-blur-md rounded-xl p-6 border border-white/10">
+              <h3 className="text-white font-semibold text-xl mb-4">Recent Transactions</h3>
+              <TransactionHistory address={address} />
+            </div>
+          )}
+
+          {/* Staking Stats */}
+          {isConnected && address && (
+            <div className="mt-8">
+              <h3 className="text-white font-semibold text-2xl mb-4">Your Staking</h3>
+              <StakingStats 
+                totalStaked={0} 
+                rewards={balance} 
+                apy={12.5} 
+              />
+            </div>
+          )}
         </div>
-         {isConnected && address && (
-          <div className="mt-8 bg-white/5 backdrop-blur-md rounded-xl p-6 border border-white/10">
-          <h3 className="text-white font-semibold text-xl mb-4">Recent Transactions</h3>
-         <TransactionHistory address={address} />
-  </div>
-  )}
       </section>
 
       {/* Stats */}
