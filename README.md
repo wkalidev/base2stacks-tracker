@@ -1,240 +1,137 @@
 # 🌉 Base2Stacks Bridge Tracker
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Stacks](https://img.shields.io/badge/Stacks-Blockchain-orange.svg)
-![Base](https://img.shields.io/badge/Base-Network-blue.svg)
+[![GitHub stars](https://img.shields.io/github/stars/wkalidev/base2stacks-tracker?style=for-the-badge&logo=github&color=yellow)](https://github.com/wkalidev/base2stacks-tracker)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](LICENSE)
+[![Testnet](https://img.shields.io/badge/network-testnet-orange.svg?style=for-the-badge&logo=ethereum)](https://explorer.hiro.so/?chain=testnet)
+[![Next.js](https://img.shields.io/badge/built%20with-Next.js-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Stacks](https://img.shields.io/badge/blockchain-Stacks-5546FF?style=for-the-badge&logo=stacks)](https://www.stacks.co/)
+[![Stacks Builder Rewards](https://img.shields.io/badge/Stacks-Builder%20Rewards-purple?style=for-the-badge)](https://stacks.org)
 
-**Track cross-chain activity between Base Network and Stacks Blockchain in real-time.**
+> 🚀 Track cross-chain bridges between Base & Stacks. Earn $B2S tokens for tracking activity.
 
-Earn **$B2S tokens** for tracking bridge transactions, providing liquidity insights, and contributing to cross-chain transparency.
+## ✨ Live Demo
+
+**Try it now:** [https://wkalidev-base2stacks-tracker.vercel.app](https://wkalidev-base2stacks-tracker.vercel.app)
 
 ---
 
 ## 🎯 Features
 
-- ✅ Real-time bridge transaction tracking
-- ✅ Cross-chain analytics dashboard
-- ✅ $B2S token rewards for active trackers
-- ✅ Historical data & trend analysis
-- ✅ Community-driven price oracle
-- ✅ NFT badges for top contributors
+- 🔗 **Wallet Connection** - Leather & Xverse support
+- 💰 **Daily Rewards** - Claim 5 $B2S tokens every day
+- 📊 **Real-time Balance** - Track your $B2S holdings
+- 📈 **Staking System** - Stake tokens to earn 12.5% APY
+- 📝 **Transaction History** - View all your claims and stakes
+- 🎨 **Professional UI** - Glass morphism design with smooth animations
+- 📱 **Mobile Responsive** - Works perfectly on all devices
 
 ---
 
-## 💰 $B2S Token
+## 📊 Smart Contract
 
-**Total Supply:** 1,000,000,000 $B2S
-
-### Distribution:
-- 40% - Community Rewards (tracking activity)
-- 25% - Liquidity Pool
-- 20% - Development Fund
-- 10% - Marketing & Partnerships
-- 5% - Team (12-month vesting)
-
-### Utility:
-- Stake to earn tracking fees
-- Governance voting rights
-- Premium analytics access
-- NFT badge minting
-- Cross-chain fee discounts
-
----
-
-## 🛠️ Tech Stack
-
-### Smart Contracts
-- **Clarity** (Stacks native language)
-- **Clarinet** (Testing framework)
-- **Hiro Platform** (Deployment)
-
-### Frontend
-- **Next.js 14** (App Router)
-- **TypeScript**
-- **Tailwind CSS**
-- **@stacks/connect** (Wallet integration)
-- **@stacks/transactions** (Blockchain interaction)
-- **Recharts** (Data visualization)
-
-### Backend
-- **Base RPC** (Base Network data)
-- **Stacks API** (Stacks data)
-- **Vercel** (Hosting)
+- **Address**: `ST936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-token`
+- **Network**: Stacks Testnet
+- **Standard**: SIP-010 Fungible Token
+- **Explorer**: [View on Hiro](https://explorer.hiro.so/txid/ST936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-token?chain=testnet)
 
 ---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-```bash
-node >= 18.x
-npm >= 9.x
-clarinet >= 1.7.x
-```
+- Node.js 18+
+- Leather or Xverse wallet
 
 ### Installation
-
 ```bash
-# Clone repository
 git clone https://github.com/wkalidev/base2stacks-tracker.git
 cd base2stacks-tracker
-
-# Install dependencies
 npm install
+```
 
-# Setup environment
-cp .env.example .env.local
-
-# Run development server
+### Development
+```bash
 npm run dev
 ```
 
-### Deploy Smart Contract
+Open [http://localhost:3000](http://localhost:3000)
 
+### Build
 ```bash
-# Test contract
-clarinet test
-
-# Deploy to testnet
-clarinet deploy --testnet
-
-# Deploy to mainnet
-clarinet deploy --mainnet
+npm run build
+npm start
 ```
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 14, React, TypeScript
+- **Styling**: Tailwind CSS, Custom animations
+- **Blockchain**: Stacks, Clarity smart contracts
+- **Wallet**: @stacks/connect
+- **Deployment**: Vercel
 
 ---
 
 ## 📁 Project Structure
-
 ```
 base2stacks-tracker/
-├── contracts/              # Clarity smart contracts
-│   ├── b2s-token.clar     # $B2S fungible token
-│   ├── bridge-tracker.clar # Bridge tracking logic
-│   └── rewards-pool.clar   # Staking & rewards
 ├── src/
-│   ├── app/               # Next.js app directory
-│   ├── components/        # React components
-│   ├── lib/              # Utilities & helpers
-│   └── hooks/            # Custom React hooks
-├── tests/                # Contract tests
-├── public/               # Static assets
-└── docs/                 # Documentation
+│   ├── app/
+│   │   ├── page.tsx          # Main page
+│   │   ├── layout.tsx        # Root layout
+│   │   └── globals.css       # Global styles
+│   ├── hooks/
+│   │   ├── useWallet.ts      # Wallet connection
+│   │   ├── useContract.ts    # Contract interactions
+│   │   └── useBalance.ts     # Balance tracking
+│   └── components/
+│       ├── TransactionHistory.tsx
+│       └── StakingStats.tsx
+├── contracts/
+│   └── b2s-token.clar        # Smart contract
+├── public/                   # Static assets
+└── tests/                    # Contract tests
 ```
-
----
-
-## 🎮 How It Works
-
-### 1. **Track Bridges**
-Users submit bridge transaction data (Base → Stacks or Stacks → Base)
-
-### 2. **Earn Rewards**
-Validators verify transactions and earn $B2S tokens
-
-### 3. **Stake & Govern**
-Stake $B2S to participate in governance and earn staking rewards
-
-### 4. **Analytics**
-Access premium cross-chain analytics and insights
-
----
-
-## 🔗 Bridge Data Sources
-
-- **Base Network**: JSON-RPC, Subgraph, Basescan API
-- **Stacks Blockchain**: Stacks API, Hiro API, Explorer
-- **Cross-chain Events**: Custom indexer for bridge contracts
-
----
-
-## 🏆 Roadmap
-
-### Phase 1 (Feb 2026) - MVP
-- [x] $B2S token contract
-- [x] Basic tracking interface
-- [ ] Wallet integration
-- [ ] Deploy testnet
-
-### Phase 2 (Mar 2026) - Enhancement
-- [ ] Advanced analytics
-- [ ] Staking mechanism
-- [ ] NFT badges
-- [ ] Mobile responsive
-
-### Phase 3 (Apr 2026) - Expansion
-- [ ] Multi-chain support (Optimism, Arbitrum)
-- [ ] API for developers
-- [ ] DAO governance
-- [ ] Mainnet launch
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
-
-### Development Flow
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
-## 📊 Stacks Builder Rewards
+## 📜 License
 
-This project participates in **Stacks Builder Rewards** program!
-
-- **Period**: February 1-28, 2026
-- **Prize Pool**: 15,000 $STX / month
-- **Tracked Activity**: GitHub commits + smart contract usage
-
-Help us climb the leaderboard by:
-- ⭐ Star this repository
-- 🔧 Contribute code
-- 📝 Improve documentation
-- 🐛 Report issues
-- 💬 Share with community
+MIT License - see [LICENSE](LICENSE)
 
 ---
 
-## 📄 License
+## 👨‍💻 Author
 
-MIT License - see [LICENSE](./LICENSE) for details
+**wkalidev** (zcodebase)
 
----
-
-## 👤 Author
-
-**Willy Warrior** (zcodebase)
 - Twitter: [@willycodexwar](https://twitter.com/willycodexwar)
+- Farcaster: [willywarrior](https://warpcast.com/willywarrior)
 - GitHub: [@wkalidev](https://github.com/wkalidev)
-- Farcaster: @willywarrior
 
 ---
 
-## 🔗 Links
+## 🏆 Built for Stacks Builder Rewards
 
-- [Website](https://base2stacks-tracker.vercel.app)
-- [Documentation](./docs)
-- [Stacks Explorer](https://explorer.stacks.co)
-- [Base Network](https://base.org)
-- [Discord Community](#)
+This project was built for the Stacks Builder Rewards program (February 2026).
 
 ---
 
-## 🙏 Acknowledgments
+## 📈 Stats
 
-Built with ❤️ for the Base and Stacks communities.
-
-Special thanks to:
-- Stacks Foundation
-- Base Network team
-- Open source contributors
-- Early adopters
+- **Lines of Code**: 2000+
+- **Components**: 8
+- **Smart Contracts**: 1
+- **Tests**: 5
 
 ---
 
-**"Bridging two worlds, one transaction at a time."** 🌉
+Made with ❤️ by wkalidev(zcodebase) the Stacks community
