@@ -178,7 +178,7 @@ Every contribution helps us in the Stacks Builder Rewards program:
 - **GitHub Issues**: For bug reports and feature requests
 - **GitHub Discussions**: For questions and ideas
 - **Twitter**: [@willywarrior](https://twitter.com/willywarrior)
-- **Discord**: Join our community server
+- **Discord**: Comming soon
 
 ## 📜 License
 
@@ -196,4 +196,4 @@ Thanks to all contributors! ⭐
 
 **"Together we bridge, together we build."** 🌉
 
-Made with ❤️ for the Stacks and Base communities.
+Made with ❤️ by wkalidev(zcodebase) for the Stacks and Base communities.
