@@ -7,6 +7,7 @@ import { useBalance } from '@/hooks/useBalance'
 import { TransactionHistory } from '@/components/TransactionHistory'
 import { StakingStats } from '@/components/StakingStats'
 import { LeaderboardAdvanced } from '@/components/LeaderboardAdvanced'
+import { APYCalculator } from '@/components/APYCalculator'
 
 export default function Page() {
   const { mounted, connect, disconnect, isConnected, address } = useWallet()
@@ -227,6 +228,16 @@ export default function Page() {
         </h3>
         <div className="max-w-4xl mx-auto">
           <LeaderboardAdvanced />
+        </div>
+      </section>
+      
+      {/* APY Calculator */}
+      <section className="container mx-auto px-4 py-8 sm:py-16">
+        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
+          📊 Calculate Your Earnings
+        </h3>
+        <div className="max-w-3xl mx-auto">
+          <APYCalculator />
         </div>
       </section>
 
