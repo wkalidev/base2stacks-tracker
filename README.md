@@ -7,6 +7,33 @@
 [![Stacks](https://img.shields.io/badge/blockchain-Stacks-5546FF?style=for-the-badge&logo=stacks)](https://www.stacks.co/)
 [![Stacks Builder Rewards](https://img.shields.io/badge/Stacks-Builder%20Rewards-purple?style=for-the-badge)](https://stacks.org)
 
+## 🌟 Community & Support
+
+<div align="center">
+
+[![GitHub issues](https://img.shields.io/github/issues/wkalidev/base2stacks-tracker?style=for-the-badge)](https://github.com/wkalidev/base2stacks-tracker/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/wkalidev/base2stacks-tracker?style=for-the-badge)](https://github.com/wkalidev/base2stacks-tracker/pulls)
+[![Code of Conduct](https://img.shields.io/badge/Code%20of-Conduct-blue?style=for-the-badge)](CODE_OF_CONDUCT.md)
+[![Security Policy](https://img.shields.io/badge/Security-Policy-red?style=for-the-badge)](SECURITY.md)
+
+**Join our community:**
+
+[![Twitter Follow](https://img.shields.io/twitter/follow/willycodexwar?style=for-the-badge&logo=twitter)](https://twitter.com/willycodexwar)
+[![Farcaster](https://img.shields.io/badge/Farcaster-willywarrior-purple?style=for-the-badge)](https://warpcast.com/willywarrior)
+
+</div>
+
+### 🐛 Found a Bug?
+[Report it here](https://github.com/wkalidev/base2stacks-tracker/issues/new?template=bug_report.md)
+
+### 💡 Have an Idea?
+[Request a feature](https://github.com/wkalidev/base2stacks-tracker/issues/new?template=feature_request.md)
+
+### 🤝 Want to Contribute?
+Check out our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md)
+
+---
+
 ## 🎉 Latest Updates (Feb 8, 2026)
 
 ### New Features Today
