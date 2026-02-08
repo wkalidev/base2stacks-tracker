@@ -7,6 +7,23 @@
 [![Stacks](https://img.shields.io/badge/blockchain-Stacks-5546FF?style=for-the-badge&logo=stacks)](https://www.stacks.co/)
 [![Stacks Builder Rewards](https://img.shields.io/badge/Stacks-Builder%20Rewards-purple?style=for-the-badge)](https://stacks.org)
 
+
+## 📊 Live Stats
+
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/wkalidev/base2stacks-tracker)
+![GitHub last commit](https://img.shields.io/github/last-commit/wkalidev/base2stacks-tracker)
+![GitHub repo size](https://img.shields.io/github/repo-size/wkalidev/base2stacks-tracker)
+![GitHub code size](https://img.shields.io/github/languages/code-size/wkalidev/base2stacks-tracker)
+
+**Project Metrics:**
+- 📈 **66+ commits** in 2 days
+- 🚀 **11 major features** shipped
+- 📝 **10 documentation files**
+- 🏆 **TOP 60** on Stacks Builder Rewards
+- ⭐ **6 repositories** in ecosystem
+
+---
+
 ## 🌟 Community & Support
 
 <div align="center">
