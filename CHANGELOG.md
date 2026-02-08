@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.2.1] - 2026-02-08
+
+### Added
+- 📋 Bug report issue template
+- 💡 Feature request issue template
+- 🔀 Pull request template
+- 🔒 Comprehensive security policy (SECURITY.md)
+- 🤝 Code of Conduct (CODE_OF_CONDUCT.md)
+- 🗺️ Project roadmap (ROADMAP.md)
+- 🌟 Community badges and engagement section in README
+- 📊 Progress tracking in roadmap
+
+### Documentation
+- Enhanced README with community section
+- Added security best practices
+- Included contribution guidelines links
+- Added enforcement policies
+
+### Community
+- Established clear reporting procedures
+- Created templates for better issue management
+- Defined community standards
+- Set up contributor guidelines
+
+---
+
 All notable changes to Base2Stacks Bridge Tracker.
 
 ## [1.2.0] - 2026-02-07
