@@ -17,14 +17,24 @@
 
 ## 🎯 Features
 
-- 🔗 **Wallet Connection** - Leather & Xverse support
-- 💰 **Daily Rewards** - Claim 5 $B2S tokens every day
-- 📊 **Real-time Balance** - Track your $B2S holdings
-- 📈 **Staking System** - Stake tokens to earn 12.5% APY
-- 📝 **Transaction History** - View all your claims and stakes
-- 🎨 **Professional UI** - Glass morphism design with smooth animations
-- 📱 **Mobile Responsive** - Works perfectly on all devices
+### Core Functionality
+- 🔗 **Wallet Connection** - Seamless Leather & Xverse integration
+- 💰 **Daily Rewards** - Claim 5 $B2S tokens every 24 hours
+- 📊 **Real-time Balance** - Live tracking of your $B2S holdings
+- 📈 **Staking System** - Earn 12.5% APY on staked tokens
+- 📝 **Transaction History** - Complete record of claims and stakes
 
+### Advanced Features
+- 🏆 **Leaderboard** - Top 10 stakers with badges and rankings
+- 📊 **APY Calculator** - Interactive earnings estimator
+- 💎 **Achievement Badges** - Earn rewards for milestones
+- 📈 **Staking Stats** - Comprehensive dashboard analytics
+
+### User Experience
+- 🎨 **Professional UI** - Glass morphism design with smooth animations
+- 📱 **Mobile Responsive** - Perfect on all devices
+- ⚡ **Real-time Updates** - Instant balance and stats refresh
+- 🎯 **Intuitive Navigation** - Clean, user-friendly interface
 ---
 
 ## 📊 Smart Contract
@@ -94,6 +104,31 @@ base2stacks-tracker/
 ├── public/                   # Static assets
 └── tests/                    # Contract tests
 ```
+
+---
+---
+
+## 📊 New Features (v1.2.0)
+
+### 🏆 Advanced Leaderboard
+- **Top 10 Display** with real-time rankings
+- **Badge System**: 👑 🥇 🔥 💎 ⭐
+- **Detailed Stats**: Total staked, rewards earned
+- **Filter Options**: Top 10, Top 50, All users
+- **Live Updates**: Rankings refresh every 30 seconds
+
+[📖 Leaderboard Documentation](docs/LEADERBOARD.md)
+
+### 📊 APY Calculator
+- **Interactive Inputs**: Stake amount and duration
+- **Duration Presets**: 1 week to 1 year
+- **Custom Sliders**: Fine-tune days and APY
+- **Real-time Results**: Instant earnings calculation
+- **Earnings Breakdown**: Daily, monthly, and total projections
+
+[📖 Calculator Documentation](docs/APY-CALCULATOR.md)
+
+**Try it live:** [Base2Stacks Tracker](https://wkalidev-base2stacks-tracker.vercel.app)
 
 ---
 
