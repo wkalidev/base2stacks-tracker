@@ -4,15 +4,18 @@ import { useState } from 'react'
 import { useWallet } from '@/hooks/useWallet'
 import { useContract } from '@/hooks/useContract'
 import { useBalance } from '@/hooks/useBalance'
+import { useToast } from '@/hooks/useToast'
 import { TransactionHistory } from '@/components/TransactionHistory'
 import { StakingStats } from '@/components/StakingStats'
 import { LeaderboardAdvanced } from '@/components/LeaderboardAdvanced'
 import { APYCalculator } from '@/components/APYCalculator'
+import { ToastContainer } from '@/components/Toast'
 
 export default function Page() {
   const { mounted, connect, disconnect, isConnected, address } = useWallet()
   const { claimDailyReward, stake, loading, error } = useContract()
   const { balance, loading: balanceLoading } = useBalance(address)
+  const { toasts, removeToast, success, error: showError } = useToast()
   
   const [stakeAmount, setStakeAmount] = useState('')
   const [showStakeModal, setShowStakeModal] = useState(false)
@@ -23,18 +26,28 @@ export default function Page() {
   }
 
   const handleClaim = async () => {
-    await claimDailyReward()
+    try {
+      await claimDailyReward()
+      success('🎉 Successfully claimed 5 $B2S tokens!')
+    } catch (err) {
+      showError('Failed to claim reward. Please try again.')
+    }
   }
 
   const handleStake = async () => {
     if (!stakeAmount || parseFloat(stakeAmount) <= 0) {
-      alert('Please enter a valid amount')
+      showError('Please enter a valid amount')
       return
     }
     
-    await stake(parseFloat(stakeAmount))
-    setShowStakeModal(false)
-    setStakeAmount('')
+    try {
+      await stake(parseFloat(stakeAmount))
+      success(`✅ Successfully staked ${stakeAmount} $B2S!`)
+      setShowStakeModal(false)
+      setStakeAmount('')
+    } catch (err) {
+      showError('Failed to stake. Please try again.')
+    }
   }
 
   const shortAddress = (addr: string) => {
@@ -230,7 +243,7 @@ export default function Page() {
           <LeaderboardAdvanced />
         </div>
       </section>
-      
+
       {/* APY Calculator */}
       <section className="container mx-auto px-4 py-8 sm:py-16">
         <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
@@ -306,6 +319,9 @@ export default function Page() {
           </div>
         </div>
       )}
+
+      {/* Toast Container */}
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>
   )
 }
