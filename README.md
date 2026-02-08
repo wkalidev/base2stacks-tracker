@@ -7,6 +7,25 @@
 [![Stacks](https://img.shields.io/badge/blockchain-Stacks-5546FF?style=for-the-badge&logo=stacks)](https://www.stacks.co/)
 [![Stacks Builder Rewards](https://img.shields.io/badge/Stacks-Builder%20Rewards-purple?style=for-the-badge)](https://stacks.org)
 
+## 🎉 Latest Updates (Feb 8, 2026)
+
+### New Features Today
+- ✅ **Advanced Leaderboard** - Top 10 stakers with badges and real-time rankings
+- ✅ **APY Calculator** - Interactive earnings estimator with custom sliders
+- ✅ **Toast Notifications** - Beautiful success/error messages
+- ✅ **Export Functionality** - Download transactions as CSV or JSON
+- ✅ **Loading Skeletons** - Professional loading states
+- ✅ **Performance Boost** - Next.js optimizations for faster loading
+- ✅ **SEO Enhanced** - Complete metadata for better discoverability
+
+### Stats
+- **16 commits today** 🔥
+- **65+ total commits**
+- **9 major features**
+- **TOP 75 on Stacks Builder Rewards** 📈
+
+---
+
 > 🚀 Track cross-chain bridges between Base & Stacks. Earn $B2S tokens for tracking activity.
 
 ## ✨ Live Demo
@@ -151,6 +170,32 @@ MIT License - see [LICENSE](LICENSE)
 - Twitter: [@willycodexwar](https://twitter.com/willycodexwar)
 - Farcaster: [willywarrior](https://warpcast.com/willywarrior)
 - GitHub: [@wkalidev](https://github.com/wkalidev)
+
+---
+
+## 🏆 Achievements
+
+- ✅ Deployed smart contract on Stacks testnet
+- ✅ Full-stack DApp with real blockchain integration
+- ✅ Advanced leaderboard system
+- ✅ Interactive APY calculator
+- ✅ Professional UI/UX design
+- ✅ Comprehensive documentation
+- ✅ Export functionality
+- ✅ Toast notification system
+- ✅ Loading states & optimizations
+- ✅ SEO & performance optimized
+
+## 📊 Project Stats
+
+| Metric | Value |
+|--------|-------|
+| **Total Commits** | 65+ |
+| **Components** | 12+ |
+| **Features** | 9 major |
+| **Documentation** | 6 files |
+| **Lines of Code** | 3000+ |
+| **Test Coverage** | Coming soon |
 
 ---
 
