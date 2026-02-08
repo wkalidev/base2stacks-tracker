@@ -5,43 +5,20 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Base2Stacks Bridge Tracker | $B2S',
-  description: 'Track cross-chain bridges between Base Network and Stacks. Earn $B2S tokens for tracking transactions.',
-  keywords: ['Base', 'Stacks', 'Bridge', 'Tracker', 'B2S', 'Web3', 'Cross-chain', 'DeFi', 'Crypto'],
-  authors: [{ name: 'wkalidev', url: 'https://github.com/wkalidev' }],
+  title: 'Base2Stacks Bridge Tracker | Earn $B2S Tokens',
+  description: 'Track cross-chain bridges between Base and Stacks. Earn $B2S tokens through daily rewards and staking. Built for Stacks Builder Rewards.',
+  keywords: ['Stacks', 'Base', 'Bridge', 'Crypto', 'DeFi', 'B2S Token', 'Staking', 'Blockchain', 'Web3'],
+  authors: [{ name: 'Willy Warrior', url: 'https://github.com/wkalidev' }],
+  creator: 'Willy Warrior',
+  publisher: 'Base2Stacks',
   
-  // PWA & Mobile
-  manifest: '/site.webmanifest',
-  themeColor: '#FF6B35',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-  },
-  
-  // Icons
-  icons: {
-    icon: [
-      { url: '/favicon.ico' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-    ],
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
-    other: [
-      {
-        rel: 'android-chrome',
-        url: '/android-chrome-192x192.png',
-      },
-    ],
-  },
-  
-  // Open Graph (Facebook, LinkedIn)
+  // Open Graph
   openGraph: {
-    title: 'Base2Stacks Bridge Tracker',
-    description: 'Track cross-chain activity between Base & Stacks. Earn $B2S tokens.',
-    url: 'https://base2stacks-tracker.vercel.app',
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://wkalidev-base2stacks-tracker.vercel.app',
+    title: 'Base2Stacks Bridge Tracker | Earn $B2S Tokens',
+    description: 'Track cross-chain bridges and earn rewards. Daily claims, staking, and more.',
     siteName: 'Base2Stacks Tracker',
     images: [
       {
@@ -51,31 +28,35 @@ export const metadata: Metadata = {
         alt: 'Base2Stacks Logo',
       },
     ],
-    locale: 'en_US',
-    type: 'website',
   },
   
   // Twitter
   twitter: {
     card: 'summary_large_image',
     title: 'Base2Stacks Bridge Tracker',
-    description: 'Track cross-chain bridges. Earn $B2S tokens. Built for Stacks Builder Rewards.',
+    description: 'Track cross-chain bridges and earn $B2S tokens',
     creator: '@willycodexwar',
     images: ['/android-chrome-512x512.png'],
   },
   
-  // Additional metadata
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
+  // Mobile
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
   },
+  
+  // Icons
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+  
+  // Manifest
+  manifest: '/site.webmanifest',
+  
+  // Theme
+  themeColor: '#3b82f6',
 }
 
 export default function RootLayout({
@@ -86,15 +67,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <link rel="canonical" href="https://wkalidev-base2stacks-tracker.vercel.app" />
       </head>
-      <body className={inter.className}>
-        <div className="min-h-screen bg-gradient-to-br from-base-dark via-stacks-dark to-b2s-secondary">
-          {children}
-        </div>
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   )
 }
