@@ -474,3 +474,40 @@ select:disabled {
 .tooltip:hover::before {
   opacity: 1;
 }
+
+/* Leaderboard specific animations */
+@keyframes rank-glow {
+  0%, 100% { 
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.3); 
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.6); 
+  }
+}
+
+@keyframes badge-bounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.1);
+  }
+}
+
+.rank-1 {
+  animation: rank-glow 2s ease-in-out infinite;
+}
+
+.badge-animate {
+  animation: badge-bounce 2s ease-in-out infinite;
+}
+
+/* Hover effect for leaderboard entries */
+.leaderboard-entry {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.leaderboard-entry:hover {
+  transform: translateX(10px);
+  box-shadow: -5px 0 20px rgba(59, 130, 246, 0.3);
+}
