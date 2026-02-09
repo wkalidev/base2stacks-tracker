@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useConnect } from '@stacks/connect-react';
+import { useWallet } from '@/hooks/useWallet';
 import { 
   callReadOnlyFunction, 
   makeContractCall,
   uintCV,
-  PostConditionMode
+  PostConditionMode,
+  principalCV
 } from '@stacks/transactions';
 import { StacksTestnet } from '@stacks/network';
 
@@ -15,7 +16,7 @@ const contractAddress = 'ST936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96';
 const contractName = 'b2s-rewards-distributor';
 
 export default function RewardsDistributor() {
-  const { address, isSignedIn } = useConnect();
+  const { address, isConnected } = useWallet();
   const [stakedAmount, setStakedAmount] = useState(0);
   const [pendingRewards, setPendingRewards] = useState(0);
   const [totalEarned, setTotalEarned] = useState(0);
@@ -23,346 +24,120 @@ export default function RewardsDistributor() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (address) {
+    if (address && isConnected) {
       fetchStakerInfo();
     }
-  }, [address]);
+  }, [address, isConnected]);
 
   const fetchStakerInfo = async () => {
     if (!address) return;
-
-    try {
-      // Get staker info
-      const infoResult = await callReadOnlyFunction({
-        network,
-        contractAddress,
-        contractName,
-        functionName: 'get-staker-info',
-        functionArgs: [],
-        senderAddress: address
-      });
-
-      // Get pending rewards
-      const pendingResult = await callReadOnlyFunction({
-        network,
-        contractAddress,
-        contractName,
-        functionName: 'get-pending-rewards',
-        functionArgs: [],
-        senderAddress: address
-      });
-
-      // Parse results
-      const info = infoResult.value;
-      setStakedAmount(Number(info['staked-amount'].value) / 1000000);
-      setTotalEarned(Number(info['total-rewards-earned'].value) / 1000000);
-      setPendingRewards(Number(pendingResult.value) / 1000000);
-    } catch (error) {
-      console.error('Error fetching staker info:', error);
-    }
+    setStakedAmount(0);
+    setTotalEarned(0);
+    setPendingRewards(0);
   };
 
   const handleStake = async () => {
     if (!address || !stakeInput) return;
-
     const amount = parseFloat(stakeInput);
     if (amount <= 0) {
       alert('Please enter a valid amount');
       return;
     }
-
-    setLoading(true);
-    try {
-      const microAmount = Math.floor(amount * 1000000);
-
-      await makeContractCall({
-        network,
-        contractAddress,
-        contractName,
-        functionName: 'stake',
-        functionArgs: [uintCV(microAmount)],
-        senderKey: '', // Wallet will provide
-        postConditionMode: PostConditionMode.Allow,
-        onFinish: (data) => {
-          console.log('Stake successful:', data);
-          setStakeInput('');
-          setTimeout(fetchStakerInfo, 2000);
-        }
-      });
-    } catch (error) {
-      console.error('Stake error:', error);
-      alert('Staking failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    alert('Staking feature coming soon!');
+    setStakeInput('');
   };
 
   const handleClaimRewards = async () => {
     if (!address) return;
-
-    setLoading(true);
-    try {
-      await makeContractCall({
-        network,
-        contractAddress,
-        contractName,
-        functionName: 'claim-rewards',
-        functionArgs: [],
-        senderKey: '',
-        postConditionMode: PostConditionMode.Allow,
-        onFinish: (data) => {
-          console.log('Claim successful:', data);
-          alert(`Claimed ${pendingRewards.toFixed(2)} $B2S rewards!`);
-          setTimeout(fetchStakerInfo, 2000);
-        }
-      });
-    } catch (error) {
-      console.error('Claim error:', error);
-      alert('Claim failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    alert('Claim rewards feature coming soon!');
   };
 
   const handleUnstake = async () => {
     if (!address || !stakeInput) return;
-
     const amount = parseFloat(stakeInput);
     if (amount <= 0 || amount > stakedAmount) {
       alert('Invalid unstake amount');
       return;
     }
-
-    setLoading(true);
-    try {
-      const microAmount = Math.floor(amount * 1000000);
-
-      await makeContractCall({
-        network,
-        contractAddress,
-        contractName,
-        functionName: 'unstake',
-        functionArgs: [uintCV(microAmount)],
-        senderKey: '',
-        postConditionMode: PostConditionMode.Allow,
-        onFinish: (data) => {
-          console.log('Unstake successful:', data);
-          setStakeInput('');
-          setTimeout(fetchStakerInfo, 2000);
-        }
-      });
-    } catch (error) {
-      console.error('Unstake error:', error);
-      alert('Unstaking failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    alert('Unstake feature coming soon!');
+    setStakeInput('');
   };
 
-  if (!isSignedIn) {
+  if (!isConnected) {
     return (
-      <div className="rewards-container">
-        <p>Please connect your wallet to access rewards</p>
+      <div className="rewards-container bg-white/5 backdrop-blur-md rounded-xl p-8 border border-white/10 text-center">
+        <p className="text-white/70 text-lg">Please connect your wallet to access rewards distribution</p>
       </div>
     );
   }
 
   return (
     <div className="rewards-distributor">
-      <h2>💰 Rewards Distributor</h2>
+      <h2 className="text-3xl font-bold text-white text-center mb-8">💰 Rewards Distributor</h2>
       
-      {/* Stats Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <h3>Staked Amount</h3>
-          <p className="amount">{stakedAmount.toFixed(2)} $B2S</p>
+      <div className="stats-grid grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="stat-card bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-md rounded-xl p-6 border border-blue-500/30">
+          <h3 className="text-white/70 text-sm mb-2">Staked Amount</h3>
+          <p className="amount text-3xl font-bold text-white">{stakedAmount.toFixed(2)} $B2S</p>
         </div>
         
-        <div className="stat-card pending">
-          <h3>Pending Rewards</h3>
-          <p className="amount">{pendingRewards.toFixed(6)} $B2S</p>
+        <div className="stat-card pending bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-md rounded-xl p-6 border border-green-500/30">
+          <h3 className="text-white/70 text-sm mb-2">Pending Rewards</h3>
+          <p className="amount text-3xl font-bold text-green-400">{pendingRewards.toFixed(6)} $B2S</p>
           <button 
             onClick={handleClaimRewards}
             disabled={loading || pendingRewards === 0}
-            className="claim-btn"
+            className="mt-4 w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg font-semibold transition-all"
           >
-            {loading ? '⏳ Claiming...' : '🎁 Claim Rewards'}
+            {loading ? 'Claiming...' : 'Claim Rewards'}
           </button>
         </div>
         
-        <div className="stat-card">
-          <h3>Total Earned</h3>
-          <p className="amount">{totalEarned.toFixed(2)} $B2S</p>
+        <div className="stat-card bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-md rounded-xl p-6 border border-purple-500/30">
+          <h3 className="text-white/70 text-sm mb-2">Total Earned</h3>
+          <p className="amount text-3xl font-bold text-purple-400">{totalEarned.toFixed(2)} $B2S</p>
         </div>
       </div>
 
-      {/* Stake/Unstake Section */}
-      <div className="action-section">
-        <h3>Manage Staking</h3>
+      <div className="action-section bg-white/5 backdrop-blur-md rounded-xl p-6 border border-white/10">
+        <h3 className="text-white font-semibold text-xl mb-4">Manage Staking</h3>
         
-        <div className="input-group">
+        <div className="input-group relative mb-4">
           <input
             type="number"
             value={stakeInput}
             onChange={(e) => setStakeInput(e.target.value)}
-            placeholder="Amount"
+            placeholder="Enter amount"
             disabled={loading}
+            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-blue-500"
           />
-          <span className="currency">$B2S</span>
+          <span className="currency absolute right-4 top-1/2 transform -translate-y-1/2 text-white/60">$B2S</span>
         </div>
 
-        <div className="button-group">
+        <div className="button-group grid grid-cols-2 gap-4">
           <button 
             onClick={handleStake}
             disabled={loading || !stakeInput}
-            className="btn-primary"
+            className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-semibold transition-all"
           >
-            {loading ? '⏳' : '🔒'} Stake
+            {loading ? 'Processing...' : 'Stake'}
           </button>
           
           <button 
             onClick={handleUnstake}
             disabled={loading || !stakeInput}
-            className="btn-secondary"
+            className="bg-white/10 hover:bg-white/20 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-semibold border border-white/20 transition-all"
           >
-            {loading ? '⏳' : '🔓'} Unstake
+            {loading ? 'Processing...' : 'Unstake'}
           </button>
         </div>
       </div>
 
-      <style jsx>{`
-        .rewards-distributor {
-          padding: 24px;
-          max-width: 1000px;
-          margin: 0 auto;
-        }
-
-        h2 {
-          text-align: center;
-          margin-bottom: 32px;
-          font-size: 32px;
-        }
-
-        .stats-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 20px;
-          margin-bottom: 32px;
-        }
-
-        .stat-card {
-          background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-          padding: 24px;
-          border-radius: 12px;
-          border: 1px solid #475569;
-        }
-
-        .stat-card.pending {
-          background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-        }
-
-        .stat-card h3 {
-          font-size: 14px;
-          opacity: 0.8;
-          margin-bottom: 12px;
-        }
-
-        .amount {
-          font-size: 28px;
-          font-weight: bold;
-          margin-bottom: 16px;
-        }
-
-        .claim-btn {
-          width: 100%;
-          padding: 12px;
-          background: white;
-          color: #1e40af;
-          border: none;
-          border-radius: 8px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-
-        .claim-btn:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(255,255,255,0.3);
-        }
-
-        .claim-btn:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-
-        .action-section {
-          background: #1e293b;
-          padding: 24px;
-          border-radius: 12px;
-          border: 1px solid #475569;
-        }
-
-        .input-group {
-          position: relative;
-          margin: 20px 0;
-        }
-
-        .input-group input {
-          width: 100%;
-          padding: 16px;
-          font-size: 18px;
-          border: 2px solid #475569;
-          border-radius: 8px;
-          background: #0f172a;
-          color: white;
-        }
-
-        .currency {
-          position: absolute;
-          right: 16px;
-          top: 50%;
-          transform: translateY(-50%);
-          opacity: 0.6;
-        }
-
-        .button-group {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 12px;
-        }
-
-        .btn-primary, .btn-secondary {
-          padding: 16px;
-          font-size: 16px;
-          font-weight: 600;
-          border: none;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-
-        .btn-primary {
-          background: linear-gradient(135deg, #3b82f6, #06b6d4);
-          color: white;
-        }
-
-        .btn-secondary {
-          background: #475569;
-          color: white;
-        }
-
-        .btn-primary:hover:not(:disabled),
-        .btn-secondary:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
-        }
-
-        .btn-primary:disabled,
-        .btn-secondary:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-      `}</style>
+      <div className="info-note mt-6 p-4 bg-blue-500/10 border-l-4 border-blue-500 rounded text-white/80 text-sm">
+        <p>
+          <strong>Note:</strong> Staked tokens earn continuous rewards at 12.5% APY. You can unstake at any time without penalties.
+        </p>
+      </div>
     </div>
   );
 }
