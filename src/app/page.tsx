@@ -10,6 +10,7 @@ import { StakingStats } from '@/components/StakingStats'
 import { LeaderboardAdvanced } from '@/components/LeaderboardAdvanced'
 import { APYCalculator } from '@/components/APYCalculator'
 import { ToastContainer } from '@/components/Toast'
+import RewardsDistributor from '@/components/RewardsDistributor'
 
 export default function Page() {
   const { mounted, connect, disconnect, isConnected, address } = useWallet()
@@ -251,6 +252,16 @@ export default function Page() {
         </h3>
         <div className="max-w-3xl mx-auto">
           <APYCalculator />
+        </div>
+      </section>
+
+      {/* NEW: Rewards Distributor */}
+      <section className="container mx-auto px-4 py-8 sm:py-16">
+        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
+          💰 Rewards Distribution System
+        </h3>
+        <div className="max-w-5xl mx-auto">
+          <RewardsDistributor />
         </div>
       </section>
 
