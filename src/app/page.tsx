@@ -13,6 +13,7 @@ import { ToastContainer } from '@/components/Toast'
 import RewardsDistributor from '@/components/RewardsDistributor'
 import GovernanceDAO from '@/components/GovernanceDAO'
 import NFTMarketplace from '@/components/NFTMarketplace'
+import LiquidityPool from '@/components/LiquidityPool'
 
 export default function Page() {
   const { mounted, connect, disconnect, isConnected, address } = useWallet()
@@ -284,6 +285,16 @@ export default function Page() {
         </h3>
         <div className="max-w-7xl mx-auto">
           <NFTMarketplace />
+        </div>
+      </section>
+      
+      {/* Liquidity Pool */}
+      <section className="container mx-auto px-4 py-8 sm:py-16">
+        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
+          💧 Liquidity Pool & Swap
+        </h3>
+        <div className="max-w-7xl mx-auto">
+          <LiquidityPool />
         </div>
       </section>
 
