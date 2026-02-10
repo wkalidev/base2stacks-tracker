@@ -12,6 +12,7 @@ import { APYCalculator } from '@/components/APYCalculator'
 import { ToastContainer } from '@/components/Toast'
 import RewardsDistributor from '@/components/RewardsDistributor'
 import GovernanceDAO from '@/components/GovernanceDAO'
+import NFTMarketplace from '@/components/NFTMarketplace'
 
 export default function Page() {
   const { mounted, connect, disconnect, isConnected, address } = useWallet()
@@ -273,6 +274,16 @@ export default function Page() {
         </h3>
         <div className="max-w-6xl mx-auto">
           <GovernanceDAO />
+        </div>
+      </section>
+
+      {/* NFT Marketplace */}
+      <section className="container mx-auto px-4 py-8 sm:py-16">
+        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
+          🛒 NFT Badge Marketplace
+        </h3>
+        <div className="max-w-7xl mx-auto">
+          <NFTMarketplace />
         </div>
       </section>
 
