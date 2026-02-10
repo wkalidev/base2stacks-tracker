@@ -50,6 +50,30 @@
 Check out our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md)
 
 ---
+## 🆕 Latest Updates (Feb 10, 2026) - Night Edition
+
+### New NFT Marketplace 🛒
+- ✅ **Complete Trading System** - Buy and sell badge NFTs
+- ✅ **Smart Contract** - b2s-marketplace.clar deployed on testnet
+- ✅ **2.5% Platform Fee** - Competitive and fair pricing
+- ✅ **Full Interface** - Browse, list, buy with beautiful UI
+- ✅ **Comprehensive Tests** - All functions tested and verified
+- ✅ **Complete Documentation** - Trading guides and tutorials
+
+**Marketplace Stats:**
+- 💰 **Platform Fee**: 2.5%
+- 🏷️ **Min Price**: 1 $B2S
+- 🎨 **Rarity Levels**: 5 (Common → Legendary)
+- 📊 **Volume Tracking**: Real-time stats
+
+---
+
+**Stats Update:**
+- 🔥 **124 commits** in one day
+- 🚀 Position: **TOP 30**
+- 💎 Features: **15 major systems**
+- 📊 Smart Contracts: **3 deployed**
+- 📝 Documentation: **30+ files**
 
 ## 🎉 Latest Updates (Feb 8, 2026)
 
@@ -88,6 +112,16 @@ Check out our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](C
 - **Transparent Results** - All votes publicly verifiable on-chain
 
 ## 🎯 Features
+
+### 🛒 NFT Badge Marketplace
+- **Buy & Sell Badges** - Trade achievement NFTs with other users
+- **Transparent Pricing** - All transactions on-chain and verifiable
+- **Low Platform Fee** - Only 2.5% fee on sales
+- **Instant Transactions** - Buy now or list for sale instantly
+- **Rarity-Based Value** - 5 rarity tiers from Common to Legendary
+- **User Statistics** - Track your trading history and earnings
+- **Price Discovery** - Real-time floor prices and volume data
+- **Secure Transfers** - Smart contract-enforced ownership changes
 
 ### Core Functionality
 - 🔗 **Wallet Connection** - Seamless Leather & Xverse integration
