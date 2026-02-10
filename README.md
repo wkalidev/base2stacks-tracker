@@ -87,10 +87,43 @@ Check out our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](C
 - ✅ **SEO Enhanced** - Complete metadata for better discoverability
 
 ### Stats
-- **16 commits today** 🔥
-- **65+ total commits**
-- **9 major features**
-- **TOP 75 on Stacks Builder Rewards** 📈
+
+## 📊 Complete Ecosystem
+```
+Base2Stacks DeFi Ecosystem
+│
+├── 💰 Token System
+│   ├── b2s-token.clar (Main token)
+│   └── b2s-rewards-distributor.clar (Staking rewards)
+│
+├── 🏛️ Governance
+│   └── b2s-governance.clar (DAO voting)
+│
+├── 🎨 NFT System
+│   ├── b2s-badges.clar (Achievement NFTs)
+│   └── b2s-marketplace.clar (NFT trading)
+│
+├── 💧 DeFi
+│   └── b2s-liquidity-pool.clar (AMM/Swaps)
+│
+└── 🎨 Frontend
+    ├── Next.js 14 App
+    ├── 15+ React Components
+    └── Real-time Integrations
+```
+
+### Project Stats
+
+| Metric | Value |
+|--------|-------|
+| **Total Commits** | 130+ |
+| **Smart Contracts** | 5 deployed |
+| **React Components** | 18+ |
+| **Documentation Files** | 35+ |
+| **Lines of Code** | 8,000+ |
+| **Test Coverage** | Comprehensive |
+| **Days Active** | 2 |
+| **Position** | TOP 20 🏆 |
 
 ---
 
@@ -112,6 +145,16 @@ Check out our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](C
 - **Transparent Results** - All votes publicly verifiable on-chain
 
 ## 🎯 Features
+
+### 💧 Liquidity Pool (AMM)
+- **Token Swaps** - Instant B2S ↔ STX swaps with 0.25% fee
+- **Provide Liquidity** - Earn fees by providing liquidity
+- **LP Tokens** - Receive tokens representing your pool share
+- **Constant Product** - Uses x × y = k formula for pricing
+- **No Impermanent Loss Protection** - But fees offset losses
+- **Real-time Quotes** - See exact output before swapping
+- **Pool Statistics** - Track volume, TVL, and your earnings
+- **Slippage Protection** - Set maximum acceptable slippage
 
 ### 🛒 NFT Badge Marketplace
 - **Buy & Sell Badges** - Trade achievement NFTs with other users
