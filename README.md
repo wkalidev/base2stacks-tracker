@@ -78,6 +78,15 @@ Check out our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](C
 
 ---
 
+### 🏛️ Governance DAO
+- **On-Chain Voting** - Fully decentralized proposal system
+- **Democratic Decisions** - 1 token = 1 vote based on stake
+- **Proposal Creation** - Anyone with 10K+ tokens can propose
+- **7-Day Voting Period** - Fair time for community participation
+- **Quorum & Threshold** - 20% quorum, 51% approval required
+- **Category System** - Economic, Security, Technical, Community
+- **Transparent Results** - All votes publicly verifiable on-chain
+
 ## 🎯 Features
 
 ### Core Functionality
