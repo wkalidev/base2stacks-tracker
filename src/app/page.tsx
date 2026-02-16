@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useWallet } from '@/hooks/useWallet'
 import { useContract } from '@/hooks/useContract'
 import { useBalance } from '@/hooks/useBalance'
@@ -14,15 +14,33 @@ import RewardsDistributor from '@/components/RewardsDistributor'
 import GovernanceDAO from '@/components/GovernanceDAO'
 import NFTMarketplace from '@/components/NFTMarketplace'
 import LiquidityPool from '@/components/LiquidityPool'
+import { TransactionToast, ErrorToast } from '@/components/TransactionToast'
 
 export default function Page() {
   const { mounted, connect, disconnect, isConnected, address } = useWallet()
-  const { claimDailyReward, stake, loading, error } = useContract()
+  const { claimDailyReward, stake, loading, error, txId } = useContract()
   const { balance, loading: balanceLoading } = useBalance(address)
   const { toasts, removeToast, success, error: showError } = useToast()
   
   const [stakeAmount, setStakeAmount] = useState('')
   const [showStakeModal, setShowStakeModal] = useState(false)
+  const [showTxToast, setShowTxToast] = useState(false)
+  const [showErrorToast, setShowErrorToast] = useState(false)
+
+  // Watch for txId changes
+  useEffect(() => {
+    if (txId) {
+      setShowTxToast(true)
+      success('🎉 Transaction submitted successfully!')
+    }
+  }, [txId])
+
+  // Watch for error changes
+  useEffect(() => {
+    if (error) {
+      setShowErrorToast(true)
+    }
+  }, [error])
 
   // Évite les problèmes d'hydratation
   if (!mounted) {
@@ -32,9 +50,10 @@ export default function Page() {
   const handleClaim = async () => {
     try {
       await claimDailyReward()
-      success('🎉 Successfully claimed 5 $B2S tokens!')
+      // Toast will show automatically via txId
     } catch (err) {
-      showError('Failed to claim reward. Please try again.')
+      // Error toast will show automatically via error
+      console.error(err)
     }
   }
 
@@ -46,11 +65,10 @@ export default function Page() {
     
     try {
       await stake(parseFloat(stakeAmount))
-      success(`✅ Successfully staked ${stakeAmount} $B2S!`)
       setShowStakeModal(false)
       setStakeAmount('')
     } catch (err) {
-      showError('Failed to stake. Please try again.')
+      console.error(err)
     }
   }
 
@@ -127,9 +145,15 @@ export default function Page() {
               <button 
                 onClick={handleClaim}
                 disabled={loading}
-                className="w-full sm:w-auto bg-gradient-to-r from-b2s-primary to-b2s-accent text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:opacity-90 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50"
+                className="w-full sm:w-auto bg-gradient-to-r from-b2s-primary to-b2s-accent text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:opacity-90 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                {loading ? '⏳ Processing...' : '🎁 Claim Daily Reward (5 $B2S)'}
+                {loading && (
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                  </svg>
+                )}
+                {loading ? 'Processing...' : '🎁 Claim Daily Reward (5 $B2S)'}
               </button>
               <button 
                 onClick={() => setShowStakeModal(true)}
@@ -145,13 +169,6 @@ export default function Page() {
             >
               Connect Wallet to Start
             </button>
-          )}
-
-          {/* Error Display */}
-          {error && (
-            <div className="mt-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
-              ⚠️ {error}
-            </div>
           )}
 
           {/* Wallet Info avec Balance */}
@@ -186,11 +203,7 @@ export default function Page() {
           {isConnected && address && (
             <div className="mt-8">
               <h3 className="text-white font-semibold text-2xl mb-4">Your Staking</h3>
-              <StakingStats 
-                totalStaked={0} 
-                rewards={balance} 
-                apy={12.5} 
-              />
+              <StakingStats address={address} />
             </div>
           )}
         </div>
@@ -362,6 +375,21 @@ export default function Page() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Transaction Notifications */}
+      {showTxToast && txId && (
+        <TransactionToast 
+          txId={txId} 
+          onClose={() => setShowTxToast(false)} 
+        />
+      )}
+      
+      {showErrorToast && error && (
+        <ErrorToast 
+          error={error} 
+          onClose={() => setShowErrorToast(false)} 
+        />
       )}
 
       {/* Toast Container */}
