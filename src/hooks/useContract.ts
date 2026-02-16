@@ -1,144 +1,129 @@
 'use client'
 
 import { useState } from 'react'
-import {
-  makeContractCall,
-  broadcastTransaction,
-  AnchorMode,
-  PostConditionMode,
-  stringAsciiCV,
+import { openContractCall } from '@stacks/connect'
+import { 
   uintCV,
-  principalCV,
+  PostConditionMode,
+  AnchorMode,
 } from '@stacks/transactions'
 import { StacksTestnet } from '@stacks/network'
-import { useWallet } from './useWallet'
 
 const network = new StacksTestnet()
-const contractAddress = 'ST936YWJPST8GB8FFRCN7CC6P2YR5K6NNB4JR1D6' // Sera mis à jour après déploiement
-const contractName = 'b2s-token'
+const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'ST936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
+const CONTRACT_NAME = process.env.NEXT_PUBLIC_CONTRACT_NAME || 'b2s-token'
 
 export function useContract() {
-  const { address, userData } = useWallet()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [txId, setTxId] = useState<string | null>(null)
 
   const claimDailyReward = async () => {
-    if (!address || !userData) {
-      setError('Please connect your wallet first')
-      return null
-    }
-
     setLoading(true)
     setError(null)
-
+    setTxId(null)
+    
     try {
-      const txOptions = {
-        contractAddress,
-        contractName,
+      await openContractCall({
+        network,
+        contractAddress: CONTRACT_ADDRESS,
+        contractName: CONTRACT_NAME,
         functionName: 'claim-daily-reward',
         functionArgs: [],
-        senderKey: userData.appPrivateKey,
-        validateWithAbi: false,
-        network,
-        anchorMode: AnchorMode.Any,
         postConditionMode: PostConditionMode.Allow,
-      }
-
-      const transaction = await makeContractCall(txOptions)
-      const broadcastResponse = await broadcastTransaction(transaction, network)
-      
-      setLoading(false)
-      return broadcastResponse.txid
+        anchorMode: AnchorMode.Any,
+        onFinish: (data) => {
+          setTxId(data.txId)
+          setLoading(false)
+          console.log('✅ Claim transaction submitted:', data.txId)
+        },
+        onCancel: () => {
+          setError('Transaction cancelled by user')
+          setLoading(false)
+        },
+      })
     } catch (err: any) {
-      console.error('Claim error:', err)
+      console.error('❌ Claim error:', err)
       setError(err.message || 'Failed to claim reward')
       setLoading(false)
-      return null
+      throw err
     }
   }
 
   const stake = async (amount: number) => {
-    if (!address || !userData) {
-      setError('Please connect your wallet first')
-      return null
-    }
-
     setLoading(true)
     setError(null)
-
+    setTxId(null)
+    
     try {
-      const txOptions = {
-        contractAddress,
-        contractName,
-        functionName: 'stake',
-        functionArgs: [uintCV(amount * 1000000)], // Convert to micro-units
-        senderKey: userData.appPrivateKey,
-        validateWithAbi: false,
-        network,
-        anchorMode: AnchorMode.Any,
-        postConditionMode: PostConditionMode.Allow,
-      }
+      const microAmount = Math.floor(amount * 1000000)
 
-      const transaction = await makeContractCall(txOptions)
-      const broadcastResponse = await broadcastTransaction(transaction, network)
-      
-      setLoading(false)
-      return broadcastResponse.txid
+      await openContractCall({
+        network,
+        contractAddress: CONTRACT_ADDRESS,
+        contractName: CONTRACT_NAME,
+        functionName: 'stake',
+        functionArgs: [uintCV(microAmount)],
+        postConditionMode: PostConditionMode.Allow,
+        anchorMode: AnchorMode.Any,
+        onFinish: (data) => {
+          setTxId(data.txId)
+          setLoading(false)
+          console.log('✅ Stake transaction submitted:', data.txId)
+        },
+        onCancel: () => {
+          setError('Transaction cancelled by user')
+          setLoading(false)
+        },
+      })
     } catch (err: any) {
-      console.error('Stake error:', err)
+      console.error('❌ Stake error:', err)
       setError(err.message || 'Failed to stake')
       setLoading(false)
-      return null
+      throw err
     }
   }
 
   const unstake = async (amount: number) => {
-    if (!address || !userData) {
-      setError('Please connect your wallet first')
-      return null
-    }
-
     setLoading(true)
     setError(null)
-
+    setTxId(null)
+    
     try {
-      const txOptions = {
-        contractAddress,
-        contractName,
-        functionName: 'unstake',
-        functionArgs: [uintCV(amount * 1000000)],
-        senderKey: userData.appPrivateKey,
-        validateWithAbi: false,
-        network,
-        anchorMode: AnchorMode.Any,
-        postConditionMode: PostConditionMode.Allow,
-      }
+      const microAmount = Math.floor(amount * 1000000)
 
-      const transaction = await makeContractCall(txOptions)
-      const broadcastResponse = await broadcastTransaction(transaction, network)
-      
-      setLoading(false)
-      return broadcastResponse.txid
+      await openContractCall({
+        network,
+        contractAddress: CONTRACT_ADDRESS,
+        contractName: CONTRACT_NAME,
+        functionName: 'unstake',
+        functionArgs: [uintCV(microAmount)],
+        postConditionMode: PostConditionMode.Allow,
+        anchorMode: AnchorMode.Any,
+        onFinish: (data) => {
+          setTxId(data.txId)
+          setLoading(false)
+          console.log('✅ Unstake transaction submitted:', data.txId)
+        },
+        onCancel: () => {
+          setError('Transaction cancelled by user')
+          setLoading(false)
+        },
+      })
     } catch (err: any) {
-      console.error('Unstake error:', err)
+      console.error('❌ Unstake error:', err)
       setError(err.message || 'Failed to unstake')
       setLoading(false)
-      return null
+      throw err
     }
-  }
-
-  const getBalance = async (address: string) => {
-    // Cette fonction nécessiterait l'API Stacks pour lire l'état
-    // Pour l'instant, on retourne une valeur mock
-    return 0
   }
 
   return {
     claimDailyReward,
     stake,
     unstake,
-    getBalance,
     loading,
     error,
+    txId,
   }
 }
