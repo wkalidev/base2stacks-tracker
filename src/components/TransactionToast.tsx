@@ -13,7 +13,6 @@ export function TransactionToast({ txId, onClose }: TransactionToastProps) {
   useEffect(() => {
     if (txId) {
       setVisible(true);
-      // Auto-hide after 10 seconds
       const timer = setTimeout(() => {
         setVisible(false);
         setTimeout(onClose, 300);
@@ -44,9 +43,7 @@ export function TransactionToast({ txId, onClose }: TransactionToastProps) {
               className="text-sm underline hover:text-green-100 inline-flex items-center gap-1"
             >
               View on Explorer
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
+              <span className="text-xs">↗</span>
             </a>
           </div>
           <button
@@ -54,9 +51,9 @@ export function TransactionToast({ txId, onClose }: TransactionToastProps) {
               setVisible(false);
               setTimeout(onClose, 300);
             }}
-            className="text-white/80 hover:text-white"
+            className="text-white/80 hover:text-white text-xl leading-none"
           >
-            ✕
+            ×
           </button>
         </div>
       </div>
@@ -100,9 +97,9 @@ export function ErrorToast({ error, onClose }: ErrorToastProps) {
               setVisible(false);
               setTimeout(onClose, 300);
             }}
-            className="text-white/80 hover:text-white"
+            className="text-white/80 hover:text-white text-xl leading-none"
           >
-            ✕
+            ×
           </button>
         </div>
       </div>
