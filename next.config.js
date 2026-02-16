@@ -1,12 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
-  compress: true,
-  
+  // swcMinify is deprecated in Next.js 16 - removed
   images: {
-    domains: [],
-    formats: ['image/avif', 'image/webp'],
+    domains: ['placeholder.com'],
   },
 }
 
