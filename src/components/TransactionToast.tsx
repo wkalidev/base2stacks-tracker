@@ -7,7 +7,8 @@ interface TransactionToastProps {
   onClose: () => void
 }
 
-export function TransactionToast({ txId, onClose }: TransactionToastProps) {
+export function TransactionToast(props: TransactionToastProps) {
+  const { txId, onClose } = props
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -21,9 +22,16 @@ export function TransactionToast({ txId, onClose }: TransactionToastProps) {
     }
   }, [txId, onClose])
 
-  if (!visible || !txId) return null
+  if (!visible || !txId) {
+    return null
+  }
 
-  const explorerUrl = `https://explorer.stacks.co/txid/${txId}?chain=testnet`
+  const handleClose = () => {
+    setVisible(false)
+    setTimeout(onClose, 300)
+  }
+
+  const explorerLink = 'https://explorer.stacks.co/txid/' + txId + '?chain=testnet'
 
   return (
     <div className="fixed top-4 right-4 z-50">
@@ -32,27 +40,10 @@ export function TransactionToast({ txId, onClose }: TransactionToastProps) {
           <div className="text-2xl">✅</div>
           <div className="flex-1">
             <h3 className="font-bold mb-1">Transaction Submitted</h3>
-            <p className="text-sm text-white/90 mb-2">
-              Your transaction has been broadcast to the network.
-            </p>
-            
-              href={explorerUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm underline hover:text-green-100"
-            >
-              View on Explorer
-            </a>
+            <p className="text-sm text-white/90 mb-2">Your transaction has been broadcast.</p>
+            <a href={explorerLink} target="_blank" rel="noopener noreferrer" className="text-sm underline">View on Explorer</a>
           </div>
-          <button
-            onClick={() => {
-              setVisible(false)
-              setTimeout(onClose, 300)
-            }}
-            className="text-white/80 hover:text-white text-xl"
-          >
-            ×
-          </button>
+          <button onClick={handleClose} className="text-white text-xl">×</button>
         </div>
       </div>
     </div>
@@ -64,7 +55,8 @@ interface ErrorToastProps {
   onClose: () => void
 }
 
-export function ErrorToast({ error, onClose }: ErrorToastProps) {
+export function ErrorToast(props: ErrorToastProps) {
+  const { error, onClose } = props
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -78,7 +70,14 @@ export function ErrorToast({ error, onClose }: ErrorToastProps) {
     }
   }, [error, onClose])
 
-  if (!visible || !error) return null
+  if (!visible || !error) {
+    return null
+  }
+
+  const handleClose = () => {
+    setVisible(false)
+    setTimeout(onClose, 300)
+  }
 
   return (
     <div className="fixed top-4 right-4 z-50">
@@ -89,15 +88,7 @@ export function ErrorToast({ error, onClose }: ErrorToastProps) {
             <h3 className="font-bold mb-1">Transaction Failed</h3>
             <p className="text-sm text-white/90">{error}</p>
           </div>
-          <button
-            onClick={() => {
-              setVisible(false)
-              setTimeout(onClose, 300)
-            }}
-            className="text-white/80 hover:text-white text-xl"
-          >
-            ×
-          </button>
+          <button onClick={handleClose} className="text-white text-xl">×</button>
         </div>
       </div>
     </div>
