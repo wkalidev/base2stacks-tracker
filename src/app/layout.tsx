@@ -89,6 +89,7 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="talentapp:project_verification" content="6de2cda5372b04a12a81a668e5d689db30de8e53e20d524b3251030926eb836f7bc84de81614e2b8f85f810e2fcb5581f5271dd0cff54aeec40161aac4e214c5">
       </head>
       <body className={inter.className}>
         <div className="min-h-screen bg-gradient-to-br from-base-dark via-stacks-dark to-b2s-secondary">
