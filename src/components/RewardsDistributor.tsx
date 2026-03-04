@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useWallet } from '@/hooks/useWallet';
-import { callReadOnlyFunction, cvToJSON, standardPrincipalCV } from '@stacks/transactions';
+import { callReadOnlyFunction, cvToJSON, standardPrincipalCV, uintCV, PostConditionMode, AnchorMode } from '@stacks/transactions';
+import { openContractCall } from '@stacks/connect';
 import { StacksMainnet } from '@stacks/network';
 
 const network = new StacksMainnet();
@@ -16,21 +17,14 @@ export default function RewardsDistributor() {
   const [totalEarned, setTotalEarned] = useState(0);
   const [stakeInput, setStakeInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [txId, setTxId] = useState<string | null>(null);
+  const [txType, setTxType] = useState<string>('');
 
-  useEffect(() => {
-    if (address && isConnected) {
-      fetchStakerInfo();
-    }
-  }, [address, isConnected]);
-
-  const fetchStakerInfo = async () => {
+  const fetchStakerInfo = useCallback(async () => {
     if (!address) return;
     try {
-      // Fetch staker info
       const infoResult = await callReadOnlyFunction({
-        network,
-        contractAddress,
-        contractName,
+        network, contractAddress, contractName,
         functionName: 'get-staker-info',
         functionArgs: [standardPrincipalCV(address)],
         senderAddress: address,
@@ -41,41 +35,63 @@ export default function RewardsDistributor() {
         setTotalEarned(Number(info.value['total-rewards-earned']?.value || 0) / 1_000_000);
       }
 
-      // Fetch pending rewards
       const rewardsResult = await callReadOnlyFunction({
-        network,
-        contractAddress,
-        contractName,
+        network, contractAddress, contractName,
         functionName: 'get-pending-rewards',
         functionArgs: [standardPrincipalCV(address)],
         senderAddress: address,
       });
-      const rewards = cvToJSON(rewardsResult);
-      setPendingRewards(Number(rewards.value?.value || 0) / 1_000_000);
+      setPendingRewards(Number(cvToJSON(rewardsResult).value?.value || 0) / 1_000_000);
     } catch (error) {
       console.error('Error fetching staker info:', error);
     }
-  };
+  }, [address]);
 
-  const handleStake = async () => {
-    if (!address || !stakeInput) return;
-    const amount = parseFloat(stakeInput);
-    if (amount <= 0) { alert('Please enter a valid amount'); return; }
-    alert('Staking feature coming soon!');
-    setStakeInput('');
-  };
+  useEffect(() => {
+    if (address && isConnected) fetchStakerInfo();
+  }, [address, isConnected, fetchStakerInfo]);
 
-  const handleClaimRewards = async () => {
+  const callContract = async (functionName: string, args: any[], type: string) => {
     if (!address) return;
-    alert('Claim rewards feature coming soon!');
+    setLoading(true);
+    setTxId(null);
+    setTxType(type);
+    try {
+      await openContractCall({
+        network, contractAddress, contractName,
+        functionName,
+        functionArgs: args,
+        postConditionMode: PostConditionMode.Allow,
+        anchorMode: AnchorMode.Any,
+        onFinish: (data) => {
+          setTxId(data.txId);
+          setStakeInput('');
+          setLoading(false);
+          setTimeout(fetchStakerInfo, 5000);
+        },
+        onCancel: () => setLoading(false),
+      });
+    } catch (err) {
+      console.error(`${type} error:`, err);
+      setLoading(false);
+    }
   };
 
-  const handleUnstake = async () => {
-    if (!address || !stakeInput) return;
+  const handleStake = () => {
     const amount = parseFloat(stakeInput);
-    if (amount <= 0 || amount > stakedAmount) { alert('Invalid unstake amount'); return; }
-    alert('Unstake feature coming soon!');
-    setStakeInput('');
+    if (!amount || amount <= 0) return;
+    callContract('stake', [uintCV(Math.floor(amount * 1_000_000))], 'Stake');
+  };
+
+  const handleUnstake = () => {
+    const amount = parseFloat(stakeInput);
+    if (!amount || amount <= 0 || amount > stakedAmount) return;
+    callContract('unstake', [uintCV(Math.floor(amount * 1_000_000))], 'Unstake');
+  };
+
+  const handleClaimRewards = () => {
+    if (pendingRewards === 0) return;
+    callContract('claim-rewards', [], 'Claim');
   };
 
   if (!isConnected) {
@@ -104,7 +120,7 @@ export default function RewardsDistributor() {
             disabled={loading || pendingRewards === 0}
             className="mt-4 w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg font-semibold transition-all"
           >
-            {loading ? 'Claiming...' : 'Claim Rewards'}
+            {loading && txType === 'Claim' ? '⏳ Claiming...' : 'Claim Rewards'}
           </button>
         </div>
 
@@ -127,23 +143,40 @@ export default function RewardsDistributor() {
           />
           <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/60">$B2S</span>
         </div>
+        {stakeInput && parseFloat(stakeInput) > stakedAmount && (
+          <p className="text-red-400 text-xs mb-3">⚠️ Cannot unstake more than your staked balance ({stakedAmount.toFixed(2)} $B2S)</p>
+        )}
         <div className="grid grid-cols-2 gap-4">
           <button
             onClick={handleStake}
-            disabled={loading || !stakeInput}
+            disabled={loading || !stakeInput || parseFloat(stakeInput) <= 0}
             className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-semibold transition-all"
           >
-            {loading ? 'Processing...' : 'Stake'}
+            {loading && txType === 'Stake' ? '⏳ Staking...' : 'Stake'}
           </button>
           <button
             onClick={handleUnstake}
-            disabled={loading || !stakeInput}
+            disabled={loading || !stakeInput || parseFloat(stakeInput) > stakedAmount}
             className="bg-white/10 hover:bg-white/20 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-semibold border border-white/20 transition-all"
           >
-            {loading ? 'Processing...' : 'Unstake'}
+            {loading && txType === 'Unstake' ? '⏳ Unstaking...' : 'Unstake'}
           </button>
         </div>
       </div>
+
+      {txId && (
+        <div className="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded-lg text-sm">
+          <p className="text-green-400 font-semibold mb-1">✅ {txType} submitted!</p>
+          <a
+            href={`https://explorer.hiro.so/txid/${txId}?chain=mainnet`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-400 hover:underline break-all"
+          >
+            View on Explorer ↗
+          </a>
+        </div>
+      )}
 
       <div className="mt-6 p-4 bg-blue-500/10 border-l-4 border-blue-500 rounded text-white/80 text-sm">
         <strong>Note:</strong> Staked tokens earn continuous rewards at 12.5% APY. You can unstake at any time without penalties.
