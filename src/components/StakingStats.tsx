@@ -1,24 +1,24 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { callReadOnlyFunction } from '@stacks/transactions';
-import { StacksTestnet } from '@stacks/network';
+import { callReadOnlyFunction, cvToJSON, standardPrincipalCV } from '@stacks/transactions';
+import { StacksMainnet } from '@stacks/network';
 
 interface StakingStatsProps {
   address: string;
 }
 
-const network = new StacksTestnet();
-const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'ST936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96';
-const CONTRACT_NAME = process.env.NEXT_PUBLIC_CONTRACT_NAME || 'b2s-token';
+const network = new StacksMainnet()
+const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
+const CONTRACT_NAME = process.env.NEXT_PUBLIC_CONTRACT_NAME || 'b2s-token'
 
 export function StakingStats({ address }: StakingStatsProps) {
-  const [stakedAmount, setStakedAmount] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [stakedAmount, setStakedAmount] = useState(0)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchStakedAmount = async () => {
-      if (!address) return;
+      if (!address) return
 
       try {
         const result = await callReadOnlyFunction({
@@ -26,32 +26,29 @@ export function StakingStats({ address }: StakingStatsProps) {
           contractAddress: CONTRACT_ADDRESS,
           contractName: CONTRACT_NAME,
           functionName: 'get-staked-amount',
-          functionArgs: [],
+          functionArgs: [standardPrincipalCV(address)],
           senderAddress: address,
-        });
+        })
 
-        // @ts-ignore
-        const staked = result.value?.value || 0;
-        setStakedAmount(Number(staked) / 1000000);
+        const jsonResult = cvToJSON(result)
+        const staked = jsonResult.value?.value || 0
+        setStakedAmount(Number(staked) / 1_000_000)
       } catch (error) {
-        console.error('Error fetching staked amount:', error);
-        setStakedAmount(0);
+        console.error('Error fetching staked amount:', error)
+        setStakedAmount(0)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchStakedAmount();
+    fetchStakedAmount()
+    const interval = setInterval(fetchStakedAmount, 30_000)
+    return () => clearInterval(interval)
+  }, [address])
 
-    const interval = setInterval(fetchStakedAmount, 30000);
-    return () => clearInterval(interval);
-  }, [address]);
-
-  const calculateRewards = () => {
-    const apy = 12.5;
-    const dailyReward = (stakedAmount * apy) / 365 / 100;
-    return dailyReward;
-  };
+  const calculateDailyRewards = () => {
+    return (stakedAmount * 12.5) / 365 / 100
+  }
 
   if (loading) {
     return (
@@ -61,7 +58,7 @@ export function StakingStats({ address }: StakingStatsProps) {
           <div className="h-4 bg-white/10 rounded w-1/2"></div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -78,7 +75,7 @@ export function StakingStats({ address }: StakingStatsProps) {
         <div className="text-center">
           <p className="text-white/60 text-sm mb-2">Daily Rewards</p>
           <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
-            {calculateRewards().toFixed(4)}
+            {calculateDailyRewards().toFixed(4)}
           </p>
           <p className="text-white/40 text-xs">$B2S per day</p>
         </div>
@@ -98,5 +95,5 @@ export function StakingStats({ address }: StakingStatsProps) {
         </div>
       )}
     </div>
-  );
+  )
 }
