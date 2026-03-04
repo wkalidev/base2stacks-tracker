@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { AppConfig, UserSession, showConnect } from '@stacks/connect'
-import { StacksTestnet, StacksMainnet } from '@stacks/network'
 
 const appConfig = new AppConfig(['store_write', 'publish_data'])
 const userSession = new UserSession({ appConfig })
@@ -17,7 +16,7 @@ export function useWallet() {
     if (userSession.isUserSignedIn()) {
       const data = userSession.loadUserData()
       setUserData(data)
-      setAddress(data.profile.stxAddress.testnet)
+      setAddress(data.profile.stxAddress.mainnet) // ✅ mainnet
     }
   }, [])
 
@@ -31,7 +30,7 @@ export function useWallet() {
       onFinish: () => {
         const data = userSession.loadUserData()
         setUserData(data)
-        setAddress(data.profile.stxAddress.testnet)
+        setAddress(data.profile.stxAddress.mainnet) // ✅ mainnet
         window.location.reload()
       },
       userSession,
@@ -45,13 +44,11 @@ export function useWallet() {
     window.location.reload()
   }
 
-  const isConnected = userData !== null
-
   return {
     mounted,
     connect,
     disconnect,
-    isConnected,
+    isConnected: userData !== null,
     address,
     userData,
   }
