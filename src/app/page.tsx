@@ -15,6 +15,7 @@ import GovernanceDAO from '@/components/GovernanceDAO'
 import NFTMarketplace from '@/components/NFTMarketplace'
 import LiquidityPool from '@/components/LiquidityPool'
 import { TransactionToast, ErrorToast } from '@/components/TransactionToast'
+import { ButtonLoading } from '@/components/LoadingSpinner'
 
 export default function Page() {
   const { mounted, connect, disconnect, isConnected, address } = useWallet()
@@ -142,19 +143,13 @@ export default function Page() {
           {/* Action Buttons */}
           {isConnected ? (
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
-              <button 
-                onClick={handleClaim}
-                disabled={loading}
-                className="w-full sm:w-auto bg-gradient-to-r from-b2s-primary to-b2s-accent text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:opacity-90 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                {loading && (
-                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
-                  </svg>
-                )}
-                {loading ? 'Processing...' : '🎁 Claim Daily Reward (5 $B2S)'}
-              </button>
+              <ButtonLoading
+                 onClick={handleClaim}
+                 loading={loading}
+                 className="w-full sm:w-auto bg-gradient-to-r from-b2s-primary to-b2s-accent text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:opacity-90 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50"
+            > 
+                   🎁 Claim Daily Reward (5 $B2S)
+             </ButtonLoading>
               <button 
                 onClick={() => setShowStakeModal(true)}
                 className="w-full sm:w-auto bg-white/10 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold border border-white/20 hover:bg-white/20 transition-all"
@@ -324,7 +319,7 @@ export default function Page() {
           </div>
           
           <p className="text-white/60 text-xs sm:text-sm">
-            Built with ❤️ by <span className="text-b2s-accent">Wkalidev(zcodebase)</span> | Testnet Version
+            Built with ❤️ by <span className="text-b2s-accent">Wkalidev(zcodebase)</span> | Mainnet
           </p>
 
           <div className="flex items-center gap-4 sm:gap-6">

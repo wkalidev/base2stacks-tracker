@@ -2,15 +2,11 @@
 
 import { useState } from 'react'
 import { openContractCall } from '@stacks/connect'
-import { 
-  uintCV,
-  PostConditionMode,
-  AnchorMode,
-} from '@stacks/transactions'
-import { StacksTestnet } from '@stacks/network'
+import { uintCV, PostConditionMode, AnchorMode } from '@stacks/transactions'
+import { StacksMainnet } from '@stacks/network'
 
-const network = new StacksTestnet()
-const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'ST936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
+const network = new StacksMainnet()
+const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 const CONTRACT_NAME = process.env.NEXT_PUBLIC_CONTRACT_NAME || 'b2s-token'
 
 export function useContract() {
@@ -22,7 +18,7 @@ export function useContract() {
     setLoading(true)
     setError(null)
     setTxId(null)
-    
+
     try {
       await openContractCall({
         network,
@@ -43,7 +39,6 @@ export function useContract() {
         },
       })
     } catch (err: any) {
-      console.error('❌ Claim error:', err)
       setError(err.message || 'Failed to claim reward')
       setLoading(false)
       throw err
@@ -54,16 +49,14 @@ export function useContract() {
     setLoading(true)
     setError(null)
     setTxId(null)
-    
-    try {
-      const microAmount = Math.floor(amount * 1000000)
 
+    try {
       await openContractCall({
         network,
         contractAddress: CONTRACT_ADDRESS,
         contractName: CONTRACT_NAME,
         functionName: 'stake',
-        functionArgs: [uintCV(microAmount)],
+        functionArgs: [uintCV(Math.floor(amount * 1_000_000))],
         postConditionMode: PostConditionMode.Allow,
         anchorMode: AnchorMode.Any,
         onFinish: (data) => {
@@ -77,7 +70,6 @@ export function useContract() {
         },
       })
     } catch (err: any) {
-      console.error('❌ Stake error:', err)
       setError(err.message || 'Failed to stake')
       setLoading(false)
       throw err
@@ -88,16 +80,14 @@ export function useContract() {
     setLoading(true)
     setError(null)
     setTxId(null)
-    
-    try {
-      const microAmount = Math.floor(amount * 1000000)
 
+    try {
       await openContractCall({
         network,
         contractAddress: CONTRACT_ADDRESS,
         contractName: CONTRACT_NAME,
         functionName: 'unstake',
-        functionArgs: [uintCV(microAmount)],
+        functionArgs: [uintCV(Math.floor(amount * 1_000_000))],
         postConditionMode: PostConditionMode.Allow,
         anchorMode: AnchorMode.Any,
         onFinish: (data) => {
@@ -111,19 +101,11 @@ export function useContract() {
         },
       })
     } catch (err: any) {
-      console.error('❌ Unstake error:', err)
       setError(err.message || 'Failed to unstake')
       setLoading(false)
       throw err
     }
   }
 
-  return {
-    claimDailyReward,
-    stake,
-    unstake,
-    loading,
-    error,
-    txId,
-  }
+  return { claimDailyReward, stake, unstake, loading, error, txId }
 }
