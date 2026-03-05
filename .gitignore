@@ -41,3 +41,4 @@ deployments/history/
 Thumbs.db.next/
 .next/
 settings/Devnet.toml
+.next/
