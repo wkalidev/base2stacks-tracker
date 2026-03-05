@@ -1,0 +1,6 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://wkalidev-base2stacks-tracker.vercel.app/sitemap.xml

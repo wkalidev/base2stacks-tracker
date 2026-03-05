@@ -1,0 +1,46 @@
+# Source files
+src/
+tests/
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+
+# Config
+.github/
+.vscode/
+.idea/
+.git/
+.gitignore
+
+# Docs (except README)
+docs/
+examples/
+TUTORIAL.md
+FAQ.md
+
+# CI/CD
+.travis.yml
+.circleci/
+.gitlab-ci.yml
+
+# Development
+tsconfig.json
+jest.config.js
+.eslintrc
+.prettierrc
+
+# Misc
+*.log
+coverage/
+.nyc_output/
+.cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Keep these
+!LICENSE
+!README.md
+!CHANGELOG.md

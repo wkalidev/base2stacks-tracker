@@ -1,13 +1,41 @@
 # Dependencies
 node_modules/
+.pnp
+.pnp.js
 
-# Next.js
+# Testing
+coverage/
+.nyc_output
+
+# Production
+build/
+dist/
 .next/
-out/
 
-# Env files
-.env*.local
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Misc
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Clarinet
+.cache/
+costs-reports/
+deployments/history/
+settings/Devnet.toml
+
+# OS
 .DS_Store
+Thumbs.db
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
