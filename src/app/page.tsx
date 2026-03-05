@@ -17,6 +17,7 @@ import NFTMarketplace from '@/components/NFTMarketplace'
 import LiquidityPool from '@/components/LiquidityPool'
 import { TransactionToast, ErrorToast } from '@/components/TransactionToast'
 import { ButtonLoading } from '@/components/LoadingSpinner'
+import PredictionMarket from '@/components/PredictionMarket'
 
 function formatNumber(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
@@ -325,6 +326,15 @@ export default function Page() {
         <div className="max-w-7xl mx-auto">
           <LiquidityPool />
         </div>
+      </section>
+
+      <section className="container mx-auto px-4 py-8 sm:py-16">
+       <h3 className="text-2xl sm:text-4xl font-bold text-white text-center mb-8">
+         🔮 Prediction Market
+       </h3>
+       <div className="max-w-6xl mx-auto">
+          <PredictionMarket />
+       </div>
       </section>
 
       {/* Footer */}
