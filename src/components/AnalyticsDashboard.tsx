@@ -193,7 +193,6 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '8px' }}>📊 B2S Analytics Dashboard</h1>
         <p style={{ color: muted, fontSize: '14px' }}>
           🟢 Live — Stacks Mainnet
           {lastUpdate && <span style={{ marginLeft: '12px' }}>Last updated: {lastUpdate}</span>}
