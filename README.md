@@ -1,190 +1,159 @@
-# 🌉 Base2Stacks Bridge Tracker
+# $B2S Token Smart Contract
 
-[![Live](https://img.shields.io/badge/Live-base2stacks--tracker.vercel.app-brightgreen)](https://base2stacks-tracker.vercel.app)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![Network](https://img.shields.io/badge/network-Stacks%20Mainnet-orange?logo=ethereum)](https://explorer.hiro.so/?chain=mainnet)
-[![Next.js](https://img.shields.io/badge/built%20with-Next.js%2014-black?logo=next.js)](https://nextjs.org/)
-[![Stacks](https://img.shields.io/badge/blockchain-Stacks-5546FF?logo=stacks)](https://www.stacks.co/)
-[![Builder Rewards](https://img.shields.io/badge/Stacks-Builder%20Rewards%20March%202026-ff6b00)](https://talent.app/~/earn/stacks-builder-rewards-mar)
+Official Clarity smart contracts for the Base2Stacks Bridge Tracker ecosystem — deployed on **Stacks Mainnet**.
 
-> Track cross-chain bridge activity between Base & Stacks. Earn $B2S tokens. Built on Stacks mainnet.
+[![Mainnet](https://img.shields.io/badge/Deployed-Stacks%20Mainnet-green)](https://explorer.hiro.so/address/SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96?chain=mainnet)
+[![Language](https://img.shields.io/badge/Language-Clarity-blue)](https://clarity-lang.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](./LICENSE)
+[![Builder Rewards](https://img.shields.io/badge/Stacks-Builder%20Rewards%202026-orange)](https://stacks.org)
 
----
+## 📋 Overview
 
-## 🚀 Live Demo
+The $B2S token powers the Base2Stacks DeFi ecosystem with:
 
-**[https://base2stacks-tracker.vercel.app](https://base2stacks-tracker.vercel.app)**
+- Daily reward claims (5 $B2S per day)
+- Staking mechanism (12.5% APY)
+- AMM Liquidity Pool with B2S ↔ STX swaps
+- Rewards distribution system
+- **Prediction Market** (Price / Stacks / Governance / Sport / Crisis Alert)
+- Anti-spam protection (24h cooldown)
 
----
-
-## 📦 Smart Contracts — Mainnet
+## 📦 Smart Contracts (Mainnet)
 
 | Contract | Address | Explorer |
 |---|---|---|
-| `b2s-token` | `SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-token` | [View ↗](https://explorer.hiro.so/address/SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-token?chain=mainnet) |
-| `b2s-liquidity-pool-v5` | `SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-liquidity-pool-v5` | [View ↗](https://explorer.hiro.so/address/SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-liquidity-pool-v5?chain=mainnet) |
-| `b2s-rewards-distributor-v3` | `SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-rewards-distributor-v3` | [View ↗](https://explorer.hiro.so/address/SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-rewards-distributor-v3?chain=mainnet) |
+| `b2s-token` | `SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-token` | [View](https://explorer.hiro.so/address/SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-token?chain=mainnet) |
+| `b2s-liquidity-pool-v5` | `SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-liquidity-pool-v5` | [View](https://explorer.hiro.so/address/SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-liquidity-pool-v5?chain=mainnet) |
+| `b2s-rewards-distributor-v3` | `SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-rewards-distributor-v3` | [View](https://explorer.hiro.so/address/SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-rewards-distributor-v3?chain=mainnet) |
+| `b2s-prediction-market` | `SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-prediction-market` | [View](https://explorer.hiro.so/address/SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-prediction-market?chain=mainnet) |
 
----
+## 🌐 Live App
 
-## ✨ Features
+**[https://base2stacks-tracker.vercel.app](https://base2stacks-tracker.vercel.app)**
 
-### 💧 AMM Liquidity Pool
-- B2S ↔ STX swaps with **0.25% fee** (Uniswap v2 constant product formula)
-- Add/remove liquidity and receive LP tokens
-- Slippage protection and real-time price quotes
-- Pool stats: TVL, 24h volume, fees
+## 💡 Features
 
-### 💰 Staking & Rewards
-- Stake $B2S and earn **12.5% APY**
-- Block-based reward calculation
-- Auto-claim on stake/unstake
-- Pending rewards dashboard
+### 1. Daily Rewards
+```clarity
+(claim-daily-reward)
+```
+- Claims 5 $B2S tokens per day
+- 24-hour cooldown between claims
+- Automatic balance update
 
-### 🏛️ Governance DAO
-- On-chain voting — 1 token = 1 vote
-- Proposal creation (10K+ tokens required)
-- 7-day voting period with quorum system
-- Categories: Economic, Security, Technical, Community
+### 2. Staking System
+```clarity
+(stake (amount uint))
+(unstake (amount uint))
+```
+- Stake tokens to earn 12.5% APY
+- Minimum: 1 $B2S token
+- No lock period — flexible unstaking
 
-### 🛒 NFT Badge Marketplace
-- Buy and sell achievement badges
-- 5 rarity tiers: Common → Legendary
-- 2.5% platform fee
-- Real-time floor price and volume
+### 3. AMM Liquidity Pool
+```clarity
+(swap-b2s-for-stx (amount uint) (min-out uint))
+(swap-stx-for-b2s (amount uint) (min-out uint))
+(add-liquidity (b2s-amount uint) (stx-amount uint) (min-lp uint))
+```
+- Uniswap v2-style AMM (x*y=k)
+- 0.25% swap fee
+- LP token rewards
 
-### 🏆 Leaderboard
-- Top stakers with real-time rankings
-- Badge system: 👑 🥇 🔥 💎 ⭐
-- Filter: Top 10 / Top 50 / All
+### 4. Rewards Distributor
+```clarity
+(stake (amount uint))
+(unstake (amount uint))
+(claim-rewards)
+```
+- Continuous rewards at 12.5% APY
+- Real-time pending rewards tracking
+- Instant claim at any time
 
-### Core
-- 🔗 Leather & Xverse wallet integration
-- 💰 Daily reward claims (5 $B2S / 24h)
-- 📊 Real-time balance tracking
-- 📈 Interactive APY calculator
-- 📱 Fully responsive UI
+### 5. Prediction Market
+```clarity
+(create-market (question (string-utf8 256)) (category (string-ascii 32)) (deadline-blocks uint))
+(place-bet (market-id uint) (vote bool) (amount uint))
+(resolve-market (market-id uint) (outcome bool))
+(claim-winnings (market-id uint))
+```
+- 5 categories: Price / Stacks / Governance / Sport / Crisis Alert
+- AMM-style odds based on bet pool
+- 2% platform fee on winnings
+- Emergency refund after deadline + 1000 blocks
 
----
+## 🏗️ Contract Structure
 
-## 🛠️ Tech Stack
+```
+contracts/
+├── b2s-token.clar                  # SIP-010 fungible token
+├── b2s-liquidity-pool.clar         # AMM pool v5
+├── b2s-rewards-distributor.clar    # Staking & rewards v3
+├── b2s-prediction-market.clar      # Prediction market
+└── b2s-governance.clar             # DAO governance
+```
 
-| Layer | Technology |
+## 📊 Token Economics
+
+| Metric | Value |
 |---|---|
-| Frontend | Next.js 14, React, TypeScript |
-| Styling | Tailwind CSS, Glass morphism |
-| Blockchain | Stacks, Clarity smart contracts |
-| Wallet | @stacks/connect (Leather / Xverse) |
-| Deployment | Vercel |
+| Standard | SIP-010 |
+| Daily Rewards | 5 $B2S / user |
+| Staking APY | 12.5% |
+| Swap Fee | 0.25% |
+| Prediction Fee | 2% |
+| Decimals | 6 |
 
----
+## 🔐 Security Features
 
-## 📁 Project Structure
+- ✅ Balance overflow protection
+- ✅ Anti-spam cooldown mechanism
+- ✅ Input validation on all functions
+- ✅ Principal-based authentication
+- ✅ Slippage protection on swaps
+- ✅ Emergency refund mechanism
 
-```
-base2stacks-tracker/
-├── src/
-│   ├── app/
-│   │   ├── page.tsx              # Main page
-│   │   ├── layout.tsx            # Root layout + metadata
-│   │   └── globals.css
-│   ├── hooks/
-│   │   ├── useWallet.ts          # Wallet connection (mainnet)
-│   │   ├── useContract.ts        # Contract calls
-│   │   └── useBalance.ts         # Balance tracking
-│   └── components/
-│       ├── StakingStats.tsx
-│       ├── RewardsDistributor.tsx
-│       ├── TransactionHistory.tsx
-│       └── ...
-├── contracts/                    # Clarity smart contracts
-├── tests/                        # Clarinet test suite
-├── docs/                         # Extended documentation
-└── deployments/                  # Deployment records
-```
-
----
-
-## 🚀 Quick Start
+## 🛠️ Local Development
 
 ### Prerequisites
+- [Clarinet](https://github.com/hirosystems/clarinet)
 - Node.js 18+
-- Leather or Xverse wallet
+- Stacks wallet (Leather / Xverse)
 
-### Installation
-
+### Setup
 ```bash
-git clone https://github.com/wkalidev/base2stacks-tracker.git
-cd base2stacks-tracker
-npm install
-cp .env.example .env.local
-npm run dev
+git clone https://github.com/wkalidev/b2s-token-contract.git
+cd b2s-token-contract
+clarinet check
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
-
-### Environment Variables
-
+### Run Tests
 ```bash
-NEXT_PUBLIC_CONTRACT_ADDRESS=SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96
-NEXT_PUBLIC_CONTRACT_NAME=b2s-token
-```
-
----
-
-## 🧪 Tests
-
-```bash
-# Clarinet contract tests
 clarinet test
-
-# Next.js build check
-npm run build
 ```
 
----
-
-## 📚 Documentation
-
-| File | Description |
-|---|---|
-| [CONTRIBUTING.md](./CONTRIBUTING.md) | Contribution guidelines |
-| [CHANGELOG.md](./CHANGELOG.md) | Version history |
-| [ROADMAP.md](./ROADMAP.md) | Upcoming features |
-| [SECURITY.md](./SECURITY.md) | Security policy |
-| [QUICKSTART.md](./QUICKSTART.md) | 5-minute setup guide |
-| [docs/](./docs/) | Extended documentation |
-
----
+### Deploy (Mainnet)
+```bash
+# Add MNEMONIC to .env
+node deploy.js
+```
 
 ## 🤝 Contributing
 
-Contributions are welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
-
-```bash
-# Create a feature branch
-git checkout -b feat/your-feature
-git commit -m "feat: your feature"
-git push origin feat/your-feature
-# Open a Pull Request
-```
-
----
-
-## 👨‍💻 Author
-
-**wkalidev** (zcodebase)
-
-[![Twitter](https://img.shields.io/badge/Twitter-@willycodexwar-1DA1F2?logo=twitter)](https://twitter.com/willycodexwar)
-[![Farcaster](https://img.shields.io/badge/Farcaster-willywarrior-purple)](https://warpcast.com/willywarrior)
-[![GitHub](https://img.shields.io/badge/GitHub-@wkalidev-black?logo=github)](https://github.com/wkalidev)
-
----
+See [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ## 📜 License
 
-MIT License — see [LICENSE](./LICENSE)
+MIT License — See [LICENSE](./LICENSE)
+
+## 🔗 Links
+
+- 🌐 [Live App](https://base2stacks-tracker.vercel.app)
+- 📊 [Explorer — Deployer Address](https://explorer.hiro.so/address/SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96?chain=mainnet)
+- 🐦 [Twitter](https://twitter.com/willycodexwar)
+- 🟪 [Farcaster](https://warpcast.com/willywarrior)
+- 🏆 [Stacks Builder Rewards](https://stacks.org)
 
 ---
 
-**Built with ❤️ for the Stacks ecosystem — #StacksBuilderRewards 🏆**
+**Built with ❤️ by [Wkalidev (zcodebase)](https://github.com/wkalidev) — #StacksBuilderRewards March 2026 🏆**
