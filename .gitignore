@@ -10,13 +10,7 @@ coverage/
 # Production
 build/
 dist/
-
-# Misc
-.DS_Store
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+.next/
 
 # Environment
 .env
@@ -32,13 +26,16 @@ yarn-error.log*
 *.swo
 *~
 
-# Clarinet specific
+# Clarinet
 .cache/
 costs-reports/
 deployments/history/
+settings/Devnet.toml
 
 # OS
-Thumbs.db.next/
-.next/
-settings/Devnet.toml
-.next/
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
