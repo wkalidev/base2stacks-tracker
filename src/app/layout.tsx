@@ -1,25 +1,31 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#FF6B35',
+}
 
 export const metadata: Metadata = {
   title: 'Base2Stacks Bridge Tracker | $B2S',
   description: 'Track cross-chain bridges between Base Network and Stacks. Earn $B2S tokens for tracking transactions.',
   keywords: ['Base', 'Stacks', 'Bridge', 'Tracker', 'B2S', 'Web3', 'Cross-chain', 'DeFi', 'Crypto'],
   authors: [{ name: 'wkalidev', url: 'https://github.com/wkalidev' }],
-  
-  // PWA & Mobile
+
   manifest: '/site.webmanifest',
-  themeColor: '#FF6B35',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
+
+  // Talent app project verification
+  other: {
+    'talentapp:project_verification': '6de2cda5372b04a12a81a668e5d689db30de8e53e20d524b3251030926eb836f7bc84de81614e2b8f85f810e2fcb5581f5271dd0cff54aeec40161aac4e214c5',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'black-translucent',
   },
-  
-  // Icons
+
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -36,12 +42,11 @@ export const metadata: Metadata = {
       },
     ],
   },
-  
-  // Open Graph (Facebook, LinkedIn)
+
   openGraph: {
     title: 'Base2Stacks Bridge Tracker',
     description: 'Track cross-chain activity between Base & Stacks. Earn $B2S tokens.',
-    url: 'https://base2stacks-tracker.vercel.app',
+    url: 'https://wkalidev-base2stacks-tracker.vercel.app',
     siteName: 'Base2Stacks Tracker',
     images: [
       {
@@ -54,8 +59,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     type: 'website',
   },
-  
-  // Twitter
+
   twitter: {
     card: 'summary_large_image',
     title: 'Base2Stacks Bridge Tracker',
@@ -63,8 +67,7 @@ export const metadata: Metadata = {
     creator: '@willycodexwar',
     images: ['/android-chrome-512x512.png'],
   },
-  
-  // Additional metadata
+
   robots: {
     index: true,
     follow: true,
@@ -85,11 +88,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-      </head>
       <body className={inter.className}>
         <div className="min-h-screen bg-gradient-to-br from-base-dark via-stacks-dark to-b2s-secondary">
           {children}
