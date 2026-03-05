@@ -39,3 +39,5 @@ deployments/history/
 
 # OS
 Thumbs.db.next/
+.next/
+settings/Devnet.toml
