@@ -1,13 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
+  experimental: {
+    serverComponentsExternalPackages: [
+      '@coinbase/agentkit',
+      '@coinbase/agentkit-langchain',
+      '@langchain/langgraph',
+      '@langchain/groq',
+      'langchain',
+      '@across-protocol/app-sdk',
     ],
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
