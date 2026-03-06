@@ -8,6 +8,7 @@ import { StacksMainnet } from '@stacks/network'
 const network = new StacksMainnet()
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 const CONTRACT_NAME = process.env.NEXT_PUBLIC_CONTRACT_NAME || 'b2s-token'
+const REWARDS_CONTRACT = 'b2s-rewards-distributor-v3'
 
 export function useContract() {
   const [loading, setLoading] = useState(false)
@@ -23,7 +24,7 @@ export function useContract() {
       await openContractCall({
         network,
         contractAddress: CONTRACT_ADDRESS,
-        contractName: CONTRACT_NAME,
+        contractName: REWARDS_CONTRACT, // ✅ b2s-rewards-distributor-v3
         functionName: 'claim-daily-reward',
         functionArgs: [],
         postConditionMode: PostConditionMode.Allow,
@@ -54,7 +55,7 @@ export function useContract() {
       await openContractCall({
         network,
         contractAddress: CONTRACT_ADDRESS,
-        contractName: CONTRACT_NAME,
+        contractName: CONTRACT_NAME, // b2s-token
         functionName: 'stake',
         functionArgs: [uintCV(Math.floor(amount * 1_000_000))],
         postConditionMode: PostConditionMode.Allow,
@@ -85,7 +86,7 @@ export function useContract() {
       await openContractCall({
         network,
         contractAddress: CONTRACT_ADDRESS,
-        contractName: CONTRACT_NAME,
+        contractName: CONTRACT_NAME, // b2s-token
         functionName: 'unstake',
         functionArgs: [uintCV(Math.floor(amount * 1_000_000))],
         postConditionMode: PostConditionMode.Allow,

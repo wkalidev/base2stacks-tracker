@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import AgentChat from '@/components/AgentChat';
+
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -92,6 +94,7 @@ export default function RootLayout({
         <div className="min-h-screen bg-gradient-to-br from-base-dark via-stacks-dark to-b2s-secondary">
           {children}
         </div>
+        <AgentChat />
       </body>
     </html>
   )

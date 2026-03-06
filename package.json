@@ -14,6 +14,10 @@
     "deploy:mainnet": "clarinet deploy --mainnet"
   },
   "dependencies": {
+    "@coinbase/agentkit": "^0.10.4",
+    "@coinbase/agentkit-langchain": "^0.3.0",
+    "@langchain/groq": "^1.1.4",
+    "@langchain/langgraph": "^1.2.0",
     "@stacks/common": "^6.16.0",
     "@stacks/connect": "^7.10.2",
     "@stacks/network": "^6.17.0",
@@ -22,6 +26,7 @@
     "@stacks/wallet-sdk": "^7.2.0",
     "clsx": "^2.1.0",
     "date-fns": "^3.3.1",
+    "langchain": "^1.2.30",
     "lucide-react": "^0.344.0",
     "next": "14.1.0",
     "react": "^18.2.0",
