@@ -24,7 +24,7 @@ export function useContract() {
       await openContractCall({
         network,
         contractAddress: CONTRACT_ADDRESS,
-        contractName: REWARDS_CONTRACT, // ✅ b2s-rewards-distributor-v3
+        contractName: CONTRACT_NAME, // ✅ b2s-rewards-distributor-v3
         functionName: 'claim-daily-reward',
         functionArgs: [],
         postConditionMode: PostConditionMode.Allow,
