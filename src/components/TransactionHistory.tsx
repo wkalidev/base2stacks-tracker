@@ -62,15 +62,6 @@ function classifyTx(tx: any): { type: string; amount: number; contractName: stri
 async function fetchAddressTransactions(address: string): Promise<Transaction[]> {
   const results: Transaction[] = []
 
-  // Fetch from all tracked contracts in parallel
-  const fetches = Object.keys(TRACKED_CONTRACTS).map(contractName =>
-    fetch(
-      `${HIRO_API}/extended/v1/address/${address}/transactions?limit=20&offset=0`,
-      { headers: { Accept: 'application/json' } }
-    )
-  )
-
-  // Actually fetch from address transactions (filtered by contract calls to our contracts)
   const res = await fetch(
     `${HIRO_API}/extended/v1/address/${address}/transactions?limit=50`,
     { headers: { Accept: 'application/json' } }
@@ -138,24 +129,32 @@ export function TransactionHistory({ address }: { address: string }) {
   }, [loadTransactions])
 
   const handleExportCSV = () => {
-    exportToCSV(
-      transactions.map(t => ({
-        ...t,
-        timestamp: t.timestamp.toISOString(),
-      })),
-      `b2s-transactions-${address.slice(0, 8)}.csv`
-    )
+    const rows = transactions.map(t => ({
+      id:           t.id,
+      type:         t.type,
+      amount:       t.amount,
+      status:       t.status,
+      contractName: t.contractName,
+      functionName: t.functionName,
+      blockHeight:  t.blockHeight,
+      timestamp:    t.timestamp.toISOString(),
+    }))
+    exportToCSV(rows, `b2s-transactions-${address.slice(0, 8)}.csv`)
     setShowExportMenu(false)
   }
 
   const handleExportJSON = () => {
-    exportToJSON(
-      transactions.map(t => ({
-        ...t,
-        timestamp: t.timestamp.toISOString(),
-      })),
-      `b2s-transactions-${address.slice(0, 8)}.json`
-    )
+    const rows = transactions.map(t => ({
+      id:           t.id,
+      type:         t.type,
+      amount:       t.amount,
+      status:       t.status,
+      contractName: t.contractName,
+      functionName: t.functionName,
+      blockHeight:  t.blockHeight,
+      timestamp:    t.timestamp.toISOString(),
+    }))
+    exportToJSON(rows, `b2s-transactions-${address.slice(0, 8)}.json`)
     setShowExportMenu(false)
   }
 
