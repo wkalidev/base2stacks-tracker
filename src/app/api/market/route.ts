@@ -1,38 +1,28 @@
 // src/app/api/market/route.ts
 import { NextResponse } from 'next/server'
 
-const API_KEY = process.env.COINGECKO_API_KEY
+// CoinGecko public API — no key required, 30 req/min
+// With 60s cache, we only make 1 req/min max — well within limits
+const COINGECKO_URL = 'https://api.coingecko.com/api/v3/coins/blockstack?localization=false&tickers=false&community_data=false&developer_data=false'
 
 let cache: { data: any; ts: number } | null = null
-const CACHE_TTL = 60_000
+const CACHE_TTL = 60_000 // 60 seconds
 
 export async function GET() {
+  // Serve from cache if fresh
   if (cache && Date.now() - cache.ts < CACHE_TTL) {
     return NextResponse.json(cache.data, { headers: { 'X-Cache': 'HIT' } })
   }
 
   try {
-    // Demo API key goes as query param, not header
-    const url = new URL('https://api.coingecko.com/api/v3/coins/blockstack')
-    url.searchParams.set('localization', 'false')
-    url.searchParams.set('tickers', 'false')
-    url.searchParams.set('community_data', 'false')
-    url.searchParams.set('developer_data', 'false')
-    if (API_KEY) {
-      url.searchParams.set('x_cg_demo_api_key', API_KEY)
-    }
-
-    console.log('Fetching:', url.toString())
-
-    const res = await fetch(url.toString(), {
+    const res = await fetch(COINGECKO_URL, {
       headers: { Accept: 'application/json' },
     })
 
     if (!res.ok) {
-      const text = await res.text()
-      console.error('CoinGecko error:', res.status, text)
+      console.error('CoinGecko error:', res.status)
       if (cache) return NextResponse.json(cache.data, { headers: { 'X-Cache': 'STALE' } })
-      return NextResponse.json({ error: `CoinGecko error: ${res.status}` }, { status: res.status })
+      return NextResponse.json({ error: `CoinGecko ${res.status}` }, { status: res.status })
     }
 
     const raw = await res.json()
