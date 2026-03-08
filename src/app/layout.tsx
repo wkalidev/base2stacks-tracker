@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import AgentChat from '@/components/AgentChat';
 
-
 const inter = Inter({ subsets: ['latin'] })
 
 export const viewport: Viewport = {
@@ -13,7 +12,10 @@ export const viewport: Viewport = {
   themeColor: '#FF6B35',
 }
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://base2stacks-tracker.up.railway.app'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: 'Base2Stacks Bridge Tracker | $B2S',
   description: 'Track cross-chain bridges between Base Network and Stacks. Earn $B2S tokens for tracking transactions.',
   keywords: ['Base', 'Stacks', 'Bridge', 'Tracker', 'B2S', 'Web3', 'Cross-chain', 'DeFi', 'Crypto'],
@@ -38,17 +40,14 @@ export const metadata: Metadata = {
       { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
     other: [
-      {
-        rel: 'android-chrome',
-        url: '/android-chrome-192x192.png',
-      },
+      { rel: 'android-chrome', url: '/android-chrome-192x192.png' },
     ],
   },
 
   openGraph: {
     title: 'Base2Stacks Bridge Tracker',
     description: 'Track cross-chain activity between Base & Stacks. Earn $B2S tokens.',
-    url: 'https://wkalidev-base2stacks-tracker.vercel.app',
+    url: BASE_URL,
     siteName: 'Base2Stacks Tracker',
     images: [
       {
