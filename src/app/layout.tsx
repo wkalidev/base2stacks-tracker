@@ -21,9 +21,9 @@ export const metadata: Metadata = {
 
   manifest: '/site.webmanifest',
 
-  // Talent app project verification
   other: {
     'talentapp:project_verification': '6de2cda5372b04a12a81a668e5d689db30de8e53e20d524b3251030926eb836f7bc84de81614e2b8f85f810e2fcb5581f5271dd0cff54aeec40161aac4e214c5',
+    'base:app_id': '69ad336936e1b05c113ad6f0',
     'apple-mobile-web-app-capable': 'yes',
     'apple-mobile-web-app-status-bar-style': 'black-translucent',
   },
