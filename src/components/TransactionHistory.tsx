@@ -8,6 +8,8 @@ const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 const DECIMALS = 1_000_000
 
 const TRACKED_CONTRACTS: Record<string, string> = {
+  'b2s-token':                  'claim',
+  'b2s-token-v4':               'claim',
   'b2s-staking-vault-v2':       'stake',
   'b2s-rewards-distributor-v3': 'claim',
   'b2s-liquidity-pool-v5':      'swap',
@@ -46,12 +48,10 @@ function classifyTx(tx: any): { type: string; amount: number; contractName: stri
 
   const baseType = TRACKED_CONTRACTS[contractName] || 'other'
 
-  // Refine type for unstake
   let type = baseType
   if (functionName === 'unstake') type = 'unstake'
   if (functionName === 'claim-daily-reward' || functionName === 'claim-rewards') type = 'claim'
 
-  // Extract amount from first uint arg if present
   const amount = args[0]?.repr?.startsWith('u')
     ? parseInt(args[0].repr.replace('u', '')) / DECIMALS
     : 0
@@ -62,43 +62,69 @@ function classifyTx(tx: any): { type: string; amount: number; contractName: stri
 async function fetchAddressTransactions(address: string): Promise<Transaction[]> {
   const results: Transaction[] = []
 
+  // Fetch confirmed transactions
   const res = await fetch(
     `${HIRO_API}/extended/v1/address/${address}/transactions?limit=50`,
-    { headers: { Accept: 'application/json' } }
+    { headers: { Accept: 'application/json' }, cache: 'no-store' }
   )
 
   if (!res.ok) return []
   const data = await res.json()
 
-  for (const tx of data.results || []) {
+  // Also fetch mempool (pending) transactions
+  const mempoolRes = await fetch(
+    `${HIRO_API}/extended/v1/address/${address}/mempool?limit=20`,
+    { headers: { Accept: 'application/json' }, cache: 'no-store' }
+  )
+  const mempoolData = mempoolRes.ok ? await mempoolRes.json() : { results: [] }
+
+  // Combine: pending first, then confirmed
+  const allTxs = [
+    ...(mempoolData.results || []).map((tx: any) => ({ ...tx, tx_status: 'pending' })),
+    ...(data.results || []),
+  ]
+
+  for (const tx of allTxs) {
     if (tx.tx_type !== 'contract_call') continue
 
     const contractId = tx.contract_call?.contract_id || ''
     const [contractOwner, contractName] = contractId.split('.')
 
-    // Only show our contracts
     if (contractOwner !== CONTRACT_ADDRESS) continue
     if (!TRACKED_CONTRACTS[contractName]) continue
 
-    const { type, amount, contractName: cn } = classifyTx(tx)
+    const { type, amount } = classifyTx(tx)
 
     const status: Transaction['status'] =
-      tx.tx_status === 'success' ? 'confirmed' :
-      tx.tx_status === 'pending' ? 'pending' : 'failed'
+      tx.tx_status === 'success'  ? 'confirmed' :
+      tx.tx_status === 'pending'  ? 'pending'   : 'failed'
+
+    // Fix: handle pending txs that have no burn_block_time_iso
+    const timestamp =
+      tx.burn_block_time_iso ? new Date(tx.burn_block_time_iso) :
+      tx.receipt_time_iso    ? new Date(tx.receipt_time_iso) :
+      tx.receipt_time        ? new Date(tx.receipt_time * 1000) :
+      new Date()
 
     results.push({
       id: tx.tx_id,
       type,
       amount,
-      timestamp: new Date(tx.burn_block_time_iso || Date.now()),
+      timestamp,
       status,
-      contractName: contractName,
+      contractName,
       functionName: tx.contract_call?.function_name || '',
       blockHeight: tx.block_height || 0,
     })
   }
 
-  return results
+  // Deduplicate by tx_id
+  const seen = new Set<string>()
+  return results.filter(tx => {
+    if (seen.has(tx.id)) return false
+    seen.add(tx.id)
+    return true
+  })
 }
 
 export function TransactionHistory({ address }: { address: string }) {
@@ -124,7 +150,7 @@ export function TransactionHistory({ address }: { address: string }) {
 
   useEffect(() => {
     loadTransactions()
-    const interval = setInterval(loadTransactions, 60_000)
+    const interval = setInterval(loadTransactions, 30_000)
     return () => clearInterval(interval)
   }, [loadTransactions])
 
@@ -207,7 +233,6 @@ export function TransactionHistory({ address }: { address: string }) {
     <div className="space-y-3">
       {/* Header: Filter + Export */}
       <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
-        {/* Type filter */}
         <div className="flex gap-2 flex-wrap">
           {txTypes.map(t => (
             <button
@@ -224,7 +249,6 @@ export function TransactionHistory({ address }: { address: string }) {
           ))}
         </div>
 
-        {/* Export */}
         <div className="relative">
           <button
             onClick={() => setShowExportMenu(!showExportMenu)}
@@ -265,6 +289,11 @@ export function TransactionHistory({ address }: { address: string }) {
                   {tx.type.toUpperCase()}
                 </span>
                 <span className="text-white/40 text-xs">{tx.contractName}</span>
+                {tx.status === 'pending' && (
+                  <span className="px-2 py-0.5 rounded-full text-xs bg-yellow-500/20 text-yellow-400 animate-pulse">
+                    ⏳ pending
+                  </span>
+                )}
               </div>
               {tx.amount > 0 && (
                 <p className="text-white font-semibold mt-1">
@@ -282,7 +311,7 @@ export function TransactionHistory({ address }: { address: string }) {
             <div className="text-right">
               <p className={`text-xs font-semibold mb-1 ${
                 tx.status === 'confirmed' ? 'text-green-400' :
-                tx.status === 'pending' ? 'text-yellow-400' :
+                tx.status === 'pending'   ? 'text-yellow-400' :
                 'text-red-400'
               }`}>
                 {tx.status === 'confirmed' ? '✅' : tx.status === 'pending' ? '⏳' : '❌'} {tx.status}
@@ -290,14 +319,25 @@ export function TransactionHistory({ address }: { address: string }) {
               <p className="text-white/50 text-xs">
                 {tx.timestamp.toLocaleDateString()} {tx.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </p>
-              <a
-                href={`https://explorer.hiro.so/txid/${tx.id}?chain=mainnet`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-400 text-xs hover:underline"
-              >
-                #{tx.blockHeight} ↗
-              </a>
+              {tx.blockHeight > 0 ? (
+                <a
+                  href={`https://explorer.hiro.so/txid/${tx.id}?chain=mainnet`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 text-xs hover:underline"
+                >
+                  #{tx.blockHeight} ↗
+                </a>
+              ) : (
+                <a
+                  href={`https://explorer.hiro.so/txid/${tx.id}?chain=mainnet`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-yellow-400 text-xs hover:underline"
+                >
+                  View ↗
+                </a>
+              )}
             </div>
           </div>
         </div>
