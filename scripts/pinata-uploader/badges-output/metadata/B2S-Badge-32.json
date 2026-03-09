@@ -1,0 +1,34 @@
+{
+  "name": "B2S Badge #32",
+  "description": "Base2Stacks NFT Badge. Pen Tester — Infosec style. Part of the B2S generative NFT collection on Stacks mainnet.",
+  "image": "ipfs://bafkreida7mo5bhsnparxpgpaovzzxcxw3r7ppt3gb6favylqsslqeptmbm",
+  "external_url": "https://base2stacks-tracker-production.up.railway.app",
+  "attributes": [
+    {
+      "trait_type": "Style",
+      "value": "Infosec"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Trait",
+      "value": "Pen Tester"
+    },
+    {
+      "trait_type": "Symbol",
+      "value": "⌬"
+    },
+    {
+      "trait_type": "Seed",
+      "value": 32
+    },
+    {
+      "trait_type": "Token ID",
+      "value": 32
+    }
+  ],
+  "imageCID": "bafkreida7mo5bhsnparxpgpaovzzxcxw3r7ppt3gb6favylqsslqeptmbm",
+  "metaCID": "bafkreifc7a5zcosmquqfg3jti32azglihlsnv537oef3ho7kpwgcen4xfa"
+}

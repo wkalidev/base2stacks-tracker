@@ -1,0 +1,17 @@
+{
+  "name": "b2s-badge-uploader",
+  "version": "2.0.0",
+  "description": "Auto-upload B2S NFT badges to Pinata IPFS",
+  "type": "module",
+  "scripts": {
+    "dry-run": "node upload-badges.js --from 1 --to 10 --dry-run",
+    "upload:200": "node upload-badges.js --from 1 --to 200",
+    "upload:all": "node upload-badges.js --from 1 --to 9999",
+    "update-marketplace": "node update-marketplace.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "form-data": "^4.0.0",
+    "node-fetch": "^3.3.2"
+  }
+}

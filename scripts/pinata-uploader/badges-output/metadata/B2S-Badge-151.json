@@ -1,0 +1,34 @@
+{
+  "name": "B2S Badge #151",
+  "description": "Base2Stacks NFT Badge. Zero-Day Hunter — Infosec style. Part of the B2S generative NFT collection on Stacks mainnet.",
+  "image": "ipfs://bafkreiegrpzkge6jsz2ttwh76j36l5gecctvdsjw7uqf744tvly3gostzm",
+  "external_url": "https://base2stacks-tracker-production.up.railway.app",
+  "attributes": [
+    {
+      "trait_type": "Style",
+      "value": "Infosec"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Rare"
+    },
+    {
+      "trait_type": "Trait",
+      "value": "Zero-Day Hunter"
+    },
+    {
+      "trait_type": "Symbol",
+      "value": "⊕"
+    },
+    {
+      "trait_type": "Seed",
+      "value": 151
+    },
+    {
+      "trait_type": "Token ID",
+      "value": 151
+    }
+  ],
+  "imageCID": "bafkreiegrpzkge6jsz2ttwh76j36l5gecctvdsjw7uqf744tvly3gostzm",
+  "metaCID": "bafkreidp77bwwsa6rufc4ob232uixdz7vedrq7kdvltbwal2yj4eyi63ju"
+}

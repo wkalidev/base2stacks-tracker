@@ -1,0 +1,34 @@
+{
+  "name": "B2S Badge #11",
+  "description": "Base2Stacks NFT Badge. CTF Champion — Infosec style. Part of the B2S generative NFT collection on Stacks mainnet.",
+  "image": "ipfs://bafkreiekkbuhz236ob45nwvfn4lskdohshxeiwpegcelxvvtq4czierdru",
+  "external_url": "https://base2stacks-tracker-production.up.railway.app",
+  "attributes": [
+    {
+      "trait_type": "Style",
+      "value": "Infosec"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Uncommon"
+    },
+    {
+      "trait_type": "Trait",
+      "value": "CTF Champion"
+    },
+    {
+      "trait_type": "Symbol",
+      "value": "⌘"
+    },
+    {
+      "trait_type": "Seed",
+      "value": 11
+    },
+    {
+      "trait_type": "Token ID",
+      "value": 11
+    }
+  ],
+  "imageCID": "bafkreiekkbuhz236ob45nwvfn4lskdohshxeiwpegcelxvvtq4czierdru",
+  "metaCID": "bafkreiejaxtxtzu2lxf6rzhjjte6wk4svdqk2lyi3ujsuncuvsigyjj6oi"
+}

@@ -1,0 +1,34 @@
+{
+  "name": "B2S Badge #129",
+  "description": "Base2Stacks NFT Badge. Bug Bounty — Infosec style. Part of the B2S generative NFT collection on Stacks mainnet.",
+  "image": "ipfs://bafkreifiicarxush2npahjhn2lh5w7vva77okjisxuxkebmlzn4ng42k6a",
+  "external_url": "https://base2stacks-tracker-production.up.railway.app",
+  "attributes": [
+    {
+      "trait_type": "Style",
+      "value": "Infosec"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Epic"
+    },
+    {
+      "trait_type": "Trait",
+      "value": "Bug Bounty"
+    },
+    {
+      "trait_type": "Symbol",
+      "value": "⌘"
+    },
+    {
+      "trait_type": "Seed",
+      "value": 129
+    },
+    {
+      "trait_type": "Token ID",
+      "value": 129
+    }
+  ],
+  "imageCID": "bafkreifiicarxush2npahjhn2lh5w7vva77okjisxuxkebmlzn4ng42k6a",
+  "metaCID": "bafkreihsxl24w7ywidp7fsc3z66zpzuvbpyobkwqxk7fqgxhcern4m7iye"
+}

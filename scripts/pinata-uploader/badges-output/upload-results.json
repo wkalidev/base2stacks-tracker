@@ -1,0 +1,1490 @@
+{
+  "uploadedAt": "2026-03-09T01:26:28.947Z",
+  "total": 200,
+  "uploaded": 167,
+  "failed": 33,
+  "seeds": {
+    "from": 1,
+    "to": 200
+  },
+  "gateway": "https://gateway.pinata.cloud/ipfs",
+  "badges": [
+    {
+      "seed": 1,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreidcb3rtrzzosvv44fekxwkyeubdjgxr3lwz6ou6euw5khy2xxrx7u",
+      "metaCID": "bafkreibifuvgauuuaa3tzyuuujvbf73gmcd3qibjn2v3ukmmgc5u2xudti"
+    },
+    {
+      "seed": 3,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreif7zex7vvgdnmqshydn2vscv6rp5zhodoj63uqvo7v3x2anieoxs4",
+      "metaCID": "bafkreifnwiyad3qnj5rukbk2sd4cdr4n6tqyxz6byd4cxbpazeuiwfviza"
+    },
+    {
+      "seed": 2,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Red Team",
+      "imageCID": "bafkreicqoasepmmpeeee7e7d5buxjwb24ej4rjnfgfd3eh35wsvy5ck6n4",
+      "metaCID": "bafkreiakd6arl6xqwgpdtdilil6y4x47m7dqflk6o2obfena3our6m5dqm"
+    },
+    {
+      "seed": 6,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Red Team",
+      "imageCID": "bafkreie5w7iy5jbesf77bm3nkjpo5v72qd4ov6b4caygyubjbxtodjt45a",
+      "metaCID": "bafkreihr25m7u7axs3ouq4cgx2pvj3nsftdpqwe4omrqn3n3nfgmcuvg5y"
+    },
+    {
+      "seed": 5,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreicnulhxix3h74oqppynycvrvrlptwh4yiswh6q44mbipqrpap4zsa",
+      "metaCID": "bafkreiah5ekjsxfd4abkfk356czwxb27ryibz2aryxaj3ac5bq37k5ap4e"
+    },
+    {
+      "seed": 4,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreig3c7fk6ikzmlotwczxvb4ibvvfnw35664tgps37tzc5vlg7v4jrm",
+      "metaCID": "bafkreifuhm22ucubsoqpe2zgjfqjcgud5lvhpr2topcgvyly6pfgzpjgwe"
+    },
+    {
+      "seed": 9,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreig4qz2djntqsedxuqkwsspdoev7jqpll77obahyqdmon6qncvkoda",
+      "metaCID": "bafkreifkmt6fqd5tecvas3tez5d6364uokwp5jkpggzkyurupi4urwn6nm"
+    },
+    {
+      "seed": 7,
+      "style": "infosec",
+      "rarity": "epic",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreiglcty7wcodzoywig36sz7fz2yreerxbfjovm2hotss6huzjgbd4y",
+      "metaCID": "bafkreicaoczuaoqlupkhrqotvx64uzmfmonrf6cnfioeain3zwayl7hl4y"
+    },
+    {
+      "seed": 8,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreielavblm4mstjfhgq4etaxwbjgvzz7dw4k7ccoe574fgryxmnhlqi",
+      "metaCID": "bafkreib3ok4kzwkabm5yqv3eq4b6c43ezkauaznq5edllivcrd5g7g2ria"
+    },
+    {
+      "seed": 11,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreiekkbuhz236ob45nwvfn4lskdohshxeiwpegcelxvvtq4czierdru",
+      "metaCID": "bafkreiejaxtxtzu2lxf6rzhjjte6wk4svdqk2lyi3ujsuncuvsigyjj6oi"
+    },
+    {
+      "seed": 12,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreibdy2cqw27ee6a2wocu7djargjhy224mn3kvktobcvhju6w4jvlna",
+      "metaCID": "bafkreibuximozgcwjldvarzdl53bqznrri6qvs5im7scgnuhv4bz54ii7y"
+    },
+    {
+      "seed": 10,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Red Team",
+      "imageCID": "bafkreifawo5bqzolxipljmu74n2w3ggodugzeoozz4pokkcw6zlapn7x4m",
+      "metaCID": "bafkreiedocfvax2j57c4545wnodh2qvogpit4fep66mgeyzxcflci4fihe"
+    },
+    {
+      "seed": 14,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Red Team",
+      "imageCID": "bafkreie7csb7ocepxgw4f7d37fovht4oombzh4tgsv2num2thqjfcm7djm",
+      "metaCID": "bafkreibcbakzgkyqfdf2mq33shskdqwcskchyf7lw25w4q5ciieez77oze"
+    },
+    {
+      "seed": 13,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreid4jromul6tkh6vptrdtv45qtsjl2ch6khpdfr6724japlqjbllha",
+      "metaCID": "bafkreianiyujsmmy5ljlosgql5utqxu5smok6ywzvvmi5kn556l6t2qepu"
+    },
+    {
+      "seed": 15,
+      "style": "infosec",
+      "rarity": "epic",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreickben2vkbtoibf2okjfbvjmv6rmsjbzckcuxol3cwavtemkug7nm",
+      "metaCID": "bafkreig4zx4qgqfaeo2yo332el3gj6uqbxto7i2h54wbnhtvsnauqgelsu"
+    },
+    {
+      "seed": 16,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreicgzxwecfqalrbgxcy477acz7pcqude6krm5lx5xslblito7cvgli",
+      "metaCID": "bafkreihri2mzzejtgjsaqjwos6sbvn4ekax2qjpigdmen5yp56dtn4upq4"
+    },
+    {
+      "seed": 18,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Red Team",
+      "imageCID": "bafkreiewsyvlttgythjwb2ptdhccgk5ekxeyzsrqougtwwklhmges4aw4i",
+      "metaCID": "bafkreibimjjtlltouozj4laiqv6x2xw6rvuns6h56j234qx5ac47m6qibe"
+    },
+    {
+      "seed": 17,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreicpewodasei5oysclxa4zctufdkjdphxhaf27nyq5h5jnajdrf6fe",
+      "metaCID": "bafkreiefcgpfjisjbhsjztkkdswm2sxr6qwhdfhyrzygilvpxdt4yqttei"
+    },
+    {
+      "seed": 21,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreifpprouwxww4cavbwd7es4ihtwu43j6mqh2dxqnth6g6gvi4niaxe",
+      "metaCID": "bafkreibjwixurvp46rdma6e7adoeeyg66msx4pswcks7rrl4ewqo75xgqe"
+    },
+    {
+      "seed": 20,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreiea5t5cje2azx6kwhsekblybeund34f3fmisnhcsnb2jkxt73524m",
+      "metaCID": "bafkreiesr5fdbfdy2ttgqsyukluohn6ecewpaewiox5zaupjxp2n6zswte"
+    },
+    {
+      "seed": 19,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreihil72smxonift5sc527jlgwekp463ecbnl54w7xtuaboobfv7wdy",
+      "metaCID": "bafkreib3rke22cdyzw5x3dnnyeptlan54vq6fhaez3bkbh43zxaqyuhoo4"
+    },
+    {
+      "seed": 24,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreiaafbujdwtodjw3u6gjrabqfvaeryx3gcix3lr4qz33uukoxv2uwu",
+      "metaCID": "bafkreie2wuciyo22rtjk2nt6awxsxcdsr46nrtii364rb3su5mj7lcwseq"
+    },
+    {
+      "seed": 23,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreicmkluhvslqv6oovjpk7yjoj3sqhaxj5bzibkh67j2hkkre5dhiue",
+      "metaCID": "bafkreigm3w6rn4hwoogvharnnrw352bf46vhqz2b6uwsyd4kfgwbkr576y"
+    },
+    {
+      "seed": 22,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Red Team",
+      "imageCID": "bafkreidf2dhd26rlarljpfk55ggnytynkv5b62cay7626rxq2vw3wkgqny",
+      "metaCID": "bafkreihczwolbu7x3wnwaath55wkvh2sb3vvhvblz54wf234dhcfzrmlia"
+    },
+    {
+      "seed": 25,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreig6t4fvxax2xf625oqopzgr4su2covx2uc6qo4wywyixzmjjw4cqa",
+      "metaCID": "bafkreid2tqone4gdaxkezynln6mtixd3vpiqr5km5ci2wgdwof4yti652i"
+    },
+    {
+      "seed": 26,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreielbfv3itvxdi2nwfsie7ewe5bqqx2xuacdoh3iycepnip5m5zxdu",
+      "metaCID": "bafkreieaq4voedsz43j55e4vmk4qfcqqmjjl54byk4ze73ovvxkod45nvq"
+    },
+    {
+      "seed": 27,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreifzjojdcbr4bffqdhq3i24kyzvpl2v4osb66x4lipobzezx5it7ba",
+      "metaCID": "bafkreifd5tni4rygjdp4eziir55h7g3eym6axy6wr3cfrnu5aadijo3wpq"
+    },
+    {
+      "seed": 29,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreibdoqyhexmisd26k7aelfjv2n5vec2jwf3baoiyzk63qwiozutyem",
+      "metaCID": "bafkreid5uouroolp32tg5qsd7rp6kya2hwweita3ttteekulwzezeyo2c4"
+    },
+    {
+      "seed": 30,
+      "style": "infosec",
+      "rarity": "epic",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreih2ni2lzme7yqydjgkkcyly3ukdvxz4sg6nf6j5awwqsbc37eq6ju",
+      "metaCID": "bafkreihlfag663lde2kn4zrixexlhqb5srfw47fdzfwgnc5sbjz46q3sii"
+    },
+    {
+      "seed": 28,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreicv2q5jyfxvnlgzclf3gi7bmtz5cbg3gmawebanqio5bv3b5mcfsi",
+      "metaCID": "bafkreiccq6qghw2ietvytyz4kylsnhfdem7h4oj5oj34yzn5kecp3sohry"
+    },
+    {
+      "seed": 32,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreida7mo5bhsnparxpgpaovzzxcxw3r7ppt3gb6favylqsslqeptmbm",
+      "metaCID": "bafkreifc7a5zcosmquqfg3jti32azglihlsnv537oef3ho7kpwgcen4xfa"
+    },
+    {
+      "seed": 31,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreigkkiwwqspobom5qfq2nz4srcakip3y2x5pfstjui43utw4q5y4na",
+      "metaCID": "bafkreicozdlf6mllvtzxup5lzmpfntp72vwqyb6p2mmv7e5y2ibfftl3qq"
+    },
+    {
+      "seed": 33,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreig2jaradv46rf3u5dgu5fhekxlzmaxzdfwnomzacmx6grns2h45m4",
+      "metaCID": "bafkreia5zuvdkwtvecnia35p3gjayzm4mqmotr5nkyor5qvnzhuil4aptm"
+    },
+    {
+      "seed": 34,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreidiqx2urasjbqrptgbdsuypvumcgzpkojydw3rcbrdeeqqgceacq4",
+      "metaCID": "bafkreifmimmsyp545wuchfp3uh76xnhrghwtlxfcoin3pasgfzn5lg7fjm"
+    },
+    {
+      "seed": 35,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreift26hl7qkp4oewaux7zn5zomg3jp4gjixkjeoo5rlm4yztq73dvu",
+      "metaCID": "bafkreifjyz2h2lrbfhs7hy7orzgssnqteypxxuz6n4jjvtb75ve6desxru"
+    },
+    {
+      "seed": 36,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreigpdyqej4d6rdmzhk3pe4xspf2nznfczcikor3kbjiq6gvqnxrmxu",
+      "metaCID": "bafkreigjdscxqvfmexwiszmgfse2opah7j3usuq6dibqjmxaxcjkwtyedq"
+    },
+    {
+      "seed": 38,
+      "style": "infosec",
+      "rarity": "legendary",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreihsywezp7e2t6q6b34oi75vxnwpeuv6rx2pggtxtlgpvrcuvpguhu",
+      "metaCID": "bafkreidjvwaats4cpfuiaxcixhxfohd5ytrp3ijtdzolh3pp4t25nqit3y"
+    },
+    {
+      "seed": 39,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreielbrddgwobe6vyf4ezedxtd2ij7fdy6eg6ybntddnciygrlzakty",
+      "metaCID": "bafkreictcdz6dmi75umaib3v3s7ztlsovxmmn2aqhl4rtmlkxy7wlx7fra"
+    },
+    {
+      "seed": 37,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreihcirfc6tyql3gpm5xn5tppgeykrybsy3c7b6d2ycajee5uu54sju",
+      "metaCID": "bafkreib33et2vezq7usdmgdwvmqmycmm4iqhtvkctwzzbgltxd2qtcwgzu"
+    },
+    {
+      "seed": 40,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreia5qoopgg7gysrhvawcz2bmbvnokt2ufnkhujqofhuvztphy7k3zm",
+      "metaCID": "bafkreicpp4ji4qtln4yotxeapqe33vkmxkezlfnvnhfxob4nd362galgqe"
+    },
+    {
+      "seed": 41,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreifyuxge33ycs4sewp6idw3lbaunbteabxaxga65co3nyswxqugznm",
+      "metaCID": "bafkreihfzpsyuuprbghhomx6ornmc4tux52rqzzhn4pclfknjeb6vlc4pm"
+    },
+    {
+      "seed": 42,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreihip2exg3jftd2eacprdrik42bu3s75cy7i6ziw56h2yzpdfdxcg4",
+      "metaCID": "bafkreieglltiigsjvvma72xgkvw5utytld4uksywidx6623ybwm5wcybwm"
+    },
+    {
+      "seed": 44,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreidakhwb53s4xawmvb436ple5xbwr7tfamr7bqpxcezv3hwksfejqa",
+      "metaCID": "bafkreid7fysslsvgqb2ifoeus562elboxscq6dzjka7ebj3ku4zs3jcuvq"
+    },
+    {
+      "seed": 43,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreib6mdbf2zzozjlpyqfsz4rgp7zlxelj736felo522hnri5rhxmp4a",
+      "metaCID": "bafkreihdz6nys7na44hasmyzv6ctne5wvintb3iodyixhh5h7haaciixoy"
+    },
+    {
+      "seed": 45,
+      "style": "infosec",
+      "rarity": "epic",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreida7slpqiujd23ykma3hnhkima3fgwjakityjr5huel74spdfqbwq",
+      "metaCID": "bafkreigtpemjpdbyqsh4odn7zlwaxik66rnlpzzwnavu7sjjzrpkxnkhlm"
+    },
+    {
+      "seed": 47,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Red Team",
+      "imageCID": "bafkreia3kqaoov5dwq2q77cdlw7tslgvklgilivujkryuymx3ghbtxj3ci",
+      "metaCID": "bafkreib7kvz3xepoi6iqq7geydcser7vjklj2og5l35eykmto5yerte6pm"
+    },
+    {
+      "seed": 48,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreigcotybj2dx7hb4gvamfmmro6oebds4kylkohmt7q2a7tkncqlhei",
+      "metaCID": "bafkreifitosuyzrshyxps74esvlcmlbjpnobxdnrbjiqocptb53swolp3e"
+    },
+    {
+      "seed": 46,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreiegpu4njrqkizfr2ar3bn5rytw6pp3avxm7y6vb6au3hmsju5xr54",
+      "metaCID": "bafkreihbfpp3xex7e3jv45ri2a2ropam5gdeh4q7ti4ks53wddwtlnabtm"
+    },
+    {
+      "seed": 49,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreicwo36phgreu4snvayvnundjximrrpsviwmoq4t7vvudqqwjdaxwy",
+      "metaCID": "bafkreib7ffb7jdszbudmoukiogglpbyeu4eggfmiddbyca7okyet7lipqy"
+    },
+    {
+      "seed": 51,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Red Team",
+      "imageCID": "bafkreieukcr2zrlkll7fdfqsmaixgxoyr7sulmmstjmvsn2uqaqe3otfbu",
+      "metaCID": "bafkreig6zuomkaqf6gqoxwh6x3zvcfddqcrnwqjqclayd5cbofxxhxecay"
+    },
+    {
+      "seed": 50,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreiceldv55jbg7e4uf6rky57kbza36gychlfhmms7y6jaxfcjkxdtzi",
+      "metaCID": "bafkreidy4xkkk2knl2wabqrs3ehf5tpuekrcwju2cazulda4edke2j3mp4"
+    },
+    {
+      "seed": 54,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreiaxlnxflt2spta6aoabi5onos3jlrubmmvjb4zrni4ewgojqi7anq",
+      "metaCID": "bafkreiept4pjstjh4c4dman3dknvkrxm3nttpseknkge7nwldzrpsnrcuq"
+    },
+    {
+      "seed": 53,
+      "style": "infosec",
+      "rarity": "epic",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreig352zaqwmcksypgunl6tyocwpy22nadzk2w5mulc7lyfqcuxzzeu",
+      "metaCID": "bafkreigjilpj5uqg5jeu5oxoyniqhs4jl4auzvy56n4picxbk6ctnf3kx4"
+    },
+    {
+      "seed": 52,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreibjh2duowvibchwkx6keojbsie5lrafxlxfubxt2ormxtfqsmzroq",
+      "metaCID": "bafkreigwz6ux4sizfthwokudcve4loheuwodvarosowbtk6b6hjmeknqai"
+    },
+    {
+      "seed": 57,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreifocefptyaqa2til367uptzfqxthur5m6bgp4eqrhkxdc5m7f7tee",
+      "metaCID": "bafkreig2g6psmyze3dm477qymvhvzhiqbwtn6oar4y2xtybcad4rmeshui"
+    },
+    {
+      "seed": 55,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Red Team",
+      "imageCID": "bafkreickhiklnlgcseqxguqz4l4v25syuyvjgxsorznatenjxvuwoo2axa",
+      "metaCID": "bafkreigwfcs3qehiqzlpywdzclzkndm3yxwlxsuf4vko2esnl2b762ayda"
+    },
+    {
+      "seed": 56,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreicr5xzzq6qiypbbclp2d5zn43pks2do7462jgub3yoelltj4araye",
+      "metaCID": "bafkreihhbewl27genubv5f2dqff6id64psqgnwhm743zbofolpnyiorfpq"
+    },
+    {
+      "seed": 58,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreial2p4iv5kinomoeubr5zew3nykzpqwdxqvjikfcxquilbt2hfse4",
+      "metaCID": "bafkreidswfkjgqibccqktxz3qnwozgfdihzrwjlboyfk7ifn7obts2vmsa"
+    },
+    {
+      "seed": 59,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Red Team",
+      "imageCID": "bafkreiasadcwrmjpof5mnqpzmkrqjn7x3hxq37wo72dqkvyp52kyrawesi",
+      "metaCID": "bafkreicsbejqrl32awlzeslvc75has3hmxi3bv5rcpb5wnreuxxgjhxuru"
+    },
+    {
+      "seed": 60,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreibjxz3kksirivozhjw355qmqnsxq2vjy6rq4yp3hcqqcjw3injulu",
+      "metaCID": "bafkreicf3dptzvultmunigmrlw4ti6ixshyefh3hc3g4ntfwbaqwucqehy"
+    },
+    {
+      "seed": 62,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreibz4g3mlpra5gsrradhh7szy7zbytokbs3ggut5lewzkthbqkpjsu",
+      "metaCID": "bafkreigqm56dzkhimhws6jnmhz64novle2nugfedslwaageybjlv4pv22q"
+    },
+    {
+      "seed": 63,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Red Team",
+      "imageCID": "bafkreihg4duzeckarbjrgpcaepmgauvrjkptmxbj6a3sqlys4zy2bczuli",
+      "metaCID": "bafkreiemz3vbuhur2nc3hwldfkfhoozz2teh6vovstzh4vicjvuh5jupeu"
+    },
+    {
+      "seed": 61,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreidjoo5bg6glypdqy5usrgnsnkvgxs22btbimi7rqdzxuknqzpc2ee",
+      "metaCID": "bafkreiesqddb3nvgrng3sbe7iskkvs26py3zii5objl7cul6q3eysitxoa"
+    },
+    {
+      "seed": 66,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreie26xsjxcy6sgruzp7kh4eua7hw4eq56hl5e27h7kgnufdzf4dnx4",
+      "metaCID": "bafkreihzyi44zq3p5kuaksacx62vfi5pmswfeidpevb2c2d2r6nimidngm"
+    },
+    {
+      "seed": 64,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreihf7ousztu2to7hpbm32my2tipoqzdvgefuepiwpjrkpugdexbsja",
+      "metaCID": "bafkreifmdc4jnm3v2ve25ucc73qhwfkrgnapovtxktj7x6uvflzmwny5tu"
+    },
+    {
+      "seed": 65,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreig5mkdf5iczrywtk7jthrc6uueit5ykj2hao2knq72equlqq6ezk4",
+      "metaCID": "bafkreib5i6lt4eexcnmxxgjcfc7byhehljvbf2mqio2omdsky5f6txkqg4"
+    },
+    {
+      "seed": 68,
+      "style": "infosec",
+      "rarity": "epic",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreievhk5dredlbqjhfaq342qi42m7akhnot274t4itt6favl3ahdoma",
+      "metaCID": "bafkreiapmbfbqtssk2lqadacef5i4bslwgwx23olz3qixxgmz5itfmamlm"
+    },
+    {
+      "seed": 67,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreiblhbi2ozwe2nzdkzx6m5zrsxbve2dtyp52eve2we6r3bnihmlvze",
+      "metaCID": "bafkreigjt2nxugyxvaz2mltsfxax4yn7rd3kdky4fy74edpwhihckjpmsi"
+    },
+    {
+      "seed": 69,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreihihfo6mf2muq45p6y2rwm24rbuvtwld2co5er4hv6wlr4xz2qbtm",
+      "metaCID": "bafkreifgolbczzrz4szeir4eqqg3hnwhfxayhilsqe7w7laofwof5m5xx4"
+    },
+    {
+      "seed": 71,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreia376kq3cklnqylns4fzairasbaqdwqlxqlyab4wp7d23ajcaoy2u",
+      "metaCID": "bafkreihcxvwxkgrzuwo7ap7mzokpeaehq6zugvpsrpavcdw627cgtsnp24"
+    },
+    {
+      "seed": 72,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreid4h76xvqckkg3foxsoxhk3inesulftbw7bnpjles65y5bicl2fum",
+      "metaCID": "bafkreihe2cf4u3y3fhag7fxlmjfyk6dm6luyjh5ri72l42acfiddz7baqi"
+    },
+    {
+      "seed": 70,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreiffyo74sxtwm56deccyvtdbqokvhjsyc26nge5qkoidsi22an5lpi",
+      "metaCID": "bafkreiam3i44dh4sssvlahabmaf4gnmjcrif2bzh5kctdat62ig4i2z67q"
+    },
+    {
+      "seed": 74,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreic5dm4fbin6vvbppv6v5e7eyun4635g4ju6vvmly5l2vsv3nqrxni",
+      "metaCID": "bafkreibfr33pdcik4ej4vfqiigbojrbwvudufayfpn4ppzg4dgjn4muvny"
+    },
+    {
+      "seed": 75,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreicvjamn52xzmq5bhmv3vbbvpxvvdobxrnjmzdh3b5noronwelp6fm",
+      "metaCID": "bafkreiedch3y5nxnnzkwa6s6fmoerumyxerycqbjayty2pij3xc5myrufu"
+    },
+    {
+      "seed": 73,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreigjhbugk5k5l5ipt2jnxj33cnhj2n5knragllxcfzdsbl3oqdt2vu",
+      "metaCID": "bafkreibmcavzp7k3i4su6ier5p7om5hudvmq4fs5bkxxphzc2znfd2c56i"
+    },
+    {
+      "seed": 76,
+      "style": "infosec",
+      "rarity": "legendary",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreigaf2lsv2xlvnhweauo3rhgli55gcnk66bakhcoevswapgmnv2lia",
+      "metaCID": "bafkreidiuo6fs22ponqe7bwdppidchgldmuz5gk3b7mknfskpfw6ctkh44"
+    },
+    {
+      "seed": 77,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreie7tla64wx6myhk5layhfexefptqxrsygpvvwgvq35sfctcsdmozq",
+      "metaCID": "bafkreigoc6ze6k5yetwyerbbuw4hwvz2cvk53z4rldy3aqcdqhxr6kka4m"
+    },
+    {
+      "seed": 78,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreifea5tyonrhwq6shrjzt7seczzhzygsqlezfm4o66k6bhffsmruyy",
+      "metaCID": "bafkreifl7i257yros5p56qu2zju56ppi7qlod2rugtaydrmkz6rdgnwaju"
+    },
+    {
+      "seed": 79,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreiekslxqwol7iqf6sr6pwkfjf7x7pqfwitu5mfunwuhxnpjtlfjdhu",
+      "metaCID": "bafkreiftpgrikwn2ippcsm5hypqvniyaa7h25uljl37oql5z6f77hwipbu"
+    },
+    {
+      "seed": 80,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreigz6thpfhsgahfrvulm4eznf3gttjgbbmj3zsalcq6oqwz73oq5qu",
+      "metaCID": "bafkreiamkbb2dwkyt5mpt6shqyw6nhml4aath4ofdwldtfickwgjxrybji"
+    },
+    {
+      "seed": 81,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreihrkktzdcaeuadvizhkcy2aoz6ylcyqupmeim4munfnljx23ksa6q",
+      "metaCID": "bafkreidgsowtr4yjo62l5krhjldqpfn2rdzlsyppgvmiqs2z7lrnpmqz3a"
+    },
+    {
+      "seed": 83,
+      "style": "infosec",
+      "rarity": "epic",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreieqasmyqgkicupfeyzgzizz4aahb7mg2wsljaelvecy2b5nctby2m",
+      "metaCID": "bafkreichvcm7k2lf6cuiiqqu4lg2qz2tct5biezfrohv2towuwmqa4rjgq"
+    },
+    {
+      "seed": 84,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreic3zcqqnmxigwz5rx7d4abphb7qtciibzx34ozlwsyr3jil7kqxem",
+      "metaCID": "bafkreigf6t7a7i45fgecgpq567oobga6uqll36dsvmuzm3xn5qvc77goha"
+    },
+    {
+      "seed": 82,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreigqv4x7uvtclo2fqqy3axlo6bxl3cnmyqcgfqxgevsmvp5duwfrn4",
+      "metaCID": "bafkreifbmppl3eyfbarj6i35sz7sencroq3ohivstvhb4d43rtk2h4jbey"
+    },
+    {
+      "seed": 85,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreiaxwyojs6hq5pxua7gsgk7x4sxdonfjiium76lqe7fajjfruissoe",
+      "metaCID": "bafkreicp64fiezauvckzmyckdq5n4qfciwddivy6tugsqeipclcjw5mz4y"
+    },
+    {
+      "seed": 87,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreid3m4qei2rmt54xrfikrhdawexr4epavp7hglm3ve2fagnuy4luxu",
+      "metaCID": "bafkreid5sckw5kqm3cxuxveryee3ad5iddqocxmvior5atcheg2m76bmfu"
+    },
+    {
+      "seed": 86,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreifee25465doebzv5c3jdfjscuf7xsrv3yy6qldv3khntie7wqkeru",
+      "metaCID": "bafkreieldvvb3vr23pzw7osx7j7r7kur2yj26krurscp7bkp2tyk4zzjkq"
+    },
+    {
+      "seed": 89,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreieofrp7sik4rhs7lg46kjascmormzcvldan6myrjp5vce4yahen4e",
+      "metaCID": "bafkreidbfs4kuzddbli2f374vbekqwobn2ng7cgwyhxyzn2zqwuc6ikkeq"
+    },
+    {
+      "seed": 90,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreihy6vhocxp6fj2bsdj5fkwf2jl7vz7i2665lbhdrvirsxczs62scq",
+      "metaCID": "bafkreicg2xbb3oayqyf7avm7xej5vmapviimoufsvmap3owfnlnth6pg5i"
+    },
+    {
+      "seed": 88,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreibyvcva2lbzddqtrdk2bj2vda7upjamlrsczs3ukoqfa3aqowkz3a",
+      "metaCID": "bafkreifx5n5zdf23rrpdiayaijfi3ekh56ayd4txakakuhiiulr4mdjkxu"
+    },
+    {
+      "seed": 93,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreialzwn75kbv3tb42bcugactycm64toygzehuuqbgxiyayynglzdvm",
+      "metaCID": "bafkreiegvpqrqltikyfug6f66l3n27o2srgfmxrwlloysk5tsaggtgs7na"
+    },
+    {
+      "seed": 92,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Red Team",
+      "imageCID": "bafkreiebdy6lqvddhi2sm7vxngrabgg73zewejsbi3ulv5dzr2wxqzjele",
+      "metaCID": "bafkreih3abks26xoygsucrvufw5z5lscghm5iv5h67z6s3wsnnwrsdf6fe"
+    },
+    {
+      "seed": 91,
+      "style": "infosec",
+      "rarity": "epic",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreiczw44u7uqkscdff2goti4aw2zttlcb5isz3yrssy2wcmckxjby3a",
+      "metaCID": "bafkreicyoflb6vq22cdgjoma23lebx3tolo646ru3xgg76bbbsx5rdnemm"
+    },
+    {
+      "seed": 96,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Red Team",
+      "imageCID": "bafkreihds6qzlxxv7wjnynfdvt3wvzrmr54i6ik3xoa5kkrgfj75r2njc4",
+      "metaCID": "bafkreicmj3a67ty5y7ki7kb6mrmi24m3s5oe3zb5obnrrsbb7bfz6kqluu"
+    },
+    {
+      "seed": 94,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreiakuiu4dcfgty2krkhkjykk7zgvjrrlvzmejg4m7mx5hej7c6bekq",
+      "metaCID": "bafkreiaido6ast6ibq2p7i4cbbhmppfls2fqggwhstpkzygdsw5ohrikze"
+    },
+    {
+      "seed": 95,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreiet7ehdmpzbvpu5yyfztogveck5x3ewhw57jxj6za2yzdlzrruqwy",
+      "metaCID": "bafkreihuqiozq5njnkx7we5gl24azem7ueojtl3rpljquthjbqzfek4gqe"
+    },
+    {
+      "seed": 99,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreicdkxtdzv5nn2k4wvyoaav6u46qfjsktxmyh6p6hh2h47ibgunuua",
+      "metaCID": "bafkreihxvisvc53ef2mzkmhpi3yu6f64v4dg7osypamukirsuiwloo5woq"
+    },
+    {
+      "seed": 98,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreihzsxwlunzp7wzzgk6szyn7kg7hkdtbseibnm4hxmnx7ljovsoive",
+      "metaCID": "bafkreidqvrocqtol5vveqtdm72batepoonsfgbuqybzc6f6sfki2wnozce"
+    },
+    {
+      "seed": 97,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreiflcnshmariexgca4v3mlybezum4bu7i2j6w4bonli25notl2uu5y",
+      "metaCID": "bafkreihsve2mnvvxx633k5rroahsmtsqduc4i6xapphhsoy72yt43z44zi"
+    },
+    {
+      "seed": 101,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreih7cdpf3szhs2om3xj53cps577s73ell4hrfo3qz2i6oizepico2e",
+      "metaCID": "bafkreibczd7mdhvay6l7n3hftvr3yae53d5clagvqecuvwmtmrupidckri"
+    },
+    {
+      "seed": 100,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Red Team",
+      "imageCID": "bafkreifulnzmzdzqpoy2rzbt4uzpsqdvfjktfkz37qoabi45xoii4pm654",
+      "metaCID": "bafkreidy3knkackpdd6ldt663qsyk4k4ax5yfwdze2jfspdemg5mhfomle"
+    },
+    {
+      "seed": 102,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreiep7hs6ujm7tpjp52lwmvadjqy2pm7crtj72zobxpa4b7cy4qkify",
+      "metaCID": "bafkreicutq57moujqtodu5cdkgm755l3ap3jajtqtm7ytvfmemz2727isa"
+    },
+    {
+      "seed": 103,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreigcv5zmmmizf52y3b6eq7nxepkzq2h5elbdhxnu3eaes27vpbn6si",
+      "metaCID": "bafkreie6gwyakcjljicweoo67qrelt2ati7wghfzfyyxvsgyoa2stjli54"
+    },
+    {
+      "seed": 104,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Red Team",
+      "imageCID": "bafkreibyjmcxhdpyqsokf27cgwitjefyhkcljn7jr23brug7o6pwmy255a",
+      "metaCID": "bafkreigfngklsk2uwrd6vfeqadpgzkihve4rqu7vboj5eiv2mjiplnl6zm"
+    },
+    {
+      "seed": 105,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreihxjzrih2vcdu4mfhsiekoo2vthq5e2eictm5pe7fyddgvmihts7q",
+      "metaCID": "bafkreiey4h3nicyynkr4rf3rfutqk5xn4wovqu3s7g7hhs3ndshbs7kx74"
+    },
+    {
+      "seed": 106,
+      "style": "infosec",
+      "rarity": "epic",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreidk4pnz5i676pqp4w4gl65xpekdr74e4jc2ukrtqacrhilsqadnvq",
+      "metaCID": "bafkreihvlr7dnyqumnjuwrlbj2w72bizk5u2pjeyrvglu4vna4ekogm72e"
+    },
+    {
+      "seed": 108,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Red Team",
+      "imageCID": "bafkreifztqivqpnmx7khq75jljelmxojur37bo7h765blrbhzimbbbszdy",
+      "metaCID": "bafkreiaeg7stlwhaiidcwxlhusma72r3ax6vqttmg4pkbxwc4i346k6udy"
+    },
+    {
+      "seed": 107,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreidtk6fu57p2xssafoqoikuy36ny4f2x2exrrjwynvr5aoviefqevi",
+      "metaCID": "bafkreibetbkkjr6df4pykbdv37kzc6ysnl6w6wzw7pkuwpsl6fc7zm3lti"
+    },
+    {
+      "seed": 109,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreig2iy2smfbqtiov6vd7xyquvjd2k7jhr2j3uxxdljurqt45s2wgyi",
+      "metaCID": "bafkreigndi4aarwenstggl6biqpxkce5qdrx7amfqmprmpvwyp7fdllbvi"
+    },
+    {
+      "seed": 111,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreif3iax732prqcsavixt7x6kfauvp4t4aiayhe3w6e4pikezwessye",
+      "metaCID": "bafkreieoeaghw4slb2wl5d6bkzs4hbkhp6bgxtu7lwc4qnw6h7mhqoqpje"
+    },
+    {
+      "seed": 110,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreicmwwyzzklcj2lcpv3d7rjf4t6xw6pbhhux235umgjvbkddbr6nry",
+      "metaCID": "bafkreieptk53dhjaf4mphn6devzmnadptwlcxb57q4l2hixmgp4raoindm"
+    },
+    {
+      "seed": 113,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreig3qs7r6mziikv6hjpj25eaf44rgdqnhrh5pptiseq7nntstbmjwy",
+      "metaCID": "bafkreifhbcequinlec2neunuzjvjtaae2w32uekiieejxgn76uewinn4zq"
+    },
+    {
+      "seed": 112,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreicrgngo5iv4kmt2fuknw5rhw4bmmrgc5s6j7cusm4g226wyovfqza",
+      "metaCID": "bafkreieerqut2cb3bkxxxrdnngsu3i6kf4br6pmbwlhkrn5vyfcsdinpy4"
+    },
+    {
+      "seed": 114,
+      "style": "infosec",
+      "rarity": "legendary",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreianssyh6jdvlbcel27qbjtyjjl224y5h3p2vcy4hl5dpv3wkbhzcq",
+      "metaCID": "bafkreihvsyxk36wsbhywigdc6m32hjfjfequapwvaosmydlbtfbt7akz3u"
+    },
+    {
+      "seed": 117,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreiaqyd7s5743tkmk5cdcrd67cqhqlz7da7blheszccyhuvi5y2sxre",
+      "metaCID": "bafkreidhiycqwmw4vjvu7h5gf6wczapkd4at6yyp34rngufhtd67xutta4"
+    },
+    {
+      "seed": 116,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreiho47uifloliuk6k2t3ipxzxsqvq2n6xftojxjn2jehdl62u7toi4",
+      "metaCID": "bafkreieuifgpx64oxfthrdhjm3zrejy2zm5upq6sk2n77izz2pemi5szz4"
+    },
+    {
+      "seed": 115,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreibzb3pvbbb2yva6eeoaifhu4llzsppetdxjpsll2ct7tgumt5eoq4",
+      "metaCID": "bafkreibtjlgf7mr3p6hq46tvfiiwerj7iffsppmssxigijye4ice46gvbe"
+    },
+    {
+      "seed": 120,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreiadzn24sxlgbdy5sdlmymv6lp4waljuza7u7tz5zdr5fnn2vt3suu",
+      "metaCID": "bafkreidcas62pbcmxwhpp4ohkg4o3znqy7bgmai7jx2uerwugeorgphtna"
+    },
+    {
+      "seed": 118,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreigsnn6xdtqe2gu34zklc2dop67reqjjvgb5ot7tf3f3cy2kldcscq",
+      "metaCID": "bafkreidicf3givdh3nycn2yr4exthkkbsc5fkpicehyhny7obgx6desrmu"
+    },
+    {
+      "seed": 119,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreigjpacyabt6j2tiquuxevyq5za5laehpjnnvibhf4gi23dhwkbsjy",
+      "metaCID": "bafkreie3bul22mcqnpcdxl3pqs5tt5cqdo55t7fc6ja2casxff3txobfri"
+    },
+    {
+      "seed": 121,
+      "style": "infosec",
+      "rarity": "epic",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreiangs4b5ul2cebez7aki22chnx5ivc5a7q4euzclp4gcaftz3lgbq",
+      "metaCID": "bafkreibz5phly7q6wchdptjbktm2lx3wvujpcgvn2ca2jzu2vw2c6pn6zi"
+    },
+    {
+      "seed": 122,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreihbzx7qo3uo3e6j47v46ptosdiybwqojpfjhcyfusmtr6gnmdmkmu",
+      "metaCID": "bafkreibq5rkotflpsszazetxaqvcrojmj2omiudcsbk5xysnji7qbbanei"
+    },
+    {
+      "seed": 123,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreiflxouqlhz7uqdgi5qajiqu5lnsvtyf5n5wid242odyhiq5y72cdq",
+      "metaCID": "bafkreiabebkzm6tgtfzoz7nwrufmjqerkrvv5oqo5losmbkc6q7w5y5yr4"
+    },
+    {
+      "seed": 126,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreiea6g6gqhy3tcdnoykrxu3z2d2xft2omscy7at3zbhejc7xigixti",
+      "metaCID": "bafkreihqlwunxdvohasq4t22ydykb6ndvgmtbm5crew7l2ov66auw6wu3u"
+    },
+    {
+      "seed": 124,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreigxzmnp2yopygrmw5ukx2apiiwj4na2wv2wzbveg4dvf4ql7css2e",
+      "metaCID": "bafkreie3z2uwfdsy5nre6fgulbyin62fdi3sdhvikux5z5fsbcbhhafpwa"
+    },
+    {
+      "seed": 125,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreic4jd7zalpcb5r6qkcat5ddo3hjvqipfw4efy7yxthbl3dvola7ua",
+      "metaCID": "bafkreidmaeksw2nmcfqjhnlpnjt6x3edx7rdjd6kyq7fnbbv6svqxd3cju"
+    },
+    {
+      "seed": 129,
+      "style": "infosec",
+      "rarity": "epic",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreifiicarxush2npahjhn2lh5w7vva77okjisxuxkebmlzn4ng42k6a",
+      "metaCID": "bafkreihsxl24w7ywidp7fsc3z66zpzuvbpyobkwqxk7fqgxhcern4m7iye"
+    },
+    {
+      "seed": 128,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreiegqignwynrtrsy46zpaf7mfdupdi24c2sg3ailawo2e27ew2aeda",
+      "metaCID": "bafkreid6m7egdg7neba2v4smtvjufftqpocno56yn7n4tococrhpn4eham"
+    },
+    {
+      "seed": 127,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreihaofbcy2oxgvquimd2bsa6evb2xtrdqpoi3w5cpjd6fd44ymko5q",
+      "metaCID": "bafkreig2gaqbgowbub3y4lrufdbf2tiave4xz7ws6e75co2muik6asx5te"
+    },
+    {
+      "seed": 130,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreigmyiwiegxicwn2ir6cgjunzkm3sugtofpzrw2kzmyaaqjfz5npzm",
+      "metaCID": "bafkreidy2uikmdhkp45bbutivgpqpr5cwjgkc6i3xt4d54jzvsweiuyz3e"
+    },
+    {
+      "seed": 132,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreiap5lmspcy4e6ihaougbbfwgudn2aaesg7oc2c23fobhsiptlerd4",
+      "metaCID": "bafkreifjxnjg3ulcq2tsucddtmkq6ihymjz35dgumjjpqlsasjjaio5dmm"
+    },
+    {
+      "seed": 131,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreibo356g6ni7ghqpowzyqabfgikilhxdgwh673npzd2z6pne2c2z3i",
+      "metaCID": "bafkreiayatp6ux5d4n73j534qajc3pjl365wd3bcicyfe4y6a5fkhkwagu"
+    },
+    {
+      "seed": 135,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreidhonbxikxpqhnpr3i7uuuvmczzx3m5apvstzq2e7ntxgu7ska7ri",
+      "metaCID": "bafkreifn2g5n7lp6vdohzmc7n4ov656dhjriyoj6hmg77d7g4yjcgm6b3e"
+    },
+    {
+      "seed": 134,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreic66x32xmryvkikuvphu6h5by3ilxh7b3aj6ev2o4qgnz3yiqvtee",
+      "metaCID": "bafkreidomsmooppql57eekamofdbumngojqmb77kujg76atajqhybsm6cm"
+    },
+    {
+      "seed": 133,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreidyofifq3mhia3u2xw4u6lqrf3fht5p2ttaxr2id3q6ecec7mhnnu",
+      "metaCID": "bafkreiftyt2c5zoabkvtiv5l2eqamaprkff36bbqfnlmn7b6mknacxe6xy"
+    },
+    {
+      "seed": 136,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreibi4tqd5lasoyr5nu6tfuygc5uq4v3rp3xlhi7i2rxxfezxxgve5q",
+      "metaCID": "bafkreic4jirgohxrqispm7q337lh4tsm3mbkoo7zdaupcncppokrhqo2by"
+    },
+    {
+      "seed": 137,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Red Team",
+      "imageCID": "bafkreieikphwbxhzaphsz6yx2fd3xjjmpsycojtz73vrdn5d4pb5tt32sa",
+      "metaCID": "bafkreihswsqqy3b2fj5kn4bonsv4zwccsm6fvlpr5ey33vh57bxc2hjcmm"
+    },
+    {
+      "seed": 138,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreiadex3aeanmjy5vwqacul36kfdwoylxloabrwcoza5lw4zhgasnaq",
+      "metaCID": "bafkreibs3n3yw3appmbcxhz5yuewma7x3w7hx7qw7nbwalo2pm4a57z2zi"
+    },
+    {
+      "seed": 141,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Red Team",
+      "imageCID": "bafkreiatdxroum7jlluvsu6wlcg5zg6y7axfqojxrhmfpjgwcfzmz3jmk4",
+      "metaCID": "bafkreigdqme3ceiodn3xc5dqkqe6mos5baa3uu54x5dimxjh6pwcmlexza"
+    },
+    {
+      "seed": 139,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreigkyt5gafiubzuiolqf6iunmgdw7qvr63wlrzckcgblo4i4fdpcni",
+      "metaCID": "bafkreifrm35x6ibtltv6a2wr2sehbgbnt43vclb22xle2yuv6utjltwktu"
+    },
+    {
+      "seed": 140,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreig6chosaspu42uhzsrecdm257hibmrerzfzvvh63ue3mr6mkunz5y",
+      "metaCID": "bafkreifqk6aag25fffcmgz4txqci2q6iqngj4sdexot4gpaqq6d35hbgii"
+    },
+    {
+      "seed": 143,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreieepq447hem4znszxbrvdzyfeno57wyc2szktogkjujpicfc5ywsa",
+      "metaCID": "bafkreifmhwxkko7myt6l72owthvsaao5bp2l55v7szvhwyyedqeirq7svu"
+    },
+    {
+      "seed": 142,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreihjf4bcbbio45bzk532va47mmuxomo2kc4dalf2nng4kivoaax7wu",
+      "metaCID": "bafkreih6p56neh3vxqn3ry2zqrxf3brqv5u2plgmkmscpgibbtxnvewuby"
+    },
+    {
+      "seed": 144,
+      "style": "infosec",
+      "rarity": "epic",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreid7tjo4t4xrhsheargfbp73zn3j35tk3mantztxlwov3iax6mf2u4",
+      "metaCID": "bafkreieacw2clauwasjefhhxrn5hj5skvugetsmxvtkis7u4hfysxoqz2e"
+    },
+    {
+      "seed": 147,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreic26c2v5akz4isvil6semxxcphe5mytq3wdy3hxuf5fwe7n4xwyfq",
+      "metaCID": "bafkreidqloklwjphszx3x2s4knfg5bgiam3kwqqnlnqda3sm25pk4orau4"
+    },
+    {
+      "seed": 145,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Red Team",
+      "imageCID": "bafkreidlg3d5mlquwqy4i3lzav2nv63md4ppyky3y2b2fyffwfpboxppxm",
+      "metaCID": "bafkreib75z26dreew35dyr37gy4fqhtlkfbfhmrq56tthdd4qyxho6l7ju"
+    },
+    {
+      "seed": 146,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreif4k4itvf6ilooilxeysnacgl66hhrqc3anlkbq5uza4p3fovtchi",
+      "metaCID": "bafkreicqxnomlfv53xmwfy2wvj2tbkdhd6hap3445mune4du4ucoz4oxza"
+    },
+    {
+      "seed": 148,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreibpxnxnyzweh37u63lv6zvgtnejsdkxp4dtp6emrlngzfk75vl2w4",
+      "metaCID": "bafkreiblkmvxmawassqtbsgfsazmhi7vbo7zsdjuter46i27qrcsogna5a"
+    },
+    {
+      "seed": 150,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreiebkhqy7coq2q4onitrm6pffk3j7escgwmd2yoyftufmbam7gzvem",
+      "metaCID": "bafkreig7p5kt5msjljfaddiaivrht2c3prhcemvzgqrp6b35uczjxl3ww4"
+    },
+    {
+      "seed": 151,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreiegrpzkge6jsz2ttwh76j36l5gecctvdsjw7uqf744tvly3gostzm",
+      "metaCID": "bafkreidp77bwwsa6rufc4ob232uixdz7vedrq7kdvltbwal2yj4eyi63ju"
+    },
+    {
+      "seed": 153,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Red Team",
+      "imageCID": "bafkreiffg35cpxvv2yqyc2y3l54vpkmmzmilmvkayzwditcsr7cgwbw57y",
+      "metaCID": "bafkreicf6pxcsk6pce5jajxrtgjjqj573fhbjgut3bsh2aybp75plytj34"
+    },
+    {
+      "seed": 154,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "CTF Champion",
+      "imageCID": "bafkreidhypp5f2c4sfoymvrjmrkvbducgoeurdlto5rdd5ptilnd6ze3ma",
+      "metaCID": "bafkreigw4onhqdcgoi7cnikul2ayxsgldpjrn3i42ed2f46j4wf3u73uzy"
+    },
+    {
+      "seed": 155,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Zero-Day Hunter",
+      "imageCID": "bafkreib6gz5sh5geqvj3ipovcacgsfxekkc3z6l44wuylqfmp4d5fzrbey",
+      "metaCID": "bafkreihu6bk446imzf7bcqaqbzkvjzg7ovvxutefvvnwpurma74gdadihq"
+    },
+    {
+      "seed": 156,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Crypto Breaker",
+      "imageCID": "bafkreib4ogo2zvfanzog3ej32h4ja6hihmypk7g5h72bsqhtrzzpvie4xa",
+      "metaCID": "bafkreibvkcdm2j666uapc7vxnoa37t72eg4p2uiibtul3tjb2zu4ywlbky"
+    },
+    {
+      "seed": 158,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreicmxsc27k2l5ps2s4sqqw3kbdzf5kkukigld5ykkigadggpzo35x4",
+      "metaCID": "bafkreiaddfvzycflzoyxtlh2qmw7zzy26twnhxsqycbzzsmv5hxhlwykey"
+    },
+    {
+      "seed": 159,
+      "style": "infosec",
+      "rarity": "epic",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreifrd7ylxlerdomlb7g2f3hu2k6orleu5ggzzbabnmmooa3xpoq3yi",
+      "metaCID": "bafkreic2lmfv5hqscn3yuyxjw5iw3iiaitfrpubkpcc3ir7354bribrejm"
+    },
+    {
+      "seed": 157,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreibmsxo5keewxu6kst7ot3hfqdsncniribl5r5srqoasuqstogwkby",
+      "metaCID": "bafkreidqp5hfwqt3advcc5nle6pi424nqq6uv6zereqla7dfsno3aobyea"
+    },
+    {
+      "seed": 160,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreiefa6licv7hgytvqbru6lajwo3dssvu5j4sl5rdphiffv53eyyrrq",
+      "metaCID": "bafkreic3cpmca5qinytdy2hxzms5jbdnhv2j6uqsibvopqptxkrrkow27y"
+    },
+    {
+      "seed": 162,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreif6qeqym6wjk7mh5wqicpncbfmenpsu3v5c66txkaao34ydoqjkni",
+      "metaCID": "bafkreihkfey3vbzq75aruhdcgzujirocdu7lokdcfojhqvxokr53ysr6ay"
+    },
+    {
+      "seed": 161,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreid7q3lha2al3pfralahiwglysyptvxnrp2t3vffs4tgu6q4t2g2r4",
+      "metaCID": "bafkreid4moyr6xkfwzg7t27xtx5wknvcdb6iqw7k35mck2ojqojznxihuy"
+    },
+    {
+      "seed": 163,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreihrlfr4nzeclsvvrm36dww72oz2kucgd37nkxpgewokzlvrj3r6gq",
+      "metaCID": "bafkreihtuogwf325orwd3rednda43uwmce6tnnl6rzt3f27hrgzywsinwu"
+    },
+    {
+      "seed": 165,
+      "style": "infosec",
+      "rarity": "rare",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreihgatjo3enoncaneps24spqexebpkdx7abuhojvgbfkuwwqxc75ua",
+      "metaCID": "bafkreid42kmw4rmxa5sgxw7l7bndmfyopxulecwcnfabaw4xqujzeyscfu"
+    },
+    {
+      "seed": 164,
+      "style": "infosec",
+      "rarity": "uncommon",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreidyxtjylx7x5khxqz4p5jctvff45pn344hihnulhekt4qvlu5srue",
+      "metaCID": "bafkreidts32rwrbjl35cekar7gyzm6v2ijmzxbisivekt2fcjjfuibzwbi"
+    },
+    {
+      "seed": 167,
+      "style": "infosec",
+      "rarity": "epic",
+      "trait": "Pen Tester",
+      "imageCID": "bafkreicczp74ezgkwpfi5r7bvhpyflzlj4rjme2pofq7go2ot43fdukmum",
+      "metaCID": "bafkreidzhxf5ukllzfhl5fs4uyanryxcpflastaoa2l2spvzevrjcj2k5i"
+    },
+    {
+      "seed": 168,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Rootkit Dev",
+      "imageCID": "bafkreibyehz2koopyun7v2muzxy4ljegfcfygf2sgiwytk7hr374zbo5c4",
+      "metaCID": "bafkreick4ccotffovzaqi7b265tmf56e7irdzj44ihkqtwc4raxubvjkpy"
+    },
+    {
+      "seed": 169,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "OSINT Master",
+      "imageCID": "bafkreifjyv4bltlkv22fvri4aqjt4t7p2qbzkekp5tmyga45ebl5jpuxme",
+      "metaCID": "bafkreibyktlp76zoqvyy7mrguckhpjysv54xck3ibis53zx7lcaauhejbe"
+    },
+    {
+      "seed": 170,
+      "style": "infosec",
+      "rarity": "common",
+      "trait": "Bug Bounty",
+      "imageCID": "bafkreieloem7viiiwhpeebzbo3lahwh4wbo5fgpdigkqhioghprg4zjrmu",
+      "metaCID": "bafkreidg7axu3koqvn7sttmpvp6ot664bcai57t4unk26booe6iihlrc2a"
+    }
+  ],
+  "failedSeeds": [
+    {
+      "seed": 149,
+      "error": "Image upload 429: {\"error\":{\"reason\":\"RATE_LIMITED\",\"details\":\"Please slow down, upgrade your plan, or reach out to Pinata for greater rate limits\"}}"
+    },
+    {
+      "seed": 152,
+      "error": "Image upload 429: {\"error\":{\"reason\":\"RATE_LIMITED\",\"details\":\"Please slow down, upgrade your plan, or reach out to Pinata for greater rate limits\"}}"
+    },
+    {
+      "seed": 166,
+      "error": "Image upload 429: {\"error\":{\"reason\":\"RATE_LIMITED\",\"details\":\"Please slow down, upgrade your plan, or reach out to Pinata for greater rate limits\"}}"
+    },
+    {
+      "seed": 171,
+      "error": "Metadata upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 173,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 172,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 174,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 177,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 176,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 175,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 178,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 180,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 179,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 183,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 181,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 182,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 184,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 185,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 186,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 188,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 187,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 189,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 191,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 192,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 190,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 195,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 194,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 193,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 197,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 198,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 196,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 200,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    },
+    {
+      "seed": 199,
+      "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+    }
+  ],
+  "rarityBreakdown": {
+    "common": 69,
+    "uncommon": 47,
+    "rare": 34,
+    "epic": 14,
+    "legendary": 3
+  }
+}

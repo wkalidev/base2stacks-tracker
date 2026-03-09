@@ -1,0 +1,34 @@
+{
+  "name": "B2S Badge #74",
+  "description": "Base2Stacks NFT Badge. Rootkit Dev — Infosec style. Part of the B2S generative NFT collection on Stacks mainnet.",
+  "image": "ipfs://bafkreic5dm4fbin6vvbppv6v5e7eyun4635g4ju6vvmly5l2vsv3nqrxni",
+  "external_url": "https://base2stacks-tracker-production.up.railway.app",
+  "attributes": [
+    {
+      "trait_type": "Style",
+      "value": "Infosec"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Rare"
+    },
+    {
+      "trait_type": "Trait",
+      "value": "Rootkit Dev"
+    },
+    {
+      "trait_type": "Symbol",
+      "value": "⬡"
+    },
+    {
+      "trait_type": "Seed",
+      "value": 74
+    },
+    {
+      "trait_type": "Token ID",
+      "value": 74
+    }
+  ],
+  "imageCID": "bafkreic5dm4fbin6vvbppv6v5e7eyun4635g4ju6vvmly5l2vsv3nqrxni",
+  "metaCID": "bafkreibfr33pdcik4ej4vfqiigbojrbwvudufayfpn4ppzg4dgjn4muvny"
+}
