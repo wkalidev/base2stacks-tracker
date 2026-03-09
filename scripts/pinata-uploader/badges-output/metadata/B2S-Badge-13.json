@@ -1,0 +1,34 @@
+{
+  "name": "B2S Badge #13",
+  "description": "Base2Stacks NFT Badge. Crypto Breaker — Infosec style. Part of the B2S generative NFT collection on Stacks mainnet.",
+  "image": "ipfs://bafkreid4jromul6tkh6vptrdtv45qtsjl2ch6khpdfr6724japlqjbllha",
+  "external_url": "https://base2stacks-tracker-production.up.railway.app",
+  "attributes": [
+    {
+      "trait_type": "Style",
+      "value": "Infosec"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Rare"
+    },
+    {
+      "trait_type": "Trait",
+      "value": "Crypto Breaker"
+    },
+    {
+      "trait_type": "Symbol",
+      "value": "⬡"
+    },
+    {
+      "trait_type": "Seed",
+      "value": 13
+    },
+    {
+      "trait_type": "Token ID",
+      "value": 13
+    }
+  ],
+  "imageCID": "bafkreid4jromul6tkh6vptrdtv45qtsjl2ch6khpdfr6724japlqjbllha",
+  "metaCID": "bafkreianiyujsmmy5ljlosgql5utqxu5smok6ywzvvmi5kn556l6t2qepu"
+}

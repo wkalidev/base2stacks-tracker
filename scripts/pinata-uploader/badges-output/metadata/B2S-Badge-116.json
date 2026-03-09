@@ -1,0 +1,34 @@
+{
+  "name": "B2S Badge #116",
+  "description": "Base2Stacks NFT Badge. OSINT Master — Infosec style. Part of the B2S generative NFT collection on Stacks mainnet.",
+  "image": "ipfs://bafkreiho47uifloliuk6k2t3ipxzxsqvq2n6xftojxjn2jehdl62u7toi4",
+  "external_url": "https://base2stacks-tracker-production.up.railway.app",
+  "attributes": [
+    {
+      "trait_type": "Style",
+      "value": "Infosec"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Trait",
+      "value": "OSINT Master"
+    },
+    {
+      "trait_type": "Symbol",
+      "value": "⊕"
+    },
+    {
+      "trait_type": "Seed",
+      "value": 116
+    },
+    {
+      "trait_type": "Token ID",
+      "value": 116
+    }
+  ],
+  "imageCID": "bafkreiho47uifloliuk6k2t3ipxzxsqvq2n6xftojxjn2jehdl62u7toi4",
+  "metaCID": "bafkreieuifgpx64oxfthrdhjm3zrejy2zm5upq6sk2n77izz2pemi5szz4"
+}

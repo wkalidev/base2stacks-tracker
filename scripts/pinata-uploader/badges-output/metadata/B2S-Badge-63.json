@@ -1,0 +1,34 @@
+{
+  "name": "B2S Badge #63",
+  "description": "Base2Stacks NFT Badge. Red Team — Infosec style. Part of the B2S generative NFT collection on Stacks mainnet.",
+  "image": "ipfs://bafkreihg4duzeckarbjrgpcaepmgauvrjkptmxbj6a3sqlys4zy2bczuli",
+  "external_url": "https://base2stacks-tracker-production.up.railway.app",
+  "attributes": [
+    {
+      "trait_type": "Style",
+      "value": "Infosec"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Trait",
+      "value": "Red Team"
+    },
+    {
+      "trait_type": "Symbol",
+      "value": "⬡"
+    },
+    {
+      "trait_type": "Seed",
+      "value": 63
+    },
+    {
+      "trait_type": "Token ID",
+      "value": 63
+    }
+  ],
+  "imageCID": "bafkreihg4duzeckarbjrgpcaepmgauvrjkptmxbj6a3sqlys4zy2bczuli",
+  "metaCID": "bafkreiemz3vbuhur2nc3hwldfkfhoozz2teh6vovstzh4vicjvuh5jupeu"
+}

@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#00ff41" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#000500" stop-opacity="1"/>
+    </radialGradient>
+    <radialGradient id="innerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00ff41" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#00ff41" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="textGlow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <linearGradient id="frameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ff41"/>
+      <stop offset="100%" stop-color="#003b00"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="400" fill="url(#bgGrad)"/>
+  
+  <!-- Particles -->
+  <circle cx="8.8" cy="364.5" r="0.9" fill="#00ff41" fill-opacity="0.39"/>
+  <circle cx="60.0" cy="171.5" r="1.2" fill="#00ff41" fill-opacity="0.36"/>
+  <circle cx="396.8" cy="134.4" r="1.3" fill="#00ff41" fill-opacity="0.37"/>
+  <circle cx="84.0" cy="279.3" r="1.1" fill="#00ff41" fill-opacity="0.28"/>
+  <circle cx="81.9" cy="212.7" r="0.9" fill="#00ff41" fill-opacity="0.43"/>
+  <circle cx="283.3" cy="361.3" r="0.9" fill="#00ff41" fill-opacity="0.22"/>
+  <circle cx="291.5" cy="327.9" r="0.6" fill="#00ff41" fill-opacity="0.05"/>
+  <circle cx="220.1" cy="92.0" r="0.6" fill="#00ff41" fill-opacity="0.40"/>
+  <circle cx="32.4" cy="303.3" r="1.5" fill="#00ff41" fill-opacity="0.08"/>
+  <circle cx="196.0" cy="272.1" r="1.7" fill="#00ff41" fill-opacity="0.39"/>
+  <circle cx="387.1" cy="77.3" r="0.7" fill="#00ff41" fill-opacity="0.10"/>
+  <circle cx="119.0" cy="121.0" r="1.3" fill="#00ff41" fill-opacity="0.26"/>
+  <circle cx="307.9" cy="257.1" r="1.6" fill="#00ff41" fill-opacity="0.14"/>
+  <circle cx="22.0" cy="365.8" r="1.6" fill="#00ff41" fill-opacity="0.34"/>
+  <circle cx="315.6" cy="297.9" r="0.4" fill="#00ff41" fill-opacity="0.21"/>
+  <circle cx="125.9" cy="60.2" r="0.4" fill="#00ff41" fill-opacity="0.18"/>
+  <circle cx="255.2" cy="261.1" r="0.9" fill="#00ff41" fill-opacity="0.36"/>
+  <circle cx="358.6" cy="110.5" r="1.0" fill="#00ff41" fill-opacity="0.23"/>
+  <circle cx="399.1" cy="379.0" r="1.4" fill="#00ff41" fill-opacity="0.07"/>
+  <circle cx="368.4" cy="34.0" r="1.7" fill="#00ff41" fill-opacity="0.15"/>
+  <circle cx="162.0" cy="258.8" r="0.9" fill="#00ff41" fill-opacity="0.29"/>
+  <circle cx="194.9" cy="333.2" r="0.6" fill="#00ff41" fill-opacity="0.44"/>
+  <circle cx="193.5" cy="134.6" r="0.7" fill="#00ff41" fill-opacity="0.36"/>
+  <circle cx="315.9" cy="250.6" r="0.8" fill="#00ff41" fill-opacity="0.13"/>
+  <circle cx="236.0" cy="282.1" r="0.7" fill="#00ff41" fill-opacity="0.39"/>
+  <circle cx="335.7" cy="306.0" r="0.8" fill="#00ff41" fill-opacity="0.36"/>
+  <circle cx="381.9" cy="367.4" r="0.8" fill="#00ff41" fill-opacity="0.23"/>
+  <circle cx="342.5" cy="99.6" r="0.5" fill="#00ff41" fill-opacity="0.44"/>
+  <circle cx="68.4" cy="157.1" r="1.4" fill="#00ff41" fill-opacity="0.12"/>
+  <circle cx="347.9" cy="26.4" r="0.4" fill="#00ff41" fill-opacity="0.37"/>
+  <circle cx="200.0" cy="9.2" r="0.9" fill="#00ff41" fill-opacity="0.36"/>
+  <circle cx="69.2" cy="146.2" r="0.7" fill="#00ff41" fill-opacity="0.06"/>
+  <circle cx="386.3" cy="63.2" r="1.7" fill="#00ff41" fill-opacity="0.37"/>
+  <circle cx="194.9" cy="290.1" r="0.5" fill="#00ff41" fill-opacity="0.24"/>
+  <circle cx="310.3" cy="259.9" r="0.8" fill="#00ff41" fill-opacity="0.08"/>
+  <circle cx="213.5" cy="111.4" r="1.1" fill="#00ff41" fill-opacity="0.20"/>
+  <circle cx="121.7" cy="128.2" r="1.3" fill="#00ff41" fill-opacity="0.06"/>
+  <circle cx="79.0" cy="150.1" r="1.6" fill="#00ff41" fill-opacity="0.12"/>
+  <circle cx="203.3" cy="288.4" r="1.7" fill="#00ff41" fill-opacity="0.08"/>
+  <circle cx="165.6" cy="222.7" r="1.4" fill="#00ff41" fill-opacity="0.13"/>
+  <circle cx="85.4" cy="231.9" r="1.7" fill="#00ff41" fill-opacity="0.25"/>
+  <circle cx="146.2" cy="392.3" r="1.7" fill="#00ff41" fill-opacity="0.14"/>
+  <circle cx="48.2" cy="258.2" r="1.7" fill="#00ff41" fill-opacity="0.11"/>
+  <circle cx="323.9" cy="267.7" r="1.4" fill="#00ff41" fill-opacity="0.39"/>
+  <circle cx="320.6" cy="360.4" r="1.0" fill="#00ff41" fill-opacity="0.25"/>
+  <circle cx="247.6" cy="33.4" r="1.2" fill="#00ff41" fill-opacity="0.41"/>
+  <circle cx="261.6" cy="19.9" r="1.5" fill="#00ff41" fill-opacity="0.15"/>
+  <circle cx="240.5" cy="330.0" r="0.5" fill="#00ff41" fill-opacity="0.11"/>
+  <circle cx="120.5" cy="287.8" r="0.4" fill="#00ff41" fill-opacity="0.41"/>
+  <circle cx="389.9" cy="308.1" r="1.5" fill="#00ff41" fill-opacity="0.32"/>
+  <circle cx="31.8" cy="28.8" r="0.4" fill="#00ff41" fill-opacity="0.25"/>
+  <circle cx="0.5" cy="87.0" r="0.6" fill="#00ff41" fill-opacity="0.40"/>
+  <circle cx="121.9" cy="15.1" r="0.4" fill="#00ff41" fill-opacity="0.35"/>
+  <circle cx="315.3" cy="41.7" r="0.8" fill="#00ff41" fill-opacity="0.31"/>
+  <circle cx="245.9" cy="71.9" r="1.2" fill="#00ff41" fill-opacity="0.21"/>
+  <circle cx="91.6" cy="155.9" r="1.7" fill="#00ff41" fill-opacity="0.19"/>
+  <circle cx="176.9" cy="229.6" r="1.0" fill="#00ff41" fill-opacity="0.33"/>
+  <circle cx="61.9" cy="330.0" r="1.6" fill="#00ff41" fill-opacity="0.20"/>
+  <circle cx="169.4" cy="131.4" r="1.2" fill="#00ff41" fill-opacity="0.15"/>
+  <circle cx="337.2" cy="211.0" r="0.5" fill="#00ff41" fill-opacity="0.25"/>
+
+  <!-- Style BG pattern -->
+  <text x="0" y="20" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">V</text><text x="80" y="20" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">v</text><text x="160" y="20" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">a</text><text x="240" y="20" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">3</text><text x="320" y="20" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">A</text><text x="400" y="20" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">[</text><text x="0" y="220" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">R</text><text x="80" y="220" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">\</text><text x="160" y="220" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">M</text><text x="240" y="220" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">x</text><text x="320" y="220" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">_</text><text x="400" y="220" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">L</text>
+
+  <!-- Hex glow layers -->
+  
+  <polygon points="353.28649646984564,111.50000000000001 353.28649646984564,288.5 200,377 46.713503530154355,288.5 46.71350353015433,111.50000000000004 199.99999999999997,23" fill="none" stroke="#60a5fa" stroke-opacity="0.2" stroke-width="4" filter="url(#glow)"/>
+  <polygon points="348.9563694509235,114.00000000000001 348.9563694509235,286 200,372 51.04363054907654,286 51.04363054907651,114.00000000000004 199.99999999999997,28" fill="none" stroke="#60a5fa" stroke-opacity="0.16" stroke-width="4" filter="url(#glow)"/>
+  <polygon points="344.6262424320013,116.50000000000001 344.6262424320013,283.5 200,367 55.37375756799872,283.5 55.37375756799872,116.50000000000004 199.99999999999997,33" fill="none" stroke="#60a5fa" stroke-opacity="0.12" stroke-width="4" filter="url(#glow)"/>
+  <polygon points="340.29611541307906,119.00000000000001 340.29611541307906,281 200,362 59.703884586920935,281 59.70388458692091,119.00000000000004 199.99999999999997,38" fill="none" stroke="#60a5fa" stroke-opacity="0.08" stroke-width="4" filter="url(#glow)"/>
+  <polygon points="335.96598839415685,121.50000000000001 335.96598839415685,278.5 200,357 64.03401160584312,278.5 64.03401160584312,121.50000000000004 199.99999999999997,43" fill="none" stroke="#60a5fa" stroke-opacity="0.04" stroke-width="4" filter="url(#glow)"/>
+
+  <!-- Outer rotating hex (epic/legendary) -->
+  
+
+  <!-- Main hex frame -->
+  <polygon points="331.6358613752347,124.00000000000001 331.6358613752347,276 200,352 68.3641386247653,276 68.3641386247653,124.00000000000004 199.99999999999997,48" fill="none" stroke="url(#frameGrad)" stroke-width="2.5" stroke-opacity="0.9"/>
+  <polygon points="329.0377851638814,125.50000000000001 329.0377851638814,274.5 200,349 70.96221483611862,274.5 70.96221483611862,125.50000000000004 199.99999999999997,51" fill="none" stroke="#00ff41" stroke-width="1" stroke-opacity="0.4"/>
+
+  <!-- Inner glow circle -->
+  <circle cx="200" cy="200" r="112" fill="url(#innerGlow)"/>
+
+  <!-- Hex corner gems -->
+  
+            <circle cx="331.6358613752347" cy="124.00000000000001" r="7" fill="#60a5fa" fill-opacity="0.9"/>
+            <circle cx="330.6358613752347" cy="123.00000000000001" r="2.5" fill="white" fill-opacity="0.6"/>
+            <circle cx="331.6358613752347" cy="276" r="7" fill="#60a5fa" fill-opacity="0.9"/>
+            <circle cx="330.6358613752347" cy="275" r="2.5" fill="white" fill-opacity="0.6"/>
+            <circle cx="200" cy="352" r="7" fill="#60a5fa" fill-opacity="0.9"/>
+            <circle cx="199" cy="351" r="2.5" fill="white" fill-opacity="0.6"/>
+            <circle cx="68.3641386247653" cy="276" r="7" fill="#00ff41" fill-opacity="0.2"/>
+            
+            <circle cx="68.3641386247653" cy="124.00000000000004" r="7" fill="#00ff41" fill-opacity="0.2"/>
+            
+            <circle cx="199.99999999999997" cy="48" r="7" fill="#00ff41" fill-opacity="0.2"/>
+            
+
+  <!-- Symbol glow layers -->
+  
+  <text x="200" y="208" text-anchor="middle" dominant-baseline="middle" 
+        font-size="88" font-family="monospace" 
+        fill="#60a5fa" fill-opacity="0.32"
+        dx="4" dy="4">⊕</text>
+  <text x="200" y="208" text-anchor="middle" dominant-baseline="middle" 
+        font-size="88" font-family="monospace" 
+        fill="#60a5fa" fill-opacity="0.24"
+        dx="3" dy="3">⊕</text>
+  <text x="200" y="208" text-anchor="middle" dominant-baseline="middle" 
+        font-size="88" font-family="monospace" 
+        fill="#60a5fa" fill-opacity="0.16"
+        dx="2" dy="2">⊕</text>
+  <text x="200" y="208" text-anchor="middle" dominant-baseline="middle" 
+        font-size="88" font-family="monospace" 
+        fill="#60a5fa" fill-opacity="0.08"
+        dx="1" dy="1">⊕</text>
+
+  <!-- Main symbol -->
+  <text x="200" y="208" text-anchor="middle" dominant-baseline="middle" 
+        font-size="88" font-family="monospace" 
+        fill="#00ff41" filter="url(#textGlow)">⊕</text>
+
+  <!-- Orbit dots -->
+  <circle cx="256" cy="200" r="3" fill="#60a5fa" fill-opacity="0.85"/><circle cx="200" cy="256" r="3" fill="#60a5fa" fill-opacity="0.85"/><circle cx="144" cy="200" r="3" fill="#60a5fa" fill-opacity="0.85"/><circle cx="200" cy="144" r="3" fill="#60a5fa" fill-opacity="0.85"/>
+
+  <!-- Style name (top) -->
+  <text x="200" y="48" text-anchor="middle" font-size="17" font-family="monospace" 
+        fill="white" fill-opacity="0.75">🔐 Infosec</text>
+
+  <!-- Trait name -->
+  <text x="200" y="307" text-anchor="middle" font-size="19" font-family="monospace" 
+        fill="white" fill-opacity="0.9" font-weight="bold">Zero-Day Hunter</text>
+
+  <!-- Rarity label -->
+  <text x="200" y="335" text-anchor="middle" font-size="15" font-family="monospace" 
+        fill="#60a5fa">◆◆◆ RARE ◆◆◆</text>
+
+  <!-- Token ID -->
+  <text x="200" y="362" text-anchor="middle" font-size="13" font-family="monospace" 
+        fill="white" fill-opacity="0.5">B2S #90</text>
+
+  <!-- Watermark -->
+  <text x="200" y="385" text-anchor="middle" font-size="11" font-family="monospace" 
+        fill="white" fill-opacity="0.25">BASE2STACKS.APP</text>
+
+  <!-- Border glow (epic/legendary) -->
+  
+</svg>

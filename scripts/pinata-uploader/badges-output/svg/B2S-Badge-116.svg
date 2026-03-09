@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#00ff41" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#000500" stop-opacity="1"/>
+    </radialGradient>
+    <radialGradient id="innerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00ff41" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#00ff41" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="textGlow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <linearGradient id="frameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ff41"/>
+      <stop offset="100%" stop-color="#003b00"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="400" fill="url(#bgGrad)"/>
+  
+  <!-- Particles -->
+  <circle cx="11.3" cy="372.3" r="1.0" fill="#00ff41" fill-opacity="0.26"/>
+  <circle cx="224.1" cy="364.0" r="1.1" fill="#00ff41" fill-opacity="0.43"/>
+  <circle cx="202.0" cy="279.4" r="1.4" fill="#00ff41" fill-opacity="0.23"/>
+  <circle cx="387.3" cy="225.3" r="1.2" fill="#00ff41" fill-opacity="0.25"/>
+  <circle cx="60.5" cy="294.6" r="1.0" fill="#00ff41" fill-opacity="0.38"/>
+  <circle cx="80.8" cy="176.8" r="0.4" fill="#00ff41" fill-opacity="0.20"/>
+  <circle cx="295.7" cy="209.8" r="0.8" fill="#00ff41" fill-opacity="0.08"/>
+  <circle cx="338.3" cy="155.9" r="1.6" fill="#00ff41" fill-opacity="0.13"/>
+  <circle cx="247.3" cy="5.9" r="0.5" fill="#00ff41" fill-opacity="0.30"/>
+  <circle cx="158.7" cy="138.8" r="1.4" fill="#00ff41" fill-opacity="0.18"/>
+  <circle cx="32.4" cy="51.5" r="1.4" fill="#00ff41" fill-opacity="0.19"/>
+  <circle cx="168.6" cy="354.9" r="1.5" fill="#00ff41" fill-opacity="0.29"/>
+  <circle cx="229.6" cy="156.1" r="1.3" fill="#00ff41" fill-opacity="0.16"/>
+  <circle cx="280.5" cy="195.7" r="0.9" fill="#00ff41" fill-opacity="0.42"/>
+  <circle cx="368.9" cy="102.2" r="1.6" fill="#00ff41" fill-opacity="0.14"/>
+  <circle cx="186.0" cy="318.4" r="0.6" fill="#00ff41" fill-opacity="0.24"/>
+  <circle cx="348.6" cy="319.2" r="1.7" fill="#00ff41" fill-opacity="0.41"/>
+  <circle cx="317.8" cy="287.2" r="0.4" fill="#00ff41" fill-opacity="0.08"/>
+  <circle cx="130.3" cy="193.7" r="1.3" fill="#00ff41" fill-opacity="0.21"/>
+  <circle cx="140.3" cy="181.0" r="1.4" fill="#00ff41" fill-opacity="0.07"/>
+  <circle cx="250.3" cy="276.6" r="0.6" fill="#00ff41" fill-opacity="0.25"/>
+  <circle cx="117.8" cy="98.0" r="1.2" fill="#00ff41" fill-opacity="0.31"/>
+  <circle cx="18.7" cy="210.3" r="0.6" fill="#00ff41" fill-opacity="0.32"/>
+  <circle cx="283.2" cy="130.1" r="1.5" fill="#00ff41" fill-opacity="0.08"/>
+  <circle cx="290.8" cy="385.1" r="0.8" fill="#00ff41" fill-opacity="0.32"/>
+  <circle cx="362.5" cy="362.5" r="1.5" fill="#00ff41" fill-opacity="0.26"/>
+  <circle cx="341.2" cy="268.9" r="0.4" fill="#00ff41" fill-opacity="0.09"/>
+  <circle cx="249.1" cy="9.5" r="0.5" fill="#00ff41" fill-opacity="0.09"/>
+  <circle cx="66.2" cy="130.9" r="0.8" fill="#00ff41" fill-opacity="0.40"/>
+  <circle cx="257.0" cy="217.5" r="0.5" fill="#00ff41" fill-opacity="0.42"/>
+  <circle cx="335.3" cy="136.4" r="1.5" fill="#00ff41" fill-opacity="0.33"/>
+  <circle cx="334.1" cy="192.0" r="0.7" fill="#00ff41" fill-opacity="0.21"/>
+  <circle cx="307.2" cy="38.0" r="1.5" fill="#00ff41" fill-opacity="0.20"/>
+  <circle cx="262.9" cy="356.2" r="0.4" fill="#00ff41" fill-opacity="0.44"/>
+  <circle cx="226.8" cy="224.6" r="1.3" fill="#00ff41" fill-opacity="0.29"/>
+  <circle cx="64.5" cy="135.2" r="1.5" fill="#00ff41" fill-opacity="0.37"/>
+  <circle cx="339.3" cy="314.6" r="1.8" fill="#00ff41" fill-opacity="0.18"/>
+  <circle cx="164.6" cy="47.2" r="1.7" fill="#00ff41" fill-opacity="0.38"/>
+  <circle cx="35.6" cy="290.1" r="0.7" fill="#00ff41" fill-opacity="0.15"/>
+  <circle cx="217.6" cy="186.9" r="1.4" fill="#00ff41" fill-opacity="0.24"/>
+  <circle cx="389.5" cy="233.5" r="1.3" fill="#00ff41" fill-opacity="0.17"/>
+  <circle cx="94.3" cy="291.8" r="1.3" fill="#00ff41" fill-opacity="0.33"/>
+  <circle cx="317.9" cy="143.1" r="1.3" fill="#00ff41" fill-opacity="0.45"/>
+  <circle cx="40.6" cy="160.6" r="0.4" fill="#00ff41" fill-opacity="0.18"/>
+  <circle cx="306.3" cy="319.6" r="1.4" fill="#00ff41" fill-opacity="0.24"/>
+  <circle cx="134.2" cy="255.0" r="1.2" fill="#00ff41" fill-opacity="0.38"/>
+  <circle cx="352.3" cy="216.0" r="1.2" fill="#00ff41" fill-opacity="0.39"/>
+  <circle cx="81.0" cy="271.2" r="1.7" fill="#00ff41" fill-opacity="0.43"/>
+  <circle cx="87.5" cy="269.6" r="0.8" fill="#00ff41" fill-opacity="0.24"/>
+  <circle cx="310.8" cy="303.0" r="1.7" fill="#00ff41" fill-opacity="0.20"/>
+  <circle cx="159.3" cy="20.2" r="1.3" fill="#00ff41" fill-opacity="0.35"/>
+  <circle cx="49.8" cy="162.5" r="0.8" fill="#00ff41" fill-opacity="0.25"/>
+  <circle cx="269.0" cy="297.8" r="1.7" fill="#00ff41" fill-opacity="0.16"/>
+  <circle cx="183.7" cy="112.4" r="1.7" fill="#00ff41" fill-opacity="0.23"/>
+  <circle cx="398.1" cy="258.9" r="0.9" fill="#00ff41" fill-opacity="0.37"/>
+  <circle cx="148.0" cy="211.8" r="0.8" fill="#00ff41" fill-opacity="0.41"/>
+  <circle cx="184.2" cy="264.9" r="1.3" fill="#00ff41" fill-opacity="0.22"/>
+  <circle cx="398.3" cy="252.8" r="1.5" fill="#00ff41" fill-opacity="0.34"/>
+  <circle cx="338.3" cy="207.8" r="1.2" fill="#00ff41" fill-opacity="0.32"/>
+  <circle cx="224.7" cy="9.0" r="1.2" fill="#00ff41" fill-opacity="0.18"/>
+
+  <!-- Style BG pattern -->
+  <text x="0" y="20" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">&</text><text x="80" y="20" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">@</text><text x="160" y="20" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">Q</text><text x="240" y="20" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">B</text><text x="320" y="20" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">_</text><text x="400" y="20" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">*</text><text x="0" y="220" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">m</text><text x="80" y="220" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">J</text><text x="160" y="220" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">^</text><text x="240" y="220" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">c</text><text x="320" y="220" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">.</text><text x="400" y="220" fill="#00ff41" fill-opacity="0.15" font-size="9" font-family="monospace">0</text>
+
+  <!-- Hex glow layers -->
+  
+  <polygon points="353.28649646984564,111.50000000000001 353.28649646984564,288.5 200,377 46.713503530154355,288.5 46.71350353015433,111.50000000000004 199.99999999999997,23" fill="none" stroke="#94a3b8" stroke-opacity="0.2" stroke-width="4" filter="url(#glow)"/>
+  <polygon points="348.9563694509235,114.00000000000001 348.9563694509235,286 200,372 51.04363054907654,286 51.04363054907651,114.00000000000004 199.99999999999997,28" fill="none" stroke="#94a3b8" stroke-opacity="0.16" stroke-width="4" filter="url(#glow)"/>
+  <polygon points="344.6262424320013,116.50000000000001 344.6262424320013,283.5 200,367 55.37375756799872,283.5 55.37375756799872,116.50000000000004 199.99999999999997,33" fill="none" stroke="#94a3b8" stroke-opacity="0.12" stroke-width="4" filter="url(#glow)"/>
+  <polygon points="340.29611541307906,119.00000000000001 340.29611541307906,281 200,362 59.703884586920935,281 59.70388458692091,119.00000000000004 199.99999999999997,38" fill="none" stroke="#94a3b8" stroke-opacity="0.08" stroke-width="4" filter="url(#glow)"/>
+  <polygon points="335.96598839415685,121.50000000000001 335.96598839415685,278.5 200,357 64.03401160584312,278.5 64.03401160584312,121.50000000000004 199.99999999999997,43" fill="none" stroke="#94a3b8" stroke-opacity="0.04" stroke-width="4" filter="url(#glow)"/>
+
+  <!-- Outer rotating hex (epic/legendary) -->
+  
+
+  <!-- Main hex frame -->
+  <polygon points="331.6358613752347,124.00000000000001 331.6358613752347,276 200,352 68.3641386247653,276 68.3641386247653,124.00000000000004 199.99999999999997,48" fill="none" stroke="url(#frameGrad)" stroke-width="2.5" stroke-opacity="0.9"/>
+  <polygon points="329.0377851638814,125.50000000000001 329.0377851638814,274.5 200,349 70.96221483611862,274.5 70.96221483611862,125.50000000000004 199.99999999999997,51" fill="none" stroke="#00ff41" stroke-width="1" stroke-opacity="0.4"/>
+
+  <!-- Inner glow circle -->
+  <circle cx="200" cy="200" r="112" fill="url(#innerGlow)"/>
+
+  <!-- Hex corner gems -->
+  
+            <circle cx="331.6358613752347" cy="124.00000000000001" r="7" fill="#94a3b8" fill-opacity="0.9"/>
+            <circle cx="330.6358613752347" cy="123.00000000000001" r="2.5" fill="white" fill-opacity="0.6"/>
+            <circle cx="331.6358613752347" cy="276" r="7" fill="#00ff41" fill-opacity="0.2"/>
+            
+            <circle cx="200" cy="352" r="7" fill="#00ff41" fill-opacity="0.2"/>
+            
+            <circle cx="68.3641386247653" cy="276" r="7" fill="#00ff41" fill-opacity="0.2"/>
+            
+            <circle cx="68.3641386247653" cy="124.00000000000004" r="7" fill="#00ff41" fill-opacity="0.2"/>
+            
+            <circle cx="199.99999999999997" cy="48" r="7" fill="#00ff41" fill-opacity="0.2"/>
+            
+
+  <!-- Symbol glow layers -->
+  
+  <text x="200" y="208" text-anchor="middle" dominant-baseline="middle" 
+        font-size="88" font-family="monospace" 
+        fill="#94a3b8" fill-opacity="0.32"
+        dx="4" dy="4">⊕</text>
+  <text x="200" y="208" text-anchor="middle" dominant-baseline="middle" 
+        font-size="88" font-family="monospace" 
+        fill="#94a3b8" fill-opacity="0.24"
+        dx="3" dy="3">⊕</text>
+  <text x="200" y="208" text-anchor="middle" dominant-baseline="middle" 
+        font-size="88" font-family="monospace" 
+        fill="#94a3b8" fill-opacity="0.16"
+        dx="2" dy="2">⊕</text>
+  <text x="200" y="208" text-anchor="middle" dominant-baseline="middle" 
+        font-size="88" font-family="monospace" 
+        fill="#94a3b8" fill-opacity="0.08"
+        dx="1" dy="1">⊕</text>
+
+  <!-- Main symbol -->
+  <text x="200" y="208" text-anchor="middle" dominant-baseline="middle" 
+        font-size="88" font-family="monospace" 
+        fill="#00ff41" filter="url(#textGlow)">⊕</text>
+
+  <!-- Orbit dots -->
+  
+
+  <!-- Style name (top) -->
+  <text x="200" y="48" text-anchor="middle" font-size="17" font-family="monospace" 
+        fill="white" fill-opacity="0.75">🔐 Infosec</text>
+
+  <!-- Trait name -->
+  <text x="200" y="307" text-anchor="middle" font-size="19" font-family="monospace" 
+        fill="white" fill-opacity="0.9" font-weight="bold">OSINT Master</text>
+
+  <!-- Rarity label -->
+  <text x="200" y="335" text-anchor="middle" font-size="15" font-family="monospace" 
+        fill="#94a3b8">◆ COMMON ◆</text>
+
+  <!-- Token ID -->
+  <text x="200" y="362" text-anchor="middle" font-size="13" font-family="monospace" 
+        fill="white" fill-opacity="0.5">B2S #116</text>
+
+  <!-- Watermark -->
+  <text x="200" y="385" text-anchor="middle" font-size="11" font-family="monospace" 
+        fill="white" fill-opacity="0.25">BASE2STACKS.APP</text>
+
+  <!-- Border glow (epic/legendary) -->
+  
+</svg>

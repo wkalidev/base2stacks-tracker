@@ -1,0 +1,134 @@
+[
+  {
+    "seed": 149,
+    "error": "Image upload 429: {\"error\":{\"reason\":\"RATE_LIMITED\",\"details\":\"Please slow down, upgrade your plan, or reach out to Pinata for greater rate limits\"}}"
+  },
+  {
+    "seed": 152,
+    "error": "Image upload 429: {\"error\":{\"reason\":\"RATE_LIMITED\",\"details\":\"Please slow down, upgrade your plan, or reach out to Pinata for greater rate limits\"}}"
+  },
+  {
+    "seed": 166,
+    "error": "Image upload 429: {\"error\":{\"reason\":\"RATE_LIMITED\",\"details\":\"Please slow down, upgrade your plan, or reach out to Pinata for greater rate limits\"}}"
+  },
+  {
+    "seed": 171,
+    "error": "Metadata upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 173,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 172,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 174,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 177,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 176,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 175,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 178,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 180,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 179,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 183,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 181,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 182,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 184,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 185,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 186,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 188,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 187,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 189,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 191,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 192,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 190,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 195,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 194,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 193,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 197,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 198,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 196,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 200,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  },
+  {
+    "seed": 199,
+    "error": "Image upload 403: {\"error\":{\"reason\":\"FORBIDDEN\",\"details\":\"Account blocked due to plan usage limit\"}}"
+  }
+]
