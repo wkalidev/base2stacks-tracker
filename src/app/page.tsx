@@ -1,11 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useWallet } from '@/hooks/useWallet'
 import { useContract } from '@/hooks/useContract'
 import { useBalance } from '@/hooks/useBalance'
 import { useToast } from '@/hooks/useToast'
 import { useDashboardStats } from '@/hooks/useDashboardStats'
+import { useStacksWebSocket } from '@/hooks/useStacksWebSocket'
+import { LiveIndicator } from '@/components/LiveIndicator'
 import { TransactionHistory } from '@/components/TransactionHistory'
 import { StakingStats } from '@/components/StakingStats'
 import { LeaderboardAdvanced } from '@/components/LeaderboardAdvanced'
@@ -20,6 +22,8 @@ import { ButtonLoading } from '@/components/LoadingSpinner'
 import PredictionMarket from '@/components/PredictionMarket'
 import { AnalyticsDashboard } from '@/components/AnalyticsDashboard'
 import MarketData from '@/components/MarketData'
+
+const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 
 function formatNumber(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
@@ -38,6 +42,34 @@ export default function Page() {
   const [showStakeModal, setShowStakeModal] = useState(false)
   const [showTxToast, setShowTxToast] = useState(false)
   const [showErrorToast, setShowErrorToast] = useState(false)
+  const [liveActivity, setLiveActivity] = useState<string | null>(null)
+  const [statsKey, setStatsKey] = useState(0) // force re-render on new block
+
+  // ── WebSocket — real-time Stacks updates ──────────────────
+  const handleBlock = useCallback(() => {
+    // Refresh stats on every new block
+    setStatsKey(k => k + 1)
+  }, [])
+
+  const handleTx = useCallback((tx: any) => {
+    const fn = tx.contract_call?.function_name
+    const addr = tx.sender_address?.slice(0, 8) ?? '?'
+    if (fn === 'stake')            setLiveActivity(`🔒 New stake from ${addr}...`)
+    else if (fn === 'unstake')     setLiveActivity(`🔓 Unstake from ${addr}...`)
+    else if (fn === 'claim-daily') setLiveActivity(`🎁 Daily claim from ${addr}...`)
+    else if (fn === 'vote')        setLiveActivity(`🗳️ New vote from ${addr}...`)
+    else if (fn === 'bridge')      setLiveActivity(`⬡ Bridge tx ${tx.tx_id?.slice(0, 10)}...`)
+    // Clear after 5s
+    setTimeout(() => setLiveActivity(null), 5000)
+  }, [])
+
+  const { connected: wsConnected, blockHeight } = useStacksWebSocket({
+    onBlock:        handleBlock,
+    onTransaction:  handleTx,
+    contractFilter: CONTRACT_ADDRESS,
+    enabled:        true,
+  })
+  // ─────────────────────────────────────────────────────────
 
   useEffect(() => {
     if (txId) {
@@ -91,6 +123,9 @@ export default function Page() {
             </h1>
           </div>
           <div className="flex items-center gap-3">
+            {/* ── Live Indicator ── */}
+            <LiveIndicator connected={wsConnected} blockHeight={blockHeight} />
+
             {isConnected && address && (
               <div className="hidden sm:block text-white/70 text-sm">{shortAddress(address)}</div>
             )}
@@ -103,6 +138,13 @@ export default function Page() {
             </button>
           </div>
         </nav>
+
+        {/* ── Live activity ticker ── */}
+        {liveActivity && (
+          <div className="mt-2 text-center text-xs text-purple-400 animate-pulse">
+            {liveActivity}
+          </div>
+        )}
       </header>
 
       {/* ── Hero ── */}
@@ -189,10 +231,10 @@ export default function Page() {
       {/* ── Live Stats ── */}
       <section className="container mx-auto px-4 py-8 sm:py-16">
         <div className="flex items-center justify-center gap-2 mb-6">
-          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-          <span className="text-white/50 text-xs uppercase tracking-widest">Live — Stacks Mainnet</span>
+          <LiveIndicator connected={wsConnected} blockHeight={blockHeight} />
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+        {/* statsKey forces a re-render when a new block arrives */}
+        <div key={statsKey} className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {stats.map((stat, i) => (
             <div key={i} className="bg-white/5 backdrop-blur-md rounded-xl p-4 sm:p-6 border border-white/10 text-center hover:bg-white/10 transition-all">
               <div className="text-2xl sm:text-3xl mb-2">{stat.emoji}</div>
@@ -203,7 +245,7 @@ export default function Page() {
         </div>
       </section>
 
-      {/* ── Market Data (NEW) ── */}
+      {/* ── Market Data ── */}
       <section className="container mx-auto px-4 py-8 sm:py-16">
         <div className="max-w-5xl mx-auto">
           <MarketData />
