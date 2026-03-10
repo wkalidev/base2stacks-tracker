@@ -22,6 +22,7 @@ import { ButtonLoading } from '@/components/LoadingSpinner'
 import PredictionMarket from '@/components/PredictionMarket'
 import { AnalyticsDashboard } from '@/components/AnalyticsDashboard'
 import MarketData from '@/components/MarketData'
+import BridgeRouter from '@/components/BridgeRouter'
 
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 
@@ -342,6 +343,16 @@ export default function Page() {
         </h3>
         <div className="max-w-7xl mx-auto">
           <LiquidityPool />
+        </div>
+      </section>
+
+      {/* Bridge Router */}
+      <section className="container mx-auto px-4 py-8 sm:py-16">
+        <h3 className="text-2xl sm:text-4xl font-bold text-white text-center mb-8">
+           🌉 Cross-Chain Bridge
+        </h3>
+        <div className="max-w-6xl mx-auto">
+          <BridgeRouter />
         </div>
       </section>
 
