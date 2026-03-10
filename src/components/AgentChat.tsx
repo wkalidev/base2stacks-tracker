@@ -259,7 +259,7 @@ export default function AgentChat() {
               </button>
             </div>
             <div className="text-center text-xs mt-2" style={{ color: '#334155' }}>
-              Powered by Coinbase AgentKit + GPT-4o
+              Powered by Groq · Llama 3.3 70B
             </div>
           </div>
         </div>

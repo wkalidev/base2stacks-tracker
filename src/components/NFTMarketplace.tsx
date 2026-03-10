@@ -3,8 +3,7 @@ import { useState, useCallback } from 'react';
 
 // ─── MULTI-GATEWAY FALLBACK ────────────────────────────────────
 const GATEWAYS = [
-  'https://w3s.link/ipfs/',              // web3.storage — le plus rapide
-  'https://ipfs.io/ipfs/',               // IPFS Foundation
+  'https://ipfs.io/ipfs/',               // IPFS Foundation — stable partout
   'https://dweb.link/ipfs/',             // Protocol Labs
   'https://gateway.pinata.cloud/ipfs/', // Pinata — dernier recours
 ];

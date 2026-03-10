@@ -7,29 +7,55 @@ import { useBalance } from '@/hooks/useBalance'
 import { useToast } from '@/hooks/useToast'
 import { useDashboardStats } from '@/hooks/useDashboardStats'
 import { useStacksWebSocket } from '@/hooks/useStacksWebSocket'
+
+// ── UI Components (fichiers séparés — PAS de ui-primitives ici) ──────
 import { LiveIndicator } from '@/components/LiveIndicator'
 import { TransactionHistory } from '@/components/TransactionHistory'
 import { StakingStats } from '@/components/StakingStats'
 import { LeaderboardAdvanced } from '@/components/LeaderboardAdvanced'
 import { APYCalculator } from '@/components/APYCalculator'
 import { ToastContainer } from '@/components/Toast'
+import { ButtonLoading } from '@/components/LoadingSpinner'
+import { TransactionToast, ErrorToast } from '@/components/TransactionToast'
+import { AnalyticsDashboard } from '@/components/AnalyticsDashboard'
 import RewardsDistributor from '@/components/RewardsDistributor'
 import GovernanceDAO from '@/components/GovernanceDAO'
 import NFTMarketplace from '@/components/NFTMarketplace'
 import LiquidityPool from '@/components/LiquidityPool'
-import { TransactionToast, ErrorToast } from '@/components/TransactionToast'
-import { ButtonLoading } from '@/components/LoadingSpinner'
 import PredictionMarket from '@/components/PredictionMarket'
-import { AnalyticsDashboard } from '@/components/AnalyticsDashboard'
 import MarketData from '@/components/MarketData'
 import BridgeRouter from '@/components/BridgeRouter'
 
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
+const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 
 function formatNumber(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`
+  if (n >= 1_000)     return `${(n / 1_000).toFixed(1)}K`
   return n.toString()
+}
+
+// ── Section wrapper ──────────────────────────────────────────────────
+function Section({ title, color = '#00d4ff', children, maxWidth = 'max-w-6xl' }: {
+  title: string; color?: string; children: React.ReactNode; maxWidth?: string
+}) {
+  return (
+    <section className="container mx-auto px-4 py-10 sm:py-16">
+      <div className={`${maxWidth} mx-auto`}>
+        <div className="flex items-center gap-3 mb-8">
+          <div className="h-px flex-1" style={{ background: `linear-gradient(90deg, ${color}40, transparent)` }} />
+          <h3
+            style={{ ...MONO, color, textShadow: `0 0 20px ${color}50` }}
+            className="text-[10px] sm:text-xs font-black tracking-[0.3em] uppercase whitespace-nowrap"
+          >
+            {title}
+          </h3>
+          <div className="h-px flex-1" style={{ background: `linear-gradient(270deg, ${color}40, transparent)` }} />
+        </div>
+        {children}
+      </div>
+    </section>
+  )
 }
 
 export default function Page() {
@@ -39,380 +65,330 @@ export default function Page() {
   const { toasts, removeToast, success, error: showError } = useToast()
   const dashStats = useDashboardStats()
 
-  const [stakeAmount, setStakeAmount] = useState('')
+  const [stakeAmount, setStakeAmount]       = useState('')
   const [showStakeModal, setShowStakeModal] = useState(false)
-  const [showTxToast, setShowTxToast] = useState(false)
+  const [showTxToast, setShowTxToast]       = useState(false)
   const [showErrorToast, setShowErrorToast] = useState(false)
-  const [liveActivity, setLiveActivity] = useState<string | null>(null)
-  const [statsKey, setStatsKey] = useState(0) // force re-render on new block
+  const [liveActivity, setLiveActivity]     = useState<string | null>(null)
+  const [statsKey, setStatsKey]             = useState(0)
 
-  // ── WebSocket — real-time Stacks updates ──────────────────
-  const handleBlock = useCallback(() => {
-    // Refresh stats on every new block
-    setStatsKey(k => k + 1)
-  }, [])
+  const handleBlock = useCallback(() => setStatsKey(k => k + 1), [])
 
   const handleTx = useCallback((tx: any) => {
-    const fn = tx.contract_call?.function_name
+    const fn   = tx.contract_call?.function_name
     const addr = tx.sender_address?.slice(0, 8) ?? '?'
-    if (fn === 'stake')            setLiveActivity(`🔒 New stake from ${addr}...`)
-    else if (fn === 'unstake')     setLiveActivity(`🔓 Unstake from ${addr}...`)
-    else if (fn === 'claim-daily') setLiveActivity(`🎁 Daily claim from ${addr}...`)
-    else if (fn === 'vote')        setLiveActivity(`🗳️ New vote from ${addr}...`)
-    else if (fn === 'bridge')      setLiveActivity(`⬡ Bridge tx ${tx.tx_id?.slice(0, 10)}...`)
-    // Clear after 5s
+    const map: Record<string, string> = {
+      'stake':       `STAKE_TX // ${addr}`,
+      'unstake':     `UNSTAKE_TX // ${addr}`,
+      'claim-daily': `CLAIM_TX // ${addr}`,
+      'vote':        `VOTE_TX // ${addr}`,
+      'bridge':      `BRIDGE_TX // ${tx.tx_id?.slice(0, 10)}`,
+    }
+    if (map[fn]) setLiveActivity(map[fn])
     setTimeout(() => setLiveActivity(null), 5000)
   }, [])
 
   const { connected: wsConnected, blockHeight } = useStacksWebSocket({
-    onBlock:        handleBlock,
-    onTransaction:  handleTx,
-    contractFilter: CONTRACT_ADDRESS,
-    enabled:        true,
+    onBlock: handleBlock, onTransaction: handleTx,
+    contractFilter: CONTRACT_ADDRESS, enabled: true,
   })
-  // ─────────────────────────────────────────────────────────
 
-  useEffect(() => {
-    if (txId) {
-      setShowTxToast(true)
-      success('🎉 Transaction submitted successfully!')
-    }
-  }, [txId])
-
-  useEffect(() => {
-    if (error) setShowErrorToast(true)
-  }, [error])
+  useEffect(() => { if (txId)  { setShowTxToast(true);   success('TX_SUBMITTED // OK') } }, [txId])
+  useEffect(() => { if (error) { setShowErrorToast(true) }                               }, [error])
 
   if (!mounted) return null
 
-  const handleClaim = async () => {
-    try { await claimDailyReward() } catch (err) { console.error(err) }
-  }
+  const handleClaim = async () => { try { await claimDailyReward() } catch (e) { console.error(e) } }
 
   const handleStake = async () => {
-    if (!stakeAmount || parseFloat(stakeAmount) <= 0) {
-      showError('Please enter a valid amount')
-      return
-    }
-    try {
-      await stake(parseFloat(stakeAmount))
-      setShowStakeModal(false)
-      setStakeAmount('')
-    } catch (err) { console.error(err) }
+    if (!stakeAmount || parseFloat(stakeAmount) <= 0) { showError('Invalid amount'); return }
+    try { await stake(parseFloat(stakeAmount)); setShowStakeModal(false); setStakeAmount('') }
+    catch (e) { console.error(e) }
   }
 
-  const shortAddress = (addr: string) =>
-    addr ? `${addr.slice(0, 6)}...${addr.slice(-4)}` : ''
+  const shortAddress = (addr: string) => addr ? `${addr.slice(0, 6)}...${addr.slice(-4)}` : ''
 
-  const stats = [
-    { label: 'Transactions', value: dashStats.loading ? '...' : formatNumber(dashStats.totalTxCount),  emoji: '🌉' },
-    { label: 'Token Holders', value: dashStats.loading ? '...' : formatNumber(dashStats.totalHolders), emoji: '👥' },
-    { label: 'Total Supply',  value: dashStats.loading ? '...' : formatNumber(dashStats.totalSupply),  emoji: '🏆' },
-    { label: 'STX in Pool',   value: dashStats.loading ? '...' : `${formatNumber(dashStats.totalStaked)} STX`, emoji: '📈' },
+  const STATS = [
+    { label: 'TRANSACTIONS',  value: dashStats.loading ? '···' : formatNumber(dashStats.totalTxCount),         color: '#00d4ff' },
+    { label: 'TOKEN_HOLDERS', value: dashStats.loading ? '···' : formatNumber(dashStats.totalHolders),         color: '#ff00ff' },
+    { label: 'TOTAL_SUPPLY',  value: dashStats.loading ? '···' : formatNumber(dashStats.totalSupply),          color: '#ffd700' },
+    { label: 'STX_IN_POOL',   value: dashStats.loading ? '···' : `${formatNumber(dashStats.totalStaked)} STX`, color: '#00ff9f' },
   ]
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-black" style={MONO}>
 
-      {/* ── Header ── */}
-      <header className="container mx-auto px-4 py-4 sm:py-6">
-        <nav className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <img src="/android-chrome-192x192.png" alt="Base2Stacks Logo" className="w-10 h-10 sm:w-12 sm:h-12" />
-            <h1 className="text-xl sm:text-2xl font-bold text-white">
-              Base<span className="text-b2s-accent">2</span>Stacks
-            </h1>
-          </div>
-          <div className="flex items-center gap-3">
-            {/* ── Live Indicator ── */}
-            <LiveIndicator connected={wsConnected} blockHeight={blockHeight} />
+      {/* ══ HEADER ══════════════════════════════════════════════════ */}
+      <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-black/80 backdrop-blur-xl">
+        <div className="container mx-auto px-4 py-3">
+          <nav className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <img src="/android-chrome-192x192.png" alt="B2S" className="w-9 h-9 rounded-xl" />
+              <div>
+                <div className="text-white font-black text-sm tracking-tight leading-none">
+                  BASE<span style={{ color: '#00d4ff' }}>2</span>STACKS
+                </div>
+                <div className="text-[9px] tracking-[0.3em] font-black" style={{ color: 'rgba(255,255,255,0.2)' }}>MAINNET</div>
+              </div>
+            </div>
 
-            {isConnected && address && (
-              <div className="hidden sm:block text-white/70 text-sm">{shortAddress(address)}</div>
-            )}
-            <button
-              onClick={isConnected ? disconnect : connect}
-              disabled={loading}
-              className="bg-gradient-to-r from-b2s-primary to-b2s-accent text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base hover:opacity-90 transition-all"
-            >
-              {isConnected ? '🔓 Disconnect' : '🔒 Connect Wallet'}
-            </button>
-          </div>
-        </nav>
+            <div className="flex items-center gap-3">
+              <LiveIndicator connected={wsConnected} blockHeight={blockHeight} />
+              {isConnected && address && (
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/[0.07] bg-white/[0.03] text-[10px] font-black tracking-widest"
+                     style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  {shortAddress(address)}
+                </div>
+              )}
+              <button
+                onClick={isConnected ? disconnect : connect}
+                disabled={loading}
+                className="px-4 py-2 rounded-xl text-[10px] font-black tracking-widest transition-all hover:opacity-80 disabled:opacity-30"
+                style={{
+                  background: isConnected ? 'rgba(255,68,68,0.1)'   : 'rgba(0,212,255,0.1)',
+                  border:     isConnected ? '1px solid rgba(255,68,68,0.3)' : '1px solid rgba(0,212,255,0.3)',
+                  color:      isConnected ? '#ff4444' : '#00d4ff',
+                }}
+              >
+                {isConnected ? '◼ DISCONNECT' : '▶ CONNECT_WALLET'}
+              </button>
+            </div>
+          </nav>
 
-        {/* ── Live activity ticker ── */}
-        {liveActivity && (
-          <div className="mt-2 text-center text-xs text-purple-400 animate-pulse">
-            {liveActivity}
-          </div>
-        )}
+          {liveActivity && (
+            <div className="mt-2 text-center text-[9px] font-black tracking-[0.3em] animate-pulse" style={{ color: '#ff00ff' }}>
+              {'>'} {liveActivity}<span className="animate-pulse">_</span>
+            </div>
+          )}
+        </div>
       </header>
 
-      {/* ── Hero ── */}
-      <section className="container mx-auto px-4 py-10 sm:py-20 text-center">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <img src="/android-chrome-512x512.png" alt="Base2Stacks" className="mx-auto w-32 h-32 sm:w-48 sm:h-48 md:w-56 md:h-56 animate-float" />
+      {/* ══ HERO ════════════════════════════════════════════════════ */}
+      <section className="container mx-auto px-4 pt-16 pb-12 text-center">
+        <div className="max-w-3xl mx-auto">
+
+          <div className="relative inline-block mb-8">
+            <div className="absolute inset-0 rounded-full blur-3xl opacity-30"
+                 style={{ background: 'radial-gradient(circle, #00d4ff, #ff00ff)' }} />
+            <img src="/android-chrome-512x512.png" alt="Base2Stacks"
+                 className="relative mx-auto w-28 h-28 sm:w-36 sm:h-36 animate-float rounded-3xl" />
           </div>
 
-          <span className="bg-b2s-accent/20 text-b2s-accent px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold border border-b2s-accent/30 inline-block mb-4 sm:mb-6">
-            🎉 Stacks Builder Rewards
-          </span>
-
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">
-            Track Cross-Chain Bridges
-          </h2>
-          <p className="text-2xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-b2s-primary via-blue-500 to-b2s-accent">
-              Earn $B2S Tokens
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00ff9f]/20 bg-[#00ff9f]/[0.06] mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00ff9f] animate-pulse" />
+            <span className="text-[9px] font-black tracking-[0.3em]" style={{ color: '#00ff9f' }}>
+              STACKS_BUILDER_REWARDS // MAINNET
             </span>
-          </p>
-          <p className="text-base sm:text-lg md:text-xl text-white/70 mb-8 sm:mb-10 px-4">
-            Connect your Stacks wallet to start earning rewards
+          </div>
+
+          <h2 className="text-3xl sm:text-5xl font-black text-white mb-2 leading-none tracking-tight">
+            TRACK CROSS-CHAIN
+          </h2>
+          <h2 className="text-3xl sm:text-5xl font-black mb-6 leading-none tracking-tight"
+              style={{ color: '#00d4ff', textShadow: '0 0 40px rgba(0,212,255,0.4)' }}>
+            BRIDGES
+          </h2>
+          <p className="text-white/25 text-xs tracking-[0.2em] mb-10">
+            CONNECT_WALLET → CLAIM_REWARDS → STAKE → EARN
           </p>
 
           {isConnected ? (
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <ButtonLoading
-                onClick={handleClaim}
-                loading={loading}
-                className="w-full sm:w-auto bg-gradient-to-r from-b2s-primary to-b2s-accent text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:opacity-90 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50"
+                onClick={handleClaim} loading={loading}
+                className="px-8 py-3 rounded-xl text-xs font-black tracking-widest transition-all hover:opacity-80 disabled:opacity-30"
+                style={{ background: 'rgba(0,255,159,0.1)', border: '1px solid rgba(0,255,159,0.3)', color: '#00ff9f' }}
               >
-                🎁 Claim Daily Reward (5 $B2S)
+                ▶ CLAIM_DAILY // 5 $B2S
               </ButtonLoading>
               <button
                 onClick={() => setShowStakeModal(true)}
-                className="w-full sm:w-auto bg-white/10 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold border border-white/20 hover:bg-white/20 transition-all"
+                className="px-8 py-3 rounded-xl text-xs font-black tracking-widest transition-all hover:opacity-80"
+                style={{ background: 'rgba(255,215,0,0.06)', border: '1px solid rgba(255,215,0,0.2)', color: '#ffd700' }}
               >
-                💰 Stake $B2S
+                ◆ STAKE_$B2S
               </button>
             </div>
           ) : (
-            <button
-              onClick={connect}
-              className="w-full sm:w-auto bg-gradient-to-r from-b2s-primary to-b2s-accent text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:opacity-90 transition-all transform hover:scale-105 shadow-lg"
-            >
-              Connect Wallet to Start
+            <button onClick={connect}
+              className="px-10 py-3 rounded-xl text-xs font-black tracking-widest transition-all hover:opacity-80"
+              style={{ background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.35)', color: '#00d4ff', boxShadow: '0 0 30px rgba(0,212,255,0.1)' }}>
+              ▶ CONNECT_WALLET_TO_START
             </button>
           )}
 
           {isConnected && address && (
-            <div className="mt-8 sm:mt-12 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 backdrop-blur-md rounded-xl p-4 sm:p-6 border border-blue-500/20">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="mt-8 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5 text-left space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <h3 className="text-white/70 text-sm mb-1">Wallet Address</h3>
-                  <div className="text-white font-mono text-sm break-all">{address}</div>
+                  <p className="text-[9px] tracking-[0.3em] font-black text-white/25 mb-1.5">WALLET_ADDRESS</p>
+                  <p className="text-white/50 text-xs font-mono break-all leading-relaxed">{address}</p>
                 </div>
                 <div>
-                  <h3 className="text-white/70 text-sm mb-1">$B2S Balance</h3>
-                  <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
-                    {balanceLoading ? '⏳ Loading...' : `${balance.toFixed(2)} $B2S`}
-                  </div>
+                  <p className="text-[9px] tracking-[0.3em] font-black text-white/25 mb-1.5">$B2S_BALANCE</p>
+                  <p className="text-3xl font-black tabular-nums"
+                     style={{ color: '#00d4ff', textShadow: '0 0 20px rgba(0,212,255,0.5)' }}>
+                    {balanceLoading ? '···' : balance.toFixed(2)}
+                    <span className="text-sm ml-2 text-white/25">$B2S</span>
+                  </p>
                 </div>
               </div>
             </div>
           )}
 
           {isConnected && address && (
-            <div className="mt-8 bg-white/5 backdrop-blur-md rounded-xl p-6 border border-white/10">
-              <h3 className="text-white font-semibold text-xl mb-4">Recent Transactions</h3>
+            <div className="mt-4 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
+              <p className="text-[9px] tracking-[0.3em] font-black text-white/25 mb-4 text-left">RECENT_TRANSACTIONS</p>
               <TransactionHistory address={address} />
             </div>
           )}
 
           {isConnected && address && (
-            <div className="mt-8">
-              <h3 className="text-white font-semibold text-2xl mb-4">Your Staking</h3>
+            <div className="mt-4">
+              <p className="text-[9px] tracking-[0.3em] font-black text-white/25 mb-4 text-left">YOUR_STAKING</p>
               <StakingStats address={address} />
             </div>
           )}
         </div>
       </section>
 
-      {/* ── Live Stats ── */}
-      <section className="container mx-auto px-4 py-8 sm:py-16">
-        <div className="flex items-center justify-center gap-2 mb-6">
-          <LiveIndicator connected={wsConnected} blockHeight={blockHeight} />
-        </div>
-        {/* statsKey forces a re-render when a new block arrives */}
-        <div key={statsKey} className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-          {stats.map((stat, i) => (
-            <div key={i} className="bg-white/5 backdrop-blur-md rounded-xl p-4 sm:p-6 border border-white/10 text-center hover:bg-white/10 transition-all">
-              <div className="text-2xl sm:text-3xl mb-2">{stat.emoji}</div>
-              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-1">{stat.value}</h3>
-              <p className="text-white/60 text-xs sm:text-sm">{stat.label}</p>
+      {/* ══ SECTIONS ════════════════════════════════════════════════ */}
+      <Section title="// LIVE_STATS" color="#00d4ff" maxWidth="max-w-5xl">
+        <div key={statsKey} className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {STATS.map((s, i) => (
+            <div key={i} className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 text-center hover:border-white/[0.12] transition-all">
+              <p className="text-[9px] tracking-[0.3em] font-black text-white/20 mb-2">{s.label}</p>
+              <p className="text-2xl sm:text-3xl font-black tabular-nums"
+                 style={{ color: s.color, textShadow: `0 0 20px ${s.color}40` }}>
+                {s.value}
+              </p>
             </div>
           ))}
         </div>
-      </section>
+      </Section>
 
-      {/* ── Market Data ── */}
-      <section className="container mx-auto px-4 py-8 sm:py-16">
-        <div className="max-w-5xl mx-auto">
-          <MarketData />
-        </div>
-      </section>
+      <Section title="// MARKET_DATA" color="#ffd700" maxWidth="max-w-5xl">
+        <MarketData />
+      </Section>
 
-      {/* ── How It Works ── */}
-      <section className="container mx-auto px-4 py-8 sm:py-16">
-        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
-          How It Works
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto">
+      <Section title="// HOW_IT_WORKS" color="#ff00ff" maxWidth="max-w-4xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {[
-            { num: '1', title: 'Connect Wallet', desc: 'Connect your Leather or Xverse wallet', emoji: '🔗' },
-            { num: '2', title: 'Claim Rewards',  desc: 'Claim 5 $B2S tokens daily',             emoji: '💰' },
-            { num: '3', title: 'Stake & Earn',   desc: 'Stake tokens to earn 12.5% APY',        emoji: '📈' },
-          ].map((step, i) => (
-            <div key={i} className="bg-white/5 backdrop-blur-md rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all text-center">
-              <div className="text-4xl mb-4">{step.emoji}</div>
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-white">{step.num}</span>
-              </div>
-              <h4 className="text-lg sm:text-xl font-semibold text-white mb-3">{step.title}</h4>
-              <p className="text-white/60 text-sm sm:text-base">{step.desc}</p>
+            { n: '01', title: 'CONNECT_WALLET', desc: 'Leather or Xverse wallet',  color: '#00d4ff' },
+            { n: '02', title: 'CLAIM_REWARDS',  desc: 'Claim 5 $B2S tokens daily', color: '#00ff9f' },
+            { n: '03', title: 'STAKE_AND_EARN', desc: 'Earn up to 37.5% APY',      color: '#ffd700' },
+          ].map((s, i) => (
+            <div key={i} className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 text-center hover:border-white/[0.12] transition-all">
+              <p className="text-4xl font-black mb-3" style={{ color: s.color, textShadow: `0 0 20px ${s.color}40` }}>{s.n}</p>
+              <p className="text-xs font-black tracking-widest text-white mb-2">{s.title}</p>
+              <p className="text-white/25 text-[10px]">{s.desc}</p>
             </div>
           ))}
         </div>
-      </section>
+      </Section>
 
-      {/* ── Analytics Dashboard ── */}
-      <section className="container mx-auto px-4 py-8 sm:py-16">
-        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
-          📊 Analytics Dashboard
-        </h3>
-        <div className="max-w-7xl mx-auto">
-          <AnalyticsDashboard theme="dark" refreshInterval={60000} />
-        </div>
-      </section>
+      <Section title="// ANALYTICS_DASHBOARD" color="#00ff9f" maxWidth="max-w-7xl">
+        <AnalyticsDashboard refreshInterval={60000} />
+      </Section>
 
-      {/* ── Leaderboard ── */}
-      <section className="container mx-auto px-4 py-8 sm:py-16">
-        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
-          🏆 Top Stakers
-        </h3>
-        <div className="max-w-4xl mx-auto">
-          <LeaderboardAdvanced />
-        </div>
-      </section>
+      <Section title="// TOP_STAKERS" color="#ffd700" maxWidth="max-w-4xl">
+        <LeaderboardAdvanced />
+      </Section>
 
-      {/* ── APY Calculator ── */}
-      <section className="container mx-auto px-4 py-8 sm:py-16">
-        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
-          📊 Calculate Your Earnings
-        </h3>
-        <div className="max-w-3xl mx-auto">
-          <APYCalculator />
-        </div>
-      </section>
+      <Section title="// APY_CALCULATOR" color="#00d4ff" maxWidth="max-w-3xl">
+        <APYCalculator />
+      </Section>
 
-      {/* ── Rewards Distributor ── */}
-      <section className="container mx-auto px-4 py-8 sm:py-16">
-        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
-          💰 Rewards Distribution System
-        </h3>
-        <div className="max-w-5xl mx-auto">
-          <RewardsDistributor />
-        </div>
-      </section>
+      <Section title="// REWARDS_DISTRIBUTION" color="#ff00ff" maxWidth="max-w-5xl">
+        <RewardsDistributor />
+      </Section>
 
-      {/* ── Governance DAO ── */}
-      <section className="container mx-auto px-4 py-8 sm:py-16">
-        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
-          🏛️ Governance & Voting
-        </h3>
-        <div className="max-w-6xl mx-auto">
-          <GovernanceDAO />
-        </div>
-      </section>
+      <Section title="// GOVERNANCE_DAO" color="#cc00ff" maxWidth="max-w-6xl">
+        <GovernanceDAO />
+      </Section>
 
-      {/* ── NFT Marketplace ── */}
-      <section className="container mx-auto px-4 py-8 sm:py-16">
-        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
-          🛒 NFT Badge Marketplace
-        </h3>
-        <div className="max-w-7xl mx-auto">
-          <NFTMarketplace />
-        </div>
-      </section>
+      <Section title="// NFT_BADGE_MARKETPLACE" color="#ff6600" maxWidth="max-w-7xl">
+        <NFTMarketplace />
+      </Section>
 
-      {/* ── Liquidity Pool ── */}
-      <section className="container mx-auto px-4 py-8 sm:py-16">
-        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
-          💧 Liquidity Pool & Swap
-        </h3>
-        <div className="max-w-7xl mx-auto">
-          <LiquidityPool />
-        </div>
-      </section>
+      <Section title="// LIQUIDITY_POOL" color="#00ff9f" maxWidth="max-w-7xl">
+        <LiquidityPool />
+      </Section>
 
-      {/* Bridge Router */}
-      <section className="container mx-auto px-4 py-8 sm:py-16">
-        <h3 className="text-2xl sm:text-4xl font-bold text-white text-center mb-8">
-           🌉 Cross-Chain Bridge
-        </h3>
-        <div className="max-w-6xl mx-auto">
-          <BridgeRouter />
-        </div>
-      </section>
+      <Section title="// CROSS_CHAIN_BRIDGE" color="#00d4ff" maxWidth="max-w-6xl">
+        <BridgeRouter />
+      </Section>
 
-      {/* ── Prediction Market ── */}
-      <section className="container mx-auto px-4 py-8 sm:py-16">
-        <h3 className="text-2xl sm:text-4xl font-bold text-white text-center mb-8">
-          🔮 Prediction Market
-        </h3>
-        <div className="max-w-6xl mx-auto">
-          <PredictionMarket />
-        </div>
-      </section>
+      <Section title="// PREDICTION_MARKET" color="#ff4444" maxWidth="max-w-6xl">
+        <PredictionMarket />
+      </Section>
 
-      {/* ── Footer ── */}
-      <footer className="container mx-auto px-4 py-8 sm:py-12 border-t border-white/10 mt-8">
-        <div className="flex flex-col items-center gap-4 text-center">
-          <div className="flex items-center space-x-3">
-            <img src="/android-chrome-192x192.png" alt="Base2Stacks Logo" className="w-8 h-8" />
-            <span className="text-white font-semibold text-sm sm:text-base">Base2Stacks Tracker</span>
-          </div>
-          <p className="text-white/60 text-xs sm:text-sm">
-            Built with ❤️ by <span className="text-b2s-accent">Wkalidev(zcodebase)</span> | Mainnet
-          </p>
-          <div className="flex items-center gap-4 sm:gap-6">
-            <a href="https://github.com/wkalidev/base2stacks-tracker" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white text-xs sm:text-sm">GitHub</a>
-            <a href="https://twitter.com/willycodexwar"                target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white text-xs sm:text-sm">Twitter</a>
-            <a href="https://warpcast.com/willywarrior"                target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white text-xs sm:text-sm">Farcaster</a>
+      {/* ══ FOOTER ══════════════════════════════════════════════════ */}
+      <footer className="border-t border-white/[0.06] mt-8">
+        <div className="container mx-auto px-4 py-10">
+          <div className="flex flex-col items-center gap-5 text-center">
+            <div className="flex items-center gap-3">
+              <img src="/android-chrome-192x192.png" alt="B2S" className="w-7 h-7 rounded-xl" />
+              <span className="text-xs font-black tracking-[0.2em] text-white/40">BASE2STACKS_TRACKER</span>
+            </div>
+            <p className="text-[10px] tracking-widest text-white/20">
+              BUILT WITH ❤️ BY <span style={{ color: '#2015f4' }}>WKALIDEV(ZCODEBASE)</span> // MAINNET
+            </p>
+            <div className="flex items-center gap-6">
+              {[
+                { label: 'GITHUB',    href: 'https://github.com/wkalidev/base2stacks-tracker' },
+                { label: 'TWITTER',   href: 'https://twitter.com/willycodexwar'               },
+                { label: 'FARCASTER', href: 'https://warpcast.com/willywarrior'               },
+              ].map(l => (
+                <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer"
+                   className="text-[9px] font-black tracking-[0.2em] text-white/20 hover:text-white/60 transition-colors">
+                  {l.label}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </footer>
 
-      {/* ── Staking Modal ── */}
+      {/* ══ STAKING MODAL ════════════════════════════════════════════ */}
       {showStakeModal && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-          <div className="bg-gradient-to-br from-base-dark to-stacks-dark border border-white/20 rounded-2xl p-6 sm:p-8 max-w-md w-full">
-            <h3 className="text-2xl font-bold text-white mb-4">Stake $B2S Tokens</h3>
-            <div className="mb-6">
-              <label className="text-white/70 text-sm mb-2 block">Amount to Stake</label>
-              <input
-                type="number"
-                value={stakeAmount}
-                onChange={(e) => setStakeAmount(e.target.value)}
-                placeholder="Enter amount"
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-b2s-accent"
-              />
+        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
+             onClick={() => setShowStakeModal(false)}>
+          <div className="relative rounded-2xl border border-white/[0.07] bg-black p-6 max-w-sm w-full"
+               style={{ boxShadow: '0 0 60px rgba(0,212,255,0.1)' }}
+               onClick={e => e.stopPropagation()}>
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00d4ff]/40 to-transparent rounded-t-2xl" />
+            <p className="text-[9px] tracking-[0.3em] font-black text-white/25 mb-1">STAKE_MODAL</p>
+            <h3 className="text-white font-black text-xl mb-5">STAKE $B2S</h3>
+            <div className="mb-4">
+              <p className="text-[9px] tracking-widest font-black text-white/25 mb-2">AMOUNT</p>
+              <div className="relative">
+                <input
+                  type="number" value={stakeAmount} onChange={e => setStakeAmount(e.target.value)}
+                  placeholder="0.0"
+                  className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-lg font-black placeholder-white/20 focus:outline-none focus:border-[#00d4ff]/40 transition-colors"
+                />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/25 text-xs font-black">$B2S</span>
+              </div>
             </div>
-            <div className="flex gap-3">
-              <button onClick={() => setShowStakeModal(false)} className="flex-1 bg-white/10 text-white px-6 py-3 rounded-lg font-semibold border border-white/20 hover:bg-white/20 transition-all">
-                Cancel
+            <div className="flex gap-2 mt-5">
+              <button onClick={() => setShowStakeModal(false)}
+                className="flex-1 py-3 rounded-xl text-xs font-black tracking-widest text-white/30 border border-white/[0.08] hover:border-white/20 transition-all">
+                CANCEL
               </button>
-              <button onClick={handleStake} disabled={loading} className="flex-1 bg-gradient-to-r from-b2s-primary to-b2s-accent text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all disabled:opacity-50">
-                {loading ? 'Staking...' : 'Stake'}
+              <button onClick={handleStake} disabled={loading}
+                className="flex-1 py-3 rounded-xl text-xs font-black tracking-widest transition-all hover:opacity-80 disabled:opacity-30"
+                style={{ background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.3)', color: '#00d4ff' }}>
+                {loading ? '⏳ STAKING...' : '▶ CONFIRM_STAKE'}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {showTxToast && txId && <TransactionToast txId={txId} onClose={() => setShowTxToast(false)} />}
-      {showErrorToast && error && <ErrorToast error={error} onClose={() => setShowErrorToast(false)} />}
+      {/* ══ TOASTS ══════════════════════════════════════════════════ */}
+      {showTxToast    && txId  && <TransactionToast txId={txId} onClose={() => setShowTxToast(false)}    />}
+      {showErrorToast && error && <ErrorToast error={error}     onClose={() => setShowErrorToast(false)} />}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>
   )

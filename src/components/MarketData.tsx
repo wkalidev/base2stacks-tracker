@@ -15,14 +15,30 @@ interface CoinData {
   price: number;
   change24h: number;
   change7d: number;
+  change30d: number;
   marketCap: number;
+  marketCapRank: number;
   volume24h: number;
   high24h: number;
   low24h: number;
   circulatingSupply: number;
+  totalSupply: number;
   ath: number;
   athDate: string;
+  atl: number;
   lastUpdated: string;
+}
+
+interface MultiCoin {
+  id: string;
+  symbol: string;
+  name: string;
+  price: number;
+  change24h: number;
+  change7d: number;
+  marketCap: number;
+  volume24h: number;
+  image: string;
 }
 
 function formatNum(n: number): string {
@@ -66,6 +82,39 @@ function StatCard({ label, value, sub, accent }: { label: string; value: string;
         {value}
       </p>
       {sub && <p className="text-white/30 text-xs mt-1">{sub}</p>}
+    </div>
+  );
+}
+
+function ChangeChip({ label, value }: { label: string; value: number }) {
+  const positive = value >= 0;
+  return (
+    <div className={`flex flex-col items-center px-3 py-2 rounded-lg border text-xs font-semibold ${
+      positive
+        ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+        : 'bg-red-500/10 border-red-500/20 text-red-400'
+    }`}>
+      <span className="text-white/40 font-normal mb-0.5">{label}</span>
+      {positive ? '▲' : '▼'} {Math.abs(value).toFixed(2)}%
+    </div>
+  );
+}
+
+function MiniTicker({ coins }: { coins: MultiCoin[] }) {
+  return (
+    <div className="flex gap-3 overflow-x-auto pb-1 mb-6 scrollbar-hide">
+      {coins.map(c => (
+        <div key={c.id} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] flex-shrink-0 hover:bg-white/[0.07] transition-all">
+          <img src={c.image} alt={c.symbol} className="w-5 h-5 rounded-full" />
+          <span className="text-white/60 text-xs font-semibold">{c.symbol}</span>
+          <span className="text-white text-xs font-bold tabular-nums">
+            ${c.price >= 1000 ? (c.price / 1000).toFixed(1) + 'K' : c.price.toFixed(2)}
+          </span>
+          <span className={`text-xs font-semibold ${c.change24h >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+            {c.change24h >= 0 ? '+' : ''}{c.change24h?.toFixed(1)}%
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
@@ -124,18 +173,27 @@ function TradingViewChart({ timeframe }: { timeframe: Timeframe }) {
 
 export default function MarketData() {
   const [coin, setCoin]           = useState<CoinData | null>(null);
+  const [multiCoins, setMultiCoins] = useState<MultiCoin[]>([]);
   const [loading, setLoading]     = useState(true);
   const [error, setError]         = useState(false);
   const [timeframe, setTimeframe] = useState<Timeframe>('1W');
   const [lastFetch, setLastFetch] = useState<Date | null>(null);
 
-  // ← Appel au proxy Next.js /api/market (pas directement CoinGecko)
   const load = useCallback(async () => {
     try {
-      const res = await fetch('/api/market');
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data: CoinData = await res.json();
-      setCoin(data);
+      const [stxRes, multiRes] = await Promise.all([
+        fetch('/api/market'),
+        fetch('/api/market?type=multi'),
+      ]);
+      if (!stxRes.ok) throw new Error(`HTTP ${stxRes.status}`);
+      const stxData: CoinData = await stxRes.json();
+      setCoin(stxData);
+      if (multiRes.ok) {
+        const multiData = await multiRes.json();
+        // multiData est { stx, coins } — on veut coins sans STX (déjà affiché)
+        const coins: MultiCoin[] = (multiData.coins || []).filter((c: MultiCoin) => c.id !== 'blockstack');
+        setMultiCoins(coins);
+      }
       setLastFetch(new Date());
       setError(false);
     } catch {
@@ -155,8 +213,9 @@ export default function MarketData() {
 
   return (
     <div className="market-data">
+
       {/* Header */}
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex items-start justify-between mb-6">
         <div>
           <h2 className="text-3xl font-bold text-white mb-1 flex items-center gap-3">
             <span className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500 to-cyan-500 flex items-center justify-center text-base font-black">S</span>
@@ -172,6 +231,9 @@ export default function MarketData() {
         </button>
       </div>
 
+      {/* Mini ticker BTC / ETH / SOL */}
+      {multiCoins.length > 0 && <MiniTicker coins={multiCoins} />}
+
       {/* Live Price */}
       <div className="mb-6 p-6 rounded-2xl bg-gradient-to-br from-violet-500/10 via-white/[0.02] to-cyan-500/10 border border-white/10">
         {loading ? (
@@ -182,20 +244,34 @@ export default function MarketData() {
         ) : error ? (
           <p className="text-red-400 text-sm">⚠️ Could not load price data — check /api/market</p>
         ) : coin ? (
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-            <div>
-              <PriceTicker value={coin.price} change={coin.change24h} />
-              <div className="flex items-center gap-4 mt-2">
-                <span className="text-white/40 text-sm">H: <span className="text-white/70">${coin.high24h.toFixed(3)}</span></span>
-                <span className="text-white/40 text-sm">L: <span className="text-white/70">${coin.low24h.toFixed(3)}</span></span>
-                <span className={`text-sm font-medium ${coin.change7d >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                  7d: {coin.change7d >= 0 ? '+' : ''}{coin.change7d.toFixed(2)}%
-                </span>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+              <div>
+                <PriceTicker value={coin.price} change={coin.change24h} />
+                <div className="flex items-center gap-4 mt-2">
+                  <span className="text-white/40 text-sm">H: <span className="text-white/70">${coin.high24h.toFixed(3)}</span></span>
+                  <span className="text-white/40 text-sm">L: <span className="text-white/70">${coin.low24h.toFixed(3)}</span></span>
+                  {coin.marketCapRank && (
+                    <span className="text-white/40 text-sm">Rank: <span className="text-violet-400 font-semibold">#{coin.marketCapRank}</span></span>
+                  )}
+                </div>
+              </div>
+              <div className="text-right text-sm text-white/40">
+                <p>ATH <span className="text-white/60 font-semibold">${coin.ath.toFixed(2)}</span></p>
+                <p className="text-xs">{coin.athDate}</p>
+                {coin.atl && (
+                  <p className="mt-1">ATL <span className="text-white/40 font-semibold">${coin.atl.toFixed(4)}</span></p>
+                )}
               </div>
             </div>
-            <div className="text-right text-sm text-white/40">
-              <p>ATH <span className="text-white/60 font-semibold">${coin.ath.toFixed(2)}</span></p>
-              <p>{coin.athDate}</p>
+
+            {/* Change chips 24h / 7d / 30d */}
+            <div className="flex gap-2">
+              <ChangeChip label="24h"  value={coin.change24h} />
+              <ChangeChip label="7d"   value={coin.change7d} />
+              {coin.change30d !== undefined && (
+                <ChangeChip label="30d" value={coin.change30d} />
+              )}
             </div>
           </div>
         ) : null}
@@ -204,10 +280,10 @@ export default function MarketData() {
       {/* Stats Grid */}
       {coin && !loading && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          <StatCard label="Market Cap"  value={formatNum(coin.marketCap)}                                          sub="USD"   accent />
-          <StatCard label="Volume 24h"  value={formatNum(coin.volume24h)}                                          sub="USD"         />
-          <StatCard label="Circulating" value={`${(coin.circulatingSupply / 1e6).toFixed(0)}M`}                    sub="STX"         />
-          <StatCard label="Vol/MCap"    value={`${((coin.volume24h / coin.marketCap) * 100).toFixed(2)}%`}         sub="ratio" accent />
+          <StatCard label="Market Cap"   value={formatNum(coin.marketCap)}                                      sub="USD"   accent />
+          <StatCard label="Volume 24h"   value={formatNum(coin.volume24h)}                                      sub="USD"         />
+          <StatCard label="Circulating"  value={`${(coin.circulatingSupply / 1e6).toFixed(0)}M`}                sub="STX"         />
+          <StatCard label="Vol/MCap"     value={`${((coin.volume24h / coin.marketCap) * 100).toFixed(2)}%`}     sub="ratio" accent />
         </div>
       )}
 
@@ -241,9 +317,10 @@ export default function MarketData() {
         <span>Data: CoinGecko via /api/market · Chart: TradingView</span>
         <div className="flex gap-4">
           <a href="https://www.coingecko.com/en/coins/blockstack" target="_blank" rel="noopener noreferrer" className="hover:text-white/50 transition-colors">CoinGecko ↗</a>
-          <a href="https://www.tradingview.com/symbols/STXUSD/"    target="_blank" rel="noopener noreferrer" className="hover:text-white/50 transition-colors">TradingView ↗</a>
+          <a href="https://www.tradingview.com/symbols/STXUSD/"   target="_blank" rel="noopener noreferrer" className="hover:text-white/50 transition-colors">TradingView ↗</a>
         </div>
       </div>
+
     </div>
   );
 }

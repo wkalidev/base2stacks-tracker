@@ -211,12 +211,13 @@ export default function BridgeRouter() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             {[
-              { name: 'Stargate',      url: 'https://stargate.finance',              desc: 'Best rates across 20+ chains',  icon: '🚀', recommended: true },
-              { name: 'deBridge',      url: 'https://app.debridge.com/r/32893',          desc: 'Fast cross-chain transfers',    icon: '🌉', recommended: false },
-              { name: 'Across',        url: 'https://across.to',                     desc: 'Fast & cheap bridging',         icon: '💨', recommended: false },
-              { name: 'Celer cBridge', url: 'https://cbridge.celer.network',         desc: 'Multi-chain bridge',            icon: '🔗', recommended: false },
-              { name: 'Orbiter',       url: 'https://www.orbiter.finance',           desc: 'ZK-powered bridge',             icon: '🔮', recommended: false },
-              { name: 'Rango',         url: 'https://rango.vip/a/o9pwCm',            desc: 'Cross-chain DEX aggregator',    icon: '⚡', recommended: false },
+              { name: 'Stargate',      url: 'https://stargate.finance',              desc: 'Best rates across 20+ chains',    icon: '🚀', recommended: true },
+              { name: 'deBridge',      url: 'https://app.debridge.com/r/32893',      desc: 'Fast cross-chain transfers',      icon: '🌉', recommended: false },
+              { name: 'Across',        url: 'https://across.to',                     desc: 'Fast & cheap bridging',           icon: '💨', recommended: false },
+              { name: 'Celer cBridge', url: 'https://cbridge.celer.network',         desc: 'Multi-chain bridge',              icon: '🔗', recommended: false },
+              { name: 'Orbiter',       url: 'https://www.orbiter.finance',           desc: 'ZK-powered bridge',               icon: '🔮', recommended: false },
+              { name: 'Rango',         url: 'https://rango.vip/a/o9pwCm',            desc: 'Cross-chain DEX aggregator',      icon: '⚡', recommended: false },
+              { name: 'Jupiter Swap',  url: 'https://jup.ag/?ref=j5ft3v5m26eu',      desc: 'Swap 1000+ tokens sur Solana',    icon: '☀️', recommended: false },
             ].map(b => (
               <a key={b.name} href={b.url} target="_blank" rel="noopener noreferrer"
                 className={`flex items-center gap-4 p-4 rounded-xl border transition-all hover:scale-[1.02] ${
