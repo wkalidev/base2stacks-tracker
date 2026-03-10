@@ -1,5 +1,22 @@
 'use client';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+
+// ─── MULTI-GATEWAY FALLBACK ────────────────────────────────────
+const GATEWAYS = [
+  'https://w3s.link/ipfs/',              // web3.storage — le plus rapide
+  'https://ipfs.io/ipfs/',               // IPFS Foundation
+  'https://dweb.link/ipfs/',             // Protocol Labs
+  'https://gateway.pinata.cloud/ipfs/', // Pinata — dernier recours
+];
+
+function getGatewayUrl(cid: string, gatewayIndex = 0): string {
+  const gateway = GATEWAYS[gatewayIndex % GATEWAYS.length];
+  return `${gateway}${cid}`;
+}
+
+function extractCid(url: string): string {
+  return url.split('/ipfs/').pop() ?? url;
+}
 
 // ─── 167 REAL BADGES ON PINATA IPFS ──────────────────────────
 const IPFS_BADGES = [
@@ -199,6 +216,70 @@ const RARITY_ICON: Record<Rarity, string> = {
   common: '◆', uncommon: '◆◆', rare: '◆◆◆', epic: '★', legendary: '🌟',
 };
 
+// ─── NFT IMAGE avec fallback multi-gateway + retry delay ────────
+function NFTImage({ badge, className = '' }: { badge: typeof IPFS_BADGES[0], className?: string }) {
+  const [gatewayIndex, setGatewayIndex] = useState(0);
+  const [loaded, setLoaded]             = useState(false);
+  const [failed, setFailed]             = useState(false);
+  const [retrying, setRetrying]         = useState(false);
+  const retryTimeout                    = useState<ReturnType<typeof setTimeout> | null>(null);
+
+  const cid = extractCid(badge.imageUrl);
+  const src = getGatewayUrl(cid, gatewayIndex);
+
+  const handleError = useCallback(() => {
+    const nextIndex = gatewayIndex + 1;
+    if (nextIndex < GATEWAYS.length) {
+      // Délai croissant entre chaque tentative pour éviter le rate-limit
+      const delay = nextIndex * 800;
+      setRetrying(true);
+      const t = setTimeout(() => {
+        setGatewayIndex(nextIndex);
+        setRetrying(false);
+      }, delay);
+      retryTimeout[1](t);
+    } else {
+      setFailed(true);
+    }
+  }, [gatewayIndex]);
+
+  // Cleanup timeout on unmount
+  useState(() => {
+    return () => {
+      if (retryTimeout[0]) clearTimeout(retryTimeout[0]);
+    };
+  });
+
+  if (failed) {
+    return (
+      <div className={`w-full h-full flex flex-col items-center justify-center bg-gray-800/80 ${className}`}>
+        <div className="text-xl mb-1 opacity-30">⬡</div>
+        <div className="text-gray-600 text-[9px]">#{badge.tokenId}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative w-full h-full bg-gray-900">
+      {/* Skeleton shimmer — toujours gris neutre, jamais coloré */}
+      {(!loaded || retrying) && (
+        <div className="absolute inset-0 bg-gray-800 animate-pulse" style={{ background: '#1f2937' }} />
+      )}
+      {!retrying && (
+        <img
+          src={src}
+          alt={badge.name}
+          className={`w-full h-full object-cover transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setLoaded(true)}
+          onError={handleError}
+        />
+      )}
+    </div>
+  );
+}
+
 export default function NFTMarketplace() {
   const [filter, setFilter]     = useState<Rarity | 'all'>('all');
   const [search, setSearch]     = useState('');
@@ -282,12 +363,10 @@ export default function NFTMarketplace() {
             className={`relative bg-gray-800/60 border ${RARITY_BORDER[badge.rarity]} ${RARITY_GLOW[badge.rarity]}
               rounded-xl overflow-hidden cursor-pointer hover:scale-105 transition-all duration-200 group`}
           >
-            <div className="aspect-square w-full overflow-hidden bg-gray-900">
-              <img
-                src={badge.imageUrl}
-                alt={badge.name}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                loading="lazy"
+            <div className="aspect-square w-full overflow-hidden bg-gray-900 isolate">
+              <NFTImage
+                badge={badge}
+                className="group-hover:scale-110 transition-transform duration-300"
               />
             </div>
             <div className={`absolute top-1.5 right-1.5 bg-gradient-to-r ${RARITY_COLOR[badge.rarity]} 
@@ -324,7 +403,7 @@ export default function NFTMarketplace() {
           <div className={`bg-gray-900 border ${RARITY_BORDER[selected.rarity]} ${RARITY_GLOW[selected.rarity]}
             rounded-2xl max-w-sm w-full overflow-hidden`} onClick={e => e.stopPropagation()}>
             <div className="aspect-square w-full bg-gray-800">
-              <img src={selected.imageUrl} alt={selected.name} className="w-full h-full object-cover" />
+              <NFTImage badge={selected} />
             </div>
             <div className="p-5 space-y-3">
               <div className="flex items-start justify-between">
