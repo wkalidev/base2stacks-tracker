@@ -1,8 +1,8 @@
-Thank you for making Base2Stacks better! 💙# 🤝 Contributing to Base2Stacks Bridge Tracker
+# 🤝 Contributing to Base2Stacks Bridge Tracker
 
 Thank you for your interest in contributing! 🎉
 
-We love contributions from the community. Whether it's a bug report, new feature, correction, or additional documentation, we greatly value feedback and contributions.
+We love contributions from the community. Whether it's a bug report, new feature, correction, or additional documentation, we greatly value your feedback.
 
 ---
 
@@ -11,32 +11,28 @@ We love contributions from the community. Whether it's a bug report, new feature
 1. **Fork** the repository
 2. **Clone** your fork
 ```bash
-   git clone https://github.com/YOUR_USERNAME/base2stacks-tracker.git
-   cd base2stacks-tracker
+git clone https://github.com/YOUR_USERNAME/base2stacks-tracker.git
+cd base2stacks-tracker
 ```
 3. **Install** dependencies
 ```bash
-   npm install
+npm install
 ```
 4. **Create** a branch
 ```bash
-   git checkout -b feature/amazing-feature
+git checkout -b feature/amazing-feature
 ```
-5. **Make** your changes
-6. **Test** locally
+5. **Make** your changes and test locally
 ```bash
-   npm run dev
-   npm run build
+npm run dev
+npm run build
 ```
-7. **Commit** your changes
+6. **Commit** and push
 ```bash
-   git commit -m "feat: add amazing feature"
+git commit -m "feat: add amazing feature"
+git push origin feature/amazing-feature
 ```
-8. **Push** to your fork
-```bash
-   git push origin feature/amazing-feature
-```
-9. **Open** a Pull Request
+7. **Open** a Pull Request
 
 ---
 
@@ -44,126 +40,88 @@ We love contributions from the community. Whether it's a bug report, new feature
 
 We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
-- `feat:` - New feature
-- `fix:` - Bug fix
-- `docs:` - Documentation changes
-- `style:` - Code style changes (formatting, semicolons, etc.)
-- `refactor:` - Code refactoring
-- `test:` - Adding or updating tests
-- `chore:` - Maintenance tasks
-
-**Examples:**
-```bash
-git commit -m "feat: add leaderboard component"
-git commit -m "fix: resolve wallet connection bug"
-git commit -m "docs: update README with new features"
-```
+- `feat:` — New feature
+- `fix:` — Bug fix
+- `docs:` — Documentation changes
+- `style:` — Code style / formatting
+- `refactor:` — Code refactoring
+- `test:` — Tests
+- `chore:` — Maintenance
 
 ---
 
-## 🧪 Testing
+## 🧪 Before Submitting a PR
 
-Before submitting a PR, make sure:
 ```bash
-# All tests pass
-npm run test
-
-# Build succeeds
-npm run build
-
-# No TypeScript errors
-npm run type-check
-
-# Linting passes
-npm run lint
+npm run build       # Build must succeed
+npm run type-check  # No TypeScript errors
+npm run lint        # Linting must pass
 ```
 
 ---
 
 ## 💡 Ideas for Contributions
 
-### Features
-- [ ] Real-time bridge tracking
-- [ ] Leaderboard system
-- [ ] APY calculator
-- [ ] Export transaction history
-- [ ] Dark/Light mode toggle
-- [ ] Multi-language support
+**Features already live** (no need to rebuild):
+- ✅ Liquidity pool, staking, governance, prediction market, NFT marketplace, bridge router, AI agent
 
-### Improvements
-- [ ] Performance optimizations
-- [ ] Better error messages
-- [ ] Accessibility enhancements
-- [ ] Mobile UX improvements
-- [ ] Animation refinements
-
-### Documentation
-- [ ] API documentation
-- [ ] Video tutorials
-- [ ] Architecture diagrams
-- [ ] Translation to other languages
-
-### Smart Contracts
-- [ ] Add more tests
-- [ ] Gas optimizations
-- [ ] Security improvements
-- [ ] Additional features
-
----
-
-## 🐛 Bug Reports
-
-When filing a bug report, please include:
-
-1. **Description** - Clear description of the bug
-2. **Steps to reproduce** - How to trigger the bug
-3. **Expected behavior** - What should happen
-4. **Actual behavior** - What actually happens
-5. **Screenshots** - If applicable
-6. **Environment** - Browser, OS, wallet version
+**Good areas to contribute:**
+- Performance optimizations
+- Accessibility improvements
+- Mobile UX refinements
+- Additional bridge integrations
+- Smart contract tests (in [b2s-token-contract](https://github.com/wkalidev/b2s-token-contract))
+- Documentation and tutorials
 
 ---
 
 ## 🎨 Design Guidelines
 
-- Follow existing design patterns
-- Use Tailwind CSS classes
-- Maintain responsive design
-- Test on mobile devices
+- Follow the existing **Neon Punk Infosec** design system
+- Colors: `#00ff9f` `#00d4ff` `#ff00ff` `#ffd700` `#ff4444`
+- Font: Courier New / monospace
+- Use Tailwind CSS utility classes
 - Keep animations smooth (60fps)
-- Use the project's color palette
+- Test on mobile
+
+---
+
+## 🐛 Bug Reports
+
+Please include:
+1. Description of the bug
+2. Steps to reproduce
+3. Expected vs actual behavior
+4. Browser, OS, wallet version
+5. Screenshots if applicable
 
 ---
 
 ## 🔐 Security
 
-If you discover a security vulnerability, please email directly instead of opening a public issue.
+If you discover a security vulnerability, please **do not** open a public issue. See [SECURITY.md](./SECURITY.md) for responsible disclosure.
 
 ---
 
 ## 📞 Questions?
 
-- **Twitter**: [@willycodexwar](https://twitter.com/willycodexwar)
-- **Farcaster**: [willywarrior](https://warpcast.com/willywarrior)
+- 🐦 Twitter: [@willycodexwar](https://twitter.com/willycodexwar)
+- 🟪 Farcaster: [@willywarrior](https://warpcast.com/willywarrior)
+- 🐛 Issues: [GitHub Issues](https://github.com/wkalidev/base2stacks-tracker/issues)
 
 ---
 
 ## 🏆 Recognition
 
-Contributors will be:
-- Listed in README
-- Mentioned in release notes
-- Credited in the app
+Contributors will be listed in the README and credited in release notes.
 
 ---
 
 ## 📜 License
 
-By contributing, you agree that your contributions will be licensed under the MIT License.
+By contributing, you agree your contributions will be licensed under the MIT License.
 
 ---
 
-**Built for #StacksBuilderRewards 🏆**
-
-Thank you for making Base2Stacks better! 💙
+**Thank you for making Base2Stacks better! 💙**
 Made with ❤️ by wkalidev(zcodebase) for the Stacks community

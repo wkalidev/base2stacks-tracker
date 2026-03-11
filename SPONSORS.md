@@ -37,13 +37,13 @@ Your support helps us:
 ## 🤝 How to Sponsor
 
 ### GitHub Sponsors
-[Sponsor on GitHub](https://github.com/sponsors/wkalidev) (coming soon)
+[Sponsor on GitHub](https://github.com/sponsors/wkalidev) *(coming soon)*
 
 ### Crypto Donations
 
-**Stacks (STX):**
+**Stacks (STX) — Mainnet:**
 ```
-ST936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96
+SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96
 ```
 
 **Bitcoin:**
@@ -75,7 +75,7 @@ Can't sponsor financially? You can still help!
 
 ## 🔗 Links
 
-- [Main App](https://wkalidev-base2stacks-tracker.vercel.app)
+- [Live App](https://base2stacks-tracker.vercel.app)
 - [GitHub](https://github.com/wkalidev)
 - [Twitter](https://twitter.com/willycodexwar)
 - [Farcaster](https://warpcast.com/willywarrior)

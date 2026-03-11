@@ -1,15 +1,15 @@
-# 🗺️ Base2Stacks Tracker - Roadmap
+# 🗺️ Base2Stacks — Roadmap
 
 ## Overview
 
-This roadmap outlines the planned features and improvements for Base2Stacks Tracker. It's subject to change based on community feedback and priorities.
+This roadmap reflects the current state of Base2Stacks on Stacks mainnet and the planned direction for Q2 2026 and beyond.
 
 ---
 
-## ✅ Completed (v1.0 - v1.2)
+## ✅ Completed
 
-### v1.0.0 - MVP Launch (Feb 5, 2026)
-- ✅ Smart contract deployment on Stacks testnet
+### v1.0.0 — MVP Launch (Feb 2026)
+- ✅ Smart contract deployment on Stacks mainnet
 - ✅ Wallet integration (Leather & Xverse)
 - ✅ Daily reward claiming (5 $B2S tokens)
 - ✅ Basic staking functionality
@@ -17,130 +17,87 @@ This roadmap outlines the planned features and improvements for Base2Stacks Trac
 - ✅ Transaction history
 - ✅ Responsive UI design
 
-### v1.1.0 - Enhanced Features (Feb 7, 2026)
-- ✅ Staking statistics dashboard
-- ✅ Professional CSS animations
-- ✅ Glass morphism design
-- ✅ Loading states and skeletons
-- ✅ Comprehensive documentation
-
-### v1.2.0 - Advanced Features (Feb 8, 2026)
+### v1.2.0 — Advanced Features (Feb 2026)
 - ✅ Advanced leaderboard with badges
 - ✅ Interactive APY calculator
 - ✅ Toast notification system
 - ✅ Export functionality (CSV/JSON)
-- ✅ SEO optimization
-- ✅ Performance improvements
-- ✅ Community templates (Issues, PRs)
-- ✅ Security policy
-- ✅ Code of Conduct
+- ✅ SEO optimization + performance
+
+### v2.0.0 — Full DeFi Platform (Mar 2026)
+- ✅ AMM Liquidity Pool (B2S ↔ STX, 0.25% fee)
+- ✅ Governance DAO (on-chain proposals + voting)
+- ✅ NFT Badge Marketplace — 567 badges, 3 series, IPFS
+- ✅ Cross-Chain Bridge Router — 7 bridges + fee router
+- ✅ Prediction Market (AMM-style odds, 5 categories)
+- ✅ TradingView chart integration
+- ✅ AI DeFi assistant (Groq, 10 tools)
+- ✅ Analytics dashboard
+- ✅ WebSocket real-time updates
+- ✅ 11 smart contracts on mainnet
+- ✅ 4 passive revenue streams active
+- ✅ Neon Punk UI redesign
 
 ---
 
-## 🚀 In Progress (v1.3)
+## 🚀 In Progress / Q2 2026
 
-### v1.3.0 - Real-time & Testing (Target: Feb 10-12, 2026)
-- [ ] Unit tests with Jest
-- [ ] Integration tests
-- [ ] CI/CD with GitHub Actions
-- [ ] WebSocket for live balance updates
-- [ ] Real-time leaderboard refresh
-- [ ] Automated deployment pipeline
-- [ ] Test coverage reports
+### v2.1.0 — Prediction Market Activation
+- [ ] Create first live prediction market
+- [ ] Community betting on STX price targets
+- [ ] Governance vote on market categories
 
----
+### v2.2.0 — Governance Activation
+- [ ] Stake 10,000 $B2S → create first proposal
+- [ ] Community vote on Q2 roadmap priorities
+- [ ] Treasury allocation proposal
 
-## 📋 Planned Features
-
-### v1.4.0 - Analytics & Insights (Target: Feb 15-18, 2026)
-- [ ] Analytics dashboard
-- [ ] Volume tracking charts
-- [ ] User growth statistics
-- [ ] Token distribution visualization
-- [ ] 7-day activity graphs
-- [ ] Historical data analysis
-- [ ] Export analytics reports
-
-### v1.5.0 - Social & Gamification (Target: Feb 20-25, 2026)
-- [ ] Achievement system
-- [ ] NFT badges for milestones
-- [ ] Social sharing features
-- [ ] Weekly competitions
-- [ ] Bonus rewards for top 10
-- [ ] Referral system
-- [ ] User profiles
-
-### v1.6.0 - Mobile & PWA (Target: Feb 28 - Mar 5, 2026)
-- [ ] Progressive Web App (PWA)
-- [ ] Mobile app optimization
-- [ ] Push notifications
-- [ ] Offline support
-- [ ] App install prompt
-- [ ] Mobile wallet integration
-- [ ] Touch gestures
+### v2.3.0 — NFT Series Completion
+- [ ] Upload Infosec series seeds #171–#200 (Pinata limit reset)
+- [ ] Fill missing badges #149, #152, #166
+- [ ] Series 4 planning (community vote on theme)
 
 ---
 
-## 🎯 Future Vision (v2.0+)
+## 🎯 Future Vision
 
-### v2.0.0 - Mainnet Launch (Target: Q2 2026)
-- [ ] Deploy to Stacks mainnet
-- [ ] Professional security audit
-- [ ] Liquidity pools
-- [ ] Token swap functionality
-- [ ] Cross-chain bridge integration
-- [ ] Real Base ↔ Stacks tracking
-- [ ] Transaction fee optimization
+### v3.0.0 — sBTC Integration
+- [ ] Bitcoin-backed collateral on Stacks
+- [ ] sBTC liquidity pairs
+- [ ] BTC yield via Clarity contracts
 
-### v2.1.0 - DeFi Integration
-- [ ] Lending/borrowing protocol
-- [ ] Yield farming
-- [ ] Liquidity mining
-- [ ] Governance token
-- [ ] DAO implementation
-- [ ] Voting system
+### v3.1.0 — Mobile & PWA
+- [ ] Progressive Web App
+- [ ] Push notifications for rewards
+- [ ] Mobile wallet deep links
 
-### v2.2.0 - Ecosystem Expansion
-- [ ] API for third-party developers
-- [ ] SDK for easy integration
-- [ ] Developer documentation portal
-- [ ] Plugin system
-- [ ] Multi-language support
-- [ ] Regional customization
+### v3.2.0 — Ecosystem Expansion
+- [ ] Public API for third-party developers
+- [ ] SDK / npm package v2
+- [ ] More bridge integrations (LayerZero, Wormhole)
+- [ ] Professional smart contract audit
 
 ---
 
 ## 💡 Community Requests
 
-Want to see a feature added? [Request it here!](https://github.com/wkalidev/base2stacks-tracker/issues/new?template=feature_request.md)
-
-Popular requests will be prioritized and added to the roadmap.
+[Request a feature here](https://github.com/wkalidev/base2stacks-tracker/issues/new?template=feature_request.md) — popular requests get prioritized.
 
 ---
 
-## 🤝 Contributing
+## 📊 Version History
 
-Want to help build these features? Check out:
-- [Contributing Guidelines](CONTRIBUTING.md)
-- [Good First Issues](https://github.com/wkalidev/base2stacks-tracker/labels/good%20first%20issue)
-- [Help Wanted](https://github.com/wkalidev/base2stacks-tracker/labels/help%20wanted)
-
----
-
-## 📊 Progress Tracking
-
-| Version | Status | Completion | Release Date |
-|---------|--------|------------|--------------|
-| v1.0.0  | ✅ Released | 100% | Feb 5, 2026 |
-| v1.1.0  | ✅ Released | 100% | Feb 7, 2026 |
-| v1.2.0  | ✅ Released | 100% | Feb 8, 2026 |
-| v1.3.0  | 🚧 In Progress | 30% | Feb 12, 2026 |
-| v1.4.0  | 📋 Planned | 0% | Feb 18, 2026 |
-| v1.5.0  | 📋 Planned | 0% | Feb 25, 2026 |
+| Version | Status | Release |
+|---------|--------|---------|
+| v1.0.0 | ✅ Released | Feb 2026 |
+| v1.2.0 | ✅ Released | Feb 2026 |
+| v2.0.0 | ✅ Released | Mar 2026 |
+| v2.1.0 | 🚧 In Progress | Q2 2026 |
+| v3.0.0 | 📋 Planned | Q3 2026 |
 
 ---
 
-**Last Updated**: February 8, 2026  
-**Current Version**: v1.2.0
+**Last Updated**: March 11, 2026
+**Current Version**: v2.0.0
 
-🏆 Built for #StacksBuilderRewards
+🏆 Built for #StacksBuilderRewards March 2026

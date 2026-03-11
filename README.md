@@ -1,11 +1,11 @@
 # 🌉 Base2Stacks Bridge Tracker
 
-[![Mainnet](https://img.shields.io/badge/Network-Stacks%20Mainnet-green)](https://explorer.hiro.so/?chain=mainnet)
-[![Next.js](https://img.shields.io/badge/Built%20with-Next.js%2014-black?logo=next.js)](https://nextjs.org/)
-[![Stacks](https://img.shields.io/badge/Blockchain-Stacks-5546FF?logo=stacks)](https://www.stacks.co/)
-[![License](https://img.shields.io/badge/License-MIT-blue)](./LICENSE)
-[![Builder Rewards](https://img.shields.io/badge/Stacks-Builder%20Rewards%20March%202026-orange)](https://stacks.org)
-[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel)](https://vercel.com)
+[![Mainnet](https://img.shields.io/badge/Network-Stacks%20Mainnet-green?style=for-the-badge&logo=ethereum)](https://explorer.hiro.so/?chain=mainnet)
+[![Next.js](https://img.shields.io/badge/Built%20with-Next.js%2014-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Stacks](https://img.shields.io/badge/Blockchain-Stacks-5546FF?style=for-the-badge&logo=stacks)](https://www.stacks.co/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](./LICENSE)
+[![Builder Rewards](https://img.shields.io/badge/Stacks-Builder%20Rewards%20March%202026-orange?style=for-the-badge)](https://stacks.org)
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com)
 
 ## 🌐 Live App
 
@@ -15,7 +15,7 @@
 
 ## 📋 Overview
 
-Base2Stacks is a full-stack DeFi platform on Stacks mainnet. Track cross-chain bridges between Base & Stacks, earn $B2S tokens, swap, stake, vote, and bet on real-world outcomes — all powered by real on-chain data.
+Base2Stacks is a full-stack DeFi platform on Stacks **mainnet**. Track cross-chain bridges between Base & Stacks, earn $B2S tokens, swap, stake, vote, and bet on real-world outcomes — all powered by real on-chain data.
 
 ---
 
@@ -25,7 +25,7 @@ Base2Stacks is a full-stack DeFi platform on Stacks mainnet. Track cross-chain b
 |---|---|
 | `b2s-token` | Original $B2S token |
 | `b2s-token-v4` | Correct URI, Clarity 4 |
-| `b2s-liquidity-pool-v5` | AMM pool with liquidity |
+| `b2s-liquidity-pool-v5` | AMM pool with active liquidity |
 | `b2s-liquidity-pool-v6` | USDCx pairs |
 | `b2s-rewards-distributor-v3` | Daily reward distribution |
 | `b2s-prediction-market` | AMM-style prediction markets |
@@ -53,7 +53,7 @@ Base2Stacks is a full-stack DeFi platform on Stacks mainnet. Track cross-chain b
 
 ### 💧 AMM Liquidity Pool
 - B2S ↔ STX swaps with **0.25% fee**
-- Uniswap v2-style constant product formula (x\*y=k)
+- Uniswap v2-style constant product formula (x*y=k)
 - LP token minting and liquidity provision
 - Configurable slippage (0.5% / 1% / 2%)
 - B2S/USDCx pairs on v6
@@ -76,9 +76,12 @@ Base2Stacks is a full-stack DeFi platform on Stacks mainnet. Track cross-chain b
 - Requires 10,000 $B2S staked to create proposals
 
 ### 🛒 NFT Badge Marketplace
-- 5 rarity tiers: Common → Legendary (based on staked amount)
-- Legendary: 100K+ B2S / Epic: 10K+ / Rare: 1K+ / Uncommon: 100+ / Common: 1+
-- Buy, sell, and trade achievement badges
+- **567 unique badges** across 3 series:
+  - 🔐 **Série 1 — Infosec Original** (#1–#170): cybersecurity themes, 3 Legendaries
+  - 🎨 **Série 2 — Glitch Art** (#201–#500): 300 generative glitch badges
+  - 🌌 **Série 3 — Ultra Rare Galactic** (#501–#600): Galactic / Base / Degen / Stack themes
+- 5 rarity tiers: Common → Legendary
+- All images on IPFS via Pinata, multi-gateway fallback
 - 2.5% platform fee
 
 ### 🔮 Prediction Market
@@ -92,6 +95,11 @@ Base2Stacks is a full-stack DeFi platform on Stacks mainnet. Track cross-chain b
 - Live stats: total staked, total vaults, block height
 - Transaction history with CSV/JSON export
 - Analytics dashboard with on-chain metrics
+
+### 🤖 AI DeFi Assistant
+- On-chain AI agent with 10 tools (Groq)
+- Natural language queries for contract data
+- Market analysis and strategy suggestions
 
 ---
 
@@ -132,8 +140,9 @@ NEXT_PUBLIC_BASE_URL=https://base2stacks-tracker.vercel.app
 | Blockchain API | Hiro Mainnet API |
 | Market Data | CoinGecko Public API |
 | Charts | TradingView Advanced Chart |
+| NFT Storage | Pinata IPFS (multi-gateway) |
+| AI Agent | Groq API |
 | Deployment | Vercel |
-| NPM Package | [@wkalidev/b2s-contracts](https://www.npmjs.com/package/@wkalidev/b2s-contracts) |
 
 ---
 
@@ -157,14 +166,14 @@ base2stacks-tracker/
 │   └── components/
 │       ├── MarketData.tsx
 │       ├── LiquidityPool.tsx
-│       ├── StakingAndRewards.tsx     # StakingStats + RewardsDistributor
+│       ├── StakingAndRewards.tsx
 │       ├── GovernanceDAO.tsx
-│       ├── NFTMarketplace.tsx
+│       ├── NFTMarketplace.tsx        # 567 badges (3 series)
 │       ├── PredictionMarket.tsx
 │       ├── LeaderboardAdvanced.tsx
 │       ├── TransactionHistory.tsx
 │       ├── AnalyticsDashboard.tsx
-│       ├── BridgeRouter.tsx          # 7 bridges + fee router
+│       ├── CrossChainBridge.tsx      # 7 bridges + fee router
 │       ├── APYCalculator.tsx
 │       └── AgentChat.tsx             # AI DeFi assistant
 └── contracts/                        # Clarity contracts (reference)
@@ -178,7 +187,20 @@ base2stacks-tracker/
 |---|---|
 | [b2s-token-contract](https://github.com/wkalidev/b2s-token-contract) | All Clarity smart contracts |
 | [b2s-analytics-dashboard](https://github.com/wkalidev/b2s-analytics-dashboard) | Analytics dashboard |
+| [b2s-nft-badges](https://github.com/wkalidev/b2s-nft-badges) | NFT badge generation scripts + 567 assets |
+| [b2s-staking-interface](https://github.com/wkalidev/b2s-staking-interface) | Staking UI components |
 | [stacks-clarity-toolkit](https://github.com/wkalidev/stacks-clarity-toolkit) | Clarity dev toolkit |
+
+---
+
+## 💰 Passive Revenue Streams
+
+| Source | Link | Commission |
+|---|---|---|
+| 🌉 deBridge | [Referral](https://app.debridge.com/r/32893) | % bridged volume |
+| ⚡ Rango | [Referral](https://rango.vip/a/o9pwCm) | % swaps |
+| ☀️ Jupiter | [Referral](https://jup.ag/?ref=j5ft3v5m26eu) | referral fees |
+| 🔗 b2s-fee-router | on-chain | 0.3% bridges |
 
 ---
 

@@ -2,92 +2,85 @@
 
 All notable changes to Base2Stacks Tracker.
 
-## [2.0.0] - 2026-02-08 - MEGA UPDATE 🚀
+---
 
-### 🎊 MASSIVE DAY 2 EXPANSION
+## [2.0.0] - 2026-03-11 — Full DeFi Platform 🚀
 
-From 25 commits to 131 commits in ONE DAY!
+### Added — Smart Contracts (Mainnet SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96)
+- `b2s-token-v4` — Clarity 4, correct URI
+- `b2s-liquidity-pool-v5` — AMM with active liquidity
+- `b2s-liquidity-pool-v6` — USDCx pairs
+- `b2s-rewards-distributor-v3` — Daily reward distribution
+- `b2s-prediction-market` — AMM-style prediction markets
+- `b2s-governance` — On-chain DAO voting
+- `b2s-price-oracle` — Clarity 4 price oracle
+- `b2s-staking-vault-v2` — Staking with APY multipliers
+- `b2s-airdrop-v2` — Token airdrop distribution
+- `b2s-fee-router` — Bridge fee collection & distribution (0.3%)
 
-### Major Features Added
-
-#### 💰 Rewards Distribution System
-- Complete staking rewards with 12.5% APY
-- Automatic reward calculations on-chain
-- Claim rewards functionality
-- Real-time balance tracking
-- Smart contract: `b2s-rewards-distributor.clar`
-
-#### 🏛️ Governance DAO
-- On-chain voting system
-- Proposal creation (10K minimum stake)
-- 7-day voting periods
-- Quorum (20%) and approval (51%) requirements
-- Multiple proposal categories
-- Smart contract: `b2s-governance.clar`
-
-#### 🛒 NFT Marketplace
-- Buy and sell achievement badges
+### Added — NFT Badge Marketplace
+- 567 unique badges across 3 series:
+  - Série 1: Infosec Original (#1–#170) — cybersecurity themes, 3 Legendaries
+  - Série 2: Glitch Art (#201–#500) — 300 generative badges
+  - Série 3: Ultra Rare Galactic (#501–#600) — Galactic / Base / Degen / Stack
+- All images on IPFS via Pinata, multi-gateway fallback
+- 5 rarity tiers: Common → Legendary
 - 2.5% platform fee
-- Rarity-based pricing
-- User trading statistics
-- Price discovery system
-- Smart contract: `b2s-marketplace.clar`
 
-#### 💧 Liquidity Pool (AMM)
-- Token swaps (B2S ↔ STX)
-- Constant product formula (x × y = k)
-- Add/remove liquidity
-- LP tokens for providers
-- 0.25% trading fee
-- Smart contract: `b2s-liquidity-pool.clar`
+### Added — Cross-Chain Bridge Router
+- 7 bridges integrated: Stargate, deBridge, Across, Celer, Orbiter, Rango, Jupiter
+- On-chain fee recording via `b2s-fee-router`
+- 4 passive revenue streams active
 
-### Components Added
-- RewardsDistributor.tsx - Staking interface
-- GovernanceDAO.tsx - Voting system
-- NFTMarketplace.tsx - Badge trading
-- LiquidityPool.tsx - Token swaps
+### Added — Core Features
+- AMM Liquidity Pool — B2S ↔ STX swaps, 0.25% fee, x*y=k formula
+- Governance DAO — on-chain proposals, 7-day voting, 10K B2S minimum
+- Prediction Market — AMM-style odds, 5 categories including Crisis Alert 🚨
+- TradingView Advanced Chart — candlesticks, RSI, 5 timeframes
+- AI DeFi assistant — Groq, 10 on-chain tools
+- Analytics dashboard — TVL, staking stats, block height
+- WebSocket real-time updates
+- Neon Punk Infosec UI redesign
 
-### Documentation
-- REWARDS-SYSTEM.md - Complete staking guide
-- GOVERNANCE.md - DAO documentation
-- GOVERNANCE-FAQ.md - Common questions
-- MARKETPLACE.md - Trading guide
-- LIQUIDITY-POOL.md - AMM documentation
-- 30+ total documentation files
-
-### Repository Structure
-- 6 active repositories
-- 5 deployed smart contracts
-- 18+ React components
-- 35+ documentation files
-- Comprehensive test coverage
-
-### Stats
-- 🔥 **131 commits** in 2 days
-- 🚀 **#20 on Stacks Builder Rewards**
-- 💎 **5 smart contracts deployed**
-- 📝 **8,000+ lines of code**
-- 🏆 **+166 position improvement**
-
-## [1.2.0] - 2026-02-07 - Day 1 Foundation
-
-### Added
-- Initial dApp launch
-- Wallet connection
-- Daily reward claiming
-- Basic staking interface
-- Transaction history
-- Leaderboard
-- APY calculator
-
-## [1.0.0] - 2026-02-06 - Genesis
-
-### Added
-- Project initialization
-- Basic structure
-- Smart contract foundation
+### Changed
+- Network: testnet → **mainnet**
+- Contract address: `ST936...` → `SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96`
+- Live URL: updated to `base2stacks-tracker.vercel.app`
 
 ---
 
-**Format**: [Keep a Changelog](https://keepachangelog.com/)  
+## [1.2.0] - 2026-02-08 — Advanced Features
+
+### Added
+- Advanced leaderboard with badge system
+- Interactive APY calculator
+- Toast notification system
+- Export functionality (CSV/JSON)
+- Performance optimizations + SEO
+
+---
+
+## [1.1.0] - 2026-02-07 — Enhanced UI
+
+### Added
+- Staking statistics dashboard
+- Glass morphism design
+- Loading states and skeletons
+- Comprehensive documentation
+
+---
+
+## [1.0.0] - 2026-02-06 — Genesis
+
+### Added
+- Smart contract deployment
+- Wallet connection (Leather & Xverse)
+- Daily reward claiming (5 $B2S)
+- Basic staking interface
+- Transaction history
+- Leaderboard + APY calculator
+
+---
+
+**Format**: [Keep a Changelog](https://keepachangelog.com/)
 **Versioning**: [Semantic Versioning](https://semver.org/)
