@@ -5,11 +5,11 @@
 [![Stacks](https://img.shields.io/badge/Blockchain-Stacks-5546FF?logo=stacks)](https://www.stacks.co/)
 [![License](https://img.shields.io/badge/License-MIT-blue)](./LICENSE)
 [![Builder Rewards](https://img.shields.io/badge/Stacks-Builder%20Rewards%20March%202026-orange)](https://stacks.org)
-[![Railway](https://img.shields.io/badge/Deployed%20on-Railway-blueviolet?logo=railway)](https://railway.app)
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel)](https://vercel.com)
 
 ## 🌐 Live App
 
-**[https://base2stacks-tracker-production.up.railway.app](https://base2stacks-tracker-production.up.railway.app)**
+**[https://base2stacks-tracker.vercel.app](https://base2stacks-tracker.vercel.app)**
 
 ---
 
@@ -33,6 +33,7 @@ Base2Stacks is a full-stack DeFi platform on Stacks mainnet. Track cross-chain b
 | `b2s-price-oracle` | Clarity 4 price oracle |
 | `b2s-staking-vault-v2` | Staking with APY multipliers |
 | `b2s-airdrop-v2` | Token airdrop distribution |
+| `b2s-fee-router` | Bridge fee collection & distribution |
 
 ---
 
@@ -63,6 +64,11 @@ Base2Stacks is a full-stack DeFi platform on Stacks mainnet. Track cross-chain b
 - Real-time pending rewards from `b2s-staking-vault-v2`
 - Instant unstake — no lock period
 
+### 🌉 Cross-Chain Bridge
+- 7 bridges: Stargate, deBridge, Across, Celer, Orbiter, Rango, Jupiter
+- On-chain fee recording via `b2s-fee-router`
+- 0.3% fee — 50% treasury / 50% stakers
+
 ### 🏛️ Governance DAO
 - On-chain proposals from `b2s-governance` contract
 - 1 token = 1 vote — voting power from staked balance
@@ -80,13 +86,12 @@ Base2Stacks is a full-stack DeFi platform on Stacks mainnet. Track cross-chain b
 - AMM-style odds based on bet pool
 - Create your own markets
 - 2% platform fee on winnings
-- Emergency refund mechanism
 
-### 📈 Leaderboard & Analytics
+### 📈 Analytics & Leaderboard
 - Top stakers from real `b2s-staking-vault-v2` transactions
 - Live stats: total staked, total vaults, block height
 - Transaction history with CSV/JSON export
-- Auto-refresh every 2 min
+- Analytics dashboard with on-chain metrics
 
 ---
 
@@ -106,18 +111,12 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000)
 
-### Build
-```bash
-npm run build
-npm start
-```
-
 ### Environment Variables
 ```bash
 # .env.local (optional — all defaults work without any key)
 NEXT_PUBLIC_CONTRACT_ADDRESS=SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96
 NEXT_PUBLIC_CONTRACT_NAME=b2s-token
-NEXT_PUBLIC_BASE_URL=https://base2stacks-tracker-production.up.railway.app
+NEXT_PUBLIC_BASE_URL=https://base2stacks-tracker.vercel.app
 ```
 
 ---
@@ -133,7 +132,7 @@ NEXT_PUBLIC_BASE_URL=https://base2stacks-tracker-production.up.railway.app
 | Blockchain API | Hiro Mainnet API |
 | Market Data | CoinGecko Public API |
 | Charts | TradingView Advanced Chart |
-| Deployment | Railway |
+| Deployment | Vercel |
 | NPM Package | [@wkalidev/b2s-contracts](https://www.npmjs.com/package/@wkalidev/b2s-contracts) |
 
 ---
@@ -144,27 +143,30 @@ NEXT_PUBLIC_BASE_URL=https://base2stacks-tracker-production.up.railway.app
 base2stacks-tracker/
 ├── src/
 │   ├── app/
-│   │   ├── page.tsx                  # Main page
-│   │   ├── layout.tsx                # Root layout
+│   │   ├── page.tsx
+│   │   ├── layout.tsx
 │   │   └── api/
-│   │       └── market/
-│   │           └── route.ts          # CoinGecko proxy (60s cache)
+│   │       ├── market/route.ts       # CoinGecko proxy (60s cache)
+│   │       └── agent/route.ts        # AI agent (10 tools, Groq)
 │   ├── hooks/
 │   │   ├── useWallet.ts
 │   │   ├── useContract.ts
 │   │   ├── useBalance.ts
-│   │   └── useDashboardStats.ts
+│   │   ├── useDashboardStats.ts
+│   │   └── useStacksWebSocket.ts
 │   └── components/
-│       ├── MarketData.tsx            # TradingView + CoinGecko live
+│       ├── MarketData.tsx
 │       ├── LiquidityPool.tsx
-│       ├── StakingStats.tsx          # b2s-staking-vault-v2
-│       ├── RewardsDistributor.tsx
-│       ├── GovernanceDAO.tsx         # On-chain proposals
-│       ├── NFTMarketplace.tsx        # Dynamic badges from stakers
+│       ├── StakingAndRewards.tsx     # StakingStats + RewardsDistributor
+│       ├── GovernanceDAO.tsx
+│       ├── NFTMarketplace.tsx
 │       ├── PredictionMarket.tsx
-│       ├── LeaderboardAdvanced.tsx   # Real staker rankings
-│       ├── TransactionHistory.tsx    # CSV/JSON export
-│       └── APYCalculator.tsx
+│       ├── LeaderboardAdvanced.tsx
+│       ├── TransactionHistory.tsx
+│       ├── AnalyticsDashboard.tsx
+│       ├── BridgeRouter.tsx          # 7 bridges + fee router
+│       ├── APYCalculator.tsx
+│       └── AgentChat.tsx             # AI DeFi assistant
 └── contracts/                        # Clarity contracts (reference)
 ```
 
@@ -176,7 +178,6 @@ base2stacks-tracker/
 |---|---|
 | [b2s-token-contract](https://github.com/wkalidev/b2s-token-contract) | All Clarity smart contracts |
 | [b2s-analytics-dashboard](https://github.com/wkalidev/b2s-analytics-dashboard) | Analytics dashboard |
-| [b2s-staking-interface](https://github.com/wkalidev/b2s-staking-interface) | Staking UI |
 | [stacks-clarity-toolkit](https://github.com/wkalidev/stacks-clarity-toolkit) | Clarity dev toolkit |
 
 ---
@@ -201,4 +202,4 @@ MIT License — See [LICENSE](./LICENSE)
 
 ---
 
-**Built with ❤️ for #StacksBuilderRewards March 2026 🏆**
+**Built with ❤️ by wkalidev(zcodebase) for #StacksBuilderRewards March 2026 🏆**
