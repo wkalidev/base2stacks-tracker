@@ -332,7 +332,7 @@ export default function Page() {
               <span className="text-xs font-black tracking-[0.2em] text-white/40">BASE2STACKS_TRACKER</span>
             </div>
             <p className="text-[10px] tracking-widest text-white/20">
-              BUILT WITH ❤️ BY <span style={{ color: '#2015f4' }}>WKALIDEV(ZCODEBASE)</span> // MAINNET
+              BUILT WITH ❤️ BY <span style={{ color: '#00d4ff' }}>WKALIDEV(ZCODEBASE)</span> // MAINNET
             </p>
             <div className="flex items-center gap-6">
               {[
