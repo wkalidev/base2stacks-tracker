@@ -12,7 +12,7 @@ export const viewport: Viewport = {
   themeColor: '#FF6B35',
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://base2stacks-tracker.up.railway.app'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://base2stacks-tracker.vercel.app'
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest',
 
   other: {
-    'talentapp:project_verification': '6de2cda5372b04a12a81a668e5d689db30de8e53e20d524b3251030926eb836f7bc84de81614e2b8f85f810e2fcb5581f5271dd0cff54aeec40161aac4e214c5',
+    'talentapp:project_verification': 'c4153b278dcd0cd530ec2934c29011c1991e8f3784316efaf662ff9e1c365cc18ccbb1886e27d103e58ab690c502083a404cc4eea5de422cc1923080a55fe9c4',
     'base:app_id': '69ad336936e1b05c113ad6f0',
     'apple-mobile-web-app-capable': 'yes',
     'apple-mobile-web-app-status-bar-style': 'black-translucent',
