@@ -11,6 +11,7 @@
 (define-constant err-insufficient-balance (err u102))
 (define-constant err-invalid-amount (err u103))
 (define-constant err-already-claimed (err u104))
+(define-constant err-already-verified (err u105))
 
 ;; Data Variables
 (define-data-var token-name (string-ascii 32) "Base2Stacks Token")
@@ -166,6 +167,9 @@
       (reward-amount u10000000) ;; 10 $B2S per verified transaction
     )
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+
+    ;; Prevents double verification
+    (asserts! (not (get verified tx-data)) err-already-verified)
     
     ;; Update verification status
     (map-set bridge-transactions
