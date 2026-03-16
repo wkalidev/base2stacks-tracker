@@ -1,38 +1,45 @@
-'use client';
+'use client'
 
-import { useState, useEffect, useCallback } from 'react';
-import { useWallet } from '@/hooks/useWallet';
-import { callReadOnlyFunction, cvToJSON, standardPrincipalCV, uintCV, PostConditionMode, AnchorMode } from '@stacks/transactions';
-import { openContractCall } from '@stacks/connect';
-import { StacksMainnet } from '@stacks/network';
+import { useState, useEffect, useCallback } from 'react'
+import { useWallet } from '@/hooks/useWallet'
+import {
+  callReadOnlyFunction, cvToJSON,
+  standardPrincipalCV, uintCV,
+  PostConditionMode, AnchorMode,
+} from '@stacks/transactions'
+import { openContractCall } from '@stacks/connect'
+import { StacksMainnet } from '@stacks/network'
 
-const network = new StacksMainnet();
-const contractAddress = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96';
-const contractName = 'b2s-rewards-distributor-v3';
+const network         = new StacksMainnet()
+const contractAddress = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
+const contractName    = 'b2s-rewards-distributor-v3'
+const DECIMALS        = 1_000_000
+const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 
 export default function RewardsDistributor() {
-  const { address, isConnected } = useWallet();
-  const [stakedAmount, setStakedAmount] = useState(0);
-  const [pendingRewards, setPendingRewards] = useState(0);
-  const [totalEarned, setTotalEarned] = useState(0);
-  const [stakeInput, setStakeInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [txId, setTxId] = useState<string | null>(null);
-  const [txType, setTxType] = useState<string>('');
+  const { address, isConnected } = useWallet()
+  const [stakedAmount,   setStakedAmount]   = useState(0)
+  const [pendingRewards, setPendingRewards] = useState(0)
+  const [totalEarned,    setTotalEarned]    = useState(0)
+  const [stakeInput,     setStakeInput]     = useState('')
+  const [loading,        setLoading]        = useState(false)
+  const [txId,           setTxId]           = useState<string | null>(null)
+  const [txType,         setTxType]         = useState('')
+  const [error,          setError]          = useState<string | null>(null)
 
   const fetchStakerInfo = useCallback(async () => {
-    if (!address) return;
+    if (!address) return
     try {
       const infoResult = await callReadOnlyFunction({
         network, contractAddress, contractName,
         functionName: 'get-staker-info',
         functionArgs: [standardPrincipalCV(address)],
         senderAddress: address,
-      });
-      const info = cvToJSON(infoResult);
+      })
+      const info = cvToJSON(infoResult)
       if (info.value) {
-        setStakedAmount(Number(info.value['staked-amount']?.value || 0) / 1_000_000);
-        setTotalEarned(Number(info.value['total-rewards-earned']?.value || 0) / 1_000_000);
+        setStakedAmount(Number(info.value['staked-amount']?.value || 0) / DECIMALS)
+        setTotalEarned(Number(info.value['total-rewards-earned']?.value || 0) / DECIMALS)
       }
 
       const rewardsResult = await callReadOnlyFunction({
@@ -40,22 +47,23 @@ export default function RewardsDistributor() {
         functionName: 'get-pending-rewards',
         functionArgs: [standardPrincipalCV(address)],
         senderAddress: address,
-      });
-      setPendingRewards(Number(cvToJSON(rewardsResult).value?.value || 0) / 1_000_000);
-    } catch (error) {
-      console.error('Error fetching staker info:', error);
+      })
+      setPendingRewards(Number(cvToJSON(rewardsResult).value?.value || 0) / DECIMALS)
+    } catch (e) {
+      console.error('fetchStakerInfo:', e)
     }
-  }, [address]);
+  }, [address])
 
   useEffect(() => {
-    if (address && isConnected) fetchStakerInfo();
-  }, [address, isConnected, fetchStakerInfo]);
+    if (address && isConnected) fetchStakerInfo()
+  }, [address, isConnected, fetchStakerInfo])
 
   const callContract = async (functionName: string, args: any[], type: string) => {
-    if (!address) return;
-    setLoading(true);
-    setTxId(null);
-    setTxType(type);
+    if (!address) return
+    setLoading(true)
+    setTxId(null)
+    setError(null)
+    setTxType(type)
     try {
       await openContractCall({
         network, contractAddress, contractName,
@@ -64,123 +72,275 @@ export default function RewardsDistributor() {
         postConditionMode: PostConditionMode.Allow,
         anchorMode: AnchorMode.Any,
         onFinish: (data) => {
-          setTxId(data.txId);
-          setStakeInput('');
-          setLoading(false);
-          setTimeout(fetchStakerInfo, 5000);
+          setTxId(data.txId)
+          setStakeInput('')
+          setLoading(false)
+          setTimeout(fetchStakerInfo, 5000)
         },
         onCancel: () => setLoading(false),
-      });
-    } catch (err) {
-      console.error(`${type} error:`, err);
-      setLoading(false);
+      })
+    } catch (err: any) {
+      setError(err?.message ?? `${type} failed`)
+      setLoading(false)
     }
-  };
-
-  const handleStake = () => {
-    const amount = parseFloat(stakeInput);
-    if (!amount || amount <= 0) return;
-    callContract('stake', [uintCV(Math.floor(amount * 1_000_000))], 'Stake');
-  };
-
-  const handleUnstake = () => {
-    const amount = parseFloat(stakeInput);
-    if (!amount || amount <= 0 || amount > stakedAmount) return;
-    callContract('unstake', [uintCV(Math.floor(amount * 1_000_000))], 'Unstake');
-  };
-
-  const handleClaimRewards = () => {
-    if (pendingRewards === 0) return;
-    callContract('claim-rewards', [], 'Claim');
-  };
-
-  if (!isConnected) {
-    return (
-      <div className="bg-white/5 backdrop-blur-md rounded-xl p-8 border border-white/10 text-center">
-        <p className="text-white/70 text-lg">Please connect your wallet to access rewards distribution</p>
-      </div>
-    );
   }
 
-  return (
-    <div className="rewards-distributor">
-      <h2 className="text-3xl font-bold text-white text-center mb-8">💰 Rewards Distributor</h2>
+  const handleStake = () => {
+    const amount = parseFloat(stakeInput)
+    if (!amount || amount <= 0) return
+    callContract('stake', [uintCV(Math.floor(amount * DECIMALS))], 'STAKE')
+  }
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-md rounded-xl p-6 border border-blue-500/30">
-          <h3 className="text-white/70 text-sm mb-2">Staked Amount</h3>
-          <p className="text-3xl font-bold text-white">{stakedAmount.toFixed(2)} $B2S</p>
-        </div>
+  const handleUnstake = () => {
+    const amount = parseFloat(stakeInput)
+    if (!amount || amount <= 0 || amount > stakedAmount) return
+    callContract('unstake', [uintCV(Math.floor(amount * DECIMALS))], 'UNSTAKE')
+  }
 
-        <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-md rounded-xl p-6 border border-green-500/30">
-          <h3 className="text-white/70 text-sm mb-2">Pending Rewards</h3>
-          <p className="text-3xl font-bold text-green-400">{pendingRewards.toFixed(6)} $B2S</p>
-          <button
-            onClick={handleClaimRewards}
-            disabled={loading || pendingRewards === 0}
-            className="mt-4 w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg font-semibold transition-all"
-          >
-            {loading && txType === 'Claim' ? '⏳ Claiming...' : 'Claim Rewards'}
-          </button>
-        </div>
+  const handleClaim = () => {
+    if (pendingRewards === 0) return
+    callContract('claim-rewards', [], 'CLAIM')
+  }
 
-        <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-md rounded-xl p-6 border border-purple-500/30">
-          <h3 className="text-white/70 text-sm mb-2">Total Earned</h3>
-          <p className="text-3xl font-bold text-purple-400">{totalEarned.toFixed(2)} $B2S</p>
+  // ── Not connected ──────────────────────────────────────────────────────────
+  if (!isConnected) {
+    return (
+      <div style={{
+        ...MONO,
+        background: 'rgba(255,255,255,0.02)',
+        border: '1px solid rgba(255,255,255,0.07)',
+        borderRadius: '16px',
+        padding: '48px',
+        textAlign: 'center',
+      }}>
+        <div style={{ fontSize: '32px', marginBottom: '12px' }}>🔒</div>
+        <div style={{ fontSize: '11px', letterSpacing: '0.25em', color: 'rgba(255,255,255,0.3)' }}>
+          CONNECT_WALLET_TO_ACCESS_REWARDS
         </div>
       </div>
+    )
+  }
 
-      <div className="bg-white/5 backdrop-blur-md rounded-xl p-6 border border-white/10">
-        <h3 className="text-white font-semibold text-xl mb-4">Manage Staking</h3>
-        <div className="relative mb-4">
+  const inputAmount = parseFloat(stakeInput) || 0
+  const canStake    = inputAmount > 0 && !loading
+  const canUnstake  = inputAmount > 0 && inputAmount <= stakedAmount && !loading
+  const canClaim    = pendingRewards > 0 && !loading
+
+  return (
+    <div style={{ ...MONO, color: '#fff' }}>
+
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <div>
+          <div style={{ fontSize: '11px', letterSpacing: '0.25em', color: '#00ff9f', marginBottom: '2px' }}>
+            REWARDS_DISTRIBUTOR
+          </div>
+          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.2)', letterSpacing: '0.1em' }}>
+            CONTRACT: {contractName}
+          </div>
+        </div>
+        <button
+          onClick={fetchStakerInfo}
+          style={{
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '8px',
+            color: 'rgba(255,255,255,0.4)',
+            cursor: 'pointer',
+            padding: '6px 10px',
+            fontSize: '14px',
+          }}
+        >
+          ⟳
+        </button>
+      </div>
+
+      {/* Stats grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '10px', marginBottom: '20px' }}>
+        {[
+          { label: 'STAKED',          value: `${stakedAmount.toFixed(2)} $B2S`,      color: '#00d4ff' },
+          { label: 'PENDING_REWARDS', value: `${pendingRewards.toFixed(6)} $B2S`,    color: '#00ff9f' },
+          { label: 'TOTAL_EARNED',    value: `${totalEarned.toFixed(2)} $B2S`,        color: '#ff00ff' },
+          { label: 'APY',             value: '12.5% — 37.5%',                         color: '#ffd700' },
+        ].map(s => (
+          <div key={s.label} style={{
+            background: 'rgba(255,255,255,0.02)',
+            border: `1px solid ${s.color}20`,
+            borderRadius: '12px',
+            padding: '14px 16px',
+            position: 'relative',
+            overflow: 'hidden',
+          }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: `linear-gradient(90deg, transparent, ${s.color}40, transparent)` }} />
+            <div style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)', marginBottom: '6px' }}>{s.label}</div>
+            <div style={{ fontSize: '15px', fontWeight: 700, color: s.color }}>{s.value}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Claim button */}
+      <button
+        onClick={handleClaim}
+        disabled={!canClaim}
+        style={{
+          width: '100%',
+          padding: '14px',
+          borderRadius: '12px',
+          marginBottom: '16px',
+          fontSize: '12px',
+          fontWeight: 700,
+          letterSpacing: '0.15em',
+          cursor: canClaim ? 'pointer' : 'not-allowed',
+          border: canClaim ? '1px solid rgba(0,255,159,0.4)' : '1px solid rgba(255,255,255,0.06)',
+          background: canClaim ? 'rgba(0,255,159,0.08)' : 'rgba(255,255,255,0.02)',
+          color: canClaim ? '#00ff9f' : 'rgba(255,255,255,0.2)',
+          transition: 'all 0.2s',
+          ...MONO,
+        }}
+      >
+        {loading && txType === 'CLAIM' ? '⏳ CLAIMING_REWARDS...' : `▶ CLAIM_REWARDS // ${pendingRewards.toFixed(4)} $B2S`}
+      </button>
+
+      {/* Stake / Unstake */}
+      <div style={{
+        background: 'rgba(255,255,255,0.02)',
+        border: '1px solid rgba(255,255,255,0.07)',
+        borderRadius: '14px',
+        padding: '18px',
+        marginBottom: '16px',
+      }}>
+        <div style={{ fontSize: '10px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)', marginBottom: '12px' }}>
+          MANAGE_STAKING
+        </div>
+
+        {/* Input */}
+        <div style={{ position: 'relative', marginBottom: '10px' }}>
           <input
             type="number"
             value={stakeInput}
-            onChange={(e) => setStakeInput(e.target.value)}
-            placeholder="Enter amount"
+            onChange={e => setStakeInput(e.target.value)}
+            placeholder="0.0"
             disabled={loading}
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-blue-500"
+            style={{
+              ...MONO,
+              width: '100%',
+              background: 'rgba(0,0,0,0.3)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: '10px',
+              color: '#fff',
+              fontSize: '20px',
+              fontWeight: 700,
+              padding: '12px 60px 12px 16px',
+              outline: 'none',
+              boxSizing: 'border-box',
+            }}
           />
-          <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/60">$B2S</span>
+          <span style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', fontSize: '11px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em' }}>
+            $B2S
+          </span>
         </div>
-        {stakeInput && parseFloat(stakeInput) > stakedAmount && (
-          <p className="text-red-400 text-xs mb-3">⚠️ Cannot unstake more than your staked balance ({stakedAmount.toFixed(2)} $B2S)</p>
+
+        {/* Overstake warning */}
+        {inputAmount > stakedAmount && inputAmount > 0 && (
+          <div style={{ fontSize: '10px', color: '#ff4444', marginBottom: '10px', letterSpacing: '0.1em' }}>
+            ⚠ MAX_UNSTAKE: {stakedAmount.toFixed(2)} $B2S
+          </div>
         )}
-        <div className="grid grid-cols-2 gap-4">
+
+        {/* Staked balance helper */}
+        <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.2)', marginBottom: '12px', letterSpacing: '0.1em' }}>
+          STAKED_BALANCE: {stakedAmount.toFixed(2)} $B2S
+          {stakedAmount > 0 && (
+            <button
+              onClick={() => setStakeInput(stakedAmount.toString())}
+              style={{ marginLeft: '8px', background: 'none', border: 'none', color: '#00d4ff', cursor: 'pointer', fontSize: '10px', ...MONO }}
+            >
+              MAX
+            </button>
+          )}
+        </div>
+
+        {/* Stake / Unstake buttons */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
           <button
             onClick={handleStake}
-            disabled={loading || !stakeInput || parseFloat(stakeInput) <= 0}
-            className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-semibold transition-all"
+            disabled={!canStake}
+            style={{
+              ...MONO,
+              padding: '12px',
+              borderRadius: '10px',
+              fontSize: '11px',
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              cursor: canStake ? 'pointer' : 'not-allowed',
+              border: canStake ? '1px solid rgba(0,212,255,0.4)' : '1px solid rgba(255,255,255,0.06)',
+              background: canStake ? 'rgba(0,212,255,0.08)' : 'rgba(255,255,255,0.02)',
+              color: canStake ? '#00d4ff' : 'rgba(255,255,255,0.2)',
+              transition: 'all 0.2s',
+            }}
           >
-            {loading && txType === 'Stake' ? '⏳ Staking...' : 'Stake'}
+            {loading && txType === 'STAKE' ? '⏳ STAKING...' : '▲ STAKE'}
           </button>
           <button
             onClick={handleUnstake}
-            disabled={loading || !stakeInput || parseFloat(stakeInput) > stakedAmount}
-            className="bg-white/10 hover:bg-white/20 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-semibold border border-white/20 transition-all"
+            disabled={!canUnstake}
+            style={{
+              ...MONO,
+              padding: '12px',
+              borderRadius: '10px',
+              fontSize: '11px',
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              cursor: canUnstake ? 'pointer' : 'not-allowed',
+              border: canUnstake ? '1px solid rgba(255,0,255,0.3)' : '1px solid rgba(255,255,255,0.06)',
+              background: canUnstake ? 'rgba(255,0,255,0.06)' : 'rgba(255,255,255,0.02)',
+              color: canUnstake ? '#ff00ff' : 'rgba(255,255,255,0.2)',
+              transition: 'all 0.2s',
+            }}
           >
-            {loading && txType === 'Unstake' ? '⏳ Unstaking...' : 'Unstake'}
+            {loading && txType === 'UNSTAKE' ? '⏳ UNSTAKING...' : '▼ UNSTAKE'}
           </button>
         </div>
       </div>
 
-      {txId && (
-        <div className="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded-lg text-sm">
-          <p className="text-green-400 font-semibold mb-1">✅ {txType} submitted!</p>
+      {/* APY info */}
+      <div style={{
+        padding: '12px 16px',
+        background: 'rgba(0,212,255,0.04)',
+        border: '1px solid rgba(0,212,255,0.12)',
+        borderLeft: '3px solid rgba(0,212,255,0.5)',
+        borderRadius: '8px',
+        fontSize: '11px',
+        color: 'rgba(255,255,255,0.4)',
+        lineHeight: 1.6,
+        marginBottom: '12px',
+      }}>
+        <span style={{ color: '#00d4ff' }}>APY_INFO</span> — Base: 12.5% · 3.5d lock: 18.75% · 7d lock: 25% · 14d lock: 37.5%
+        <br />
+        Unstake anytime — no penalties.
+      </div>
+
+      {/* Error */}
+      {error && (
+        <div style={{ padding: '10px 14px', background: 'rgba(255,68,68,0.08)', border: '1px solid rgba(255,68,68,0.2)', borderRadius: '8px', fontSize: '11px', color: '#ff4444', ...MONO, marginBottom: '10px' }}>
+          ERR: {error}
+        </div>
+      )}
+
+      {/* TX success */}
+      {txId && !error && (
+        <div style={{ padding: '12px 16px', background: 'rgba(0,255,159,0.06)', border: '1px solid rgba(0,255,159,0.2)', borderRadius: '10px', fontSize: '11px', ...MONO }}>
+          <div style={{ color: '#00ff9f', fontWeight: 700, marginBottom: '4px' }}>✓ {txType}_SUBMITTED</div>
           <a
             href={`https://explorer.hiro.so/txid/${txId}?chain=mainnet`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-400 hover:underline break-all"
+            style={{ color: '#00d4ff', wordBreak: 'break-all' }}
           >
-            View on Explorer ↗
+            {txId.slice(0, 20)}...{txId.slice(-8)} ↗
           </a>
         </div>
       )}
-
-      <div className="mt-6 p-4 bg-blue-500/10 border-l-4 border-blue-500 rounded text-white/80 text-sm">
-        <strong>Note:</strong> Staked tokens earn continuous rewards at 12.5% APY. You can unstake at any time without penalties.
-      </div>
     </div>
-  );
+  )
 }
