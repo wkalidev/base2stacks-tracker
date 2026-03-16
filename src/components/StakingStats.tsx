@@ -1,29 +1,30 @@
-'use client';
+'use client'
 
-import { useEffect, useState, useCallback } from 'react';
-import { callReadOnlyFunction, cvToJSON, standardPrincipalCV } from '@stacks/transactions';
-import { StacksMainnet } from '@stacks/network';
+import { useEffect, useState, useCallback } from 'react'
+import { callReadOnlyFunction, cvToJSON, standardPrincipalCV } from '@stacks/transactions'
+import { StacksMainnet } from '@stacks/network'
 
 interface StakingStatsProps {
-  address: string;
+  address: string
 }
 
-const network = new StacksMainnet();
-const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96';
-const STAKING_CONTRACT = 'b2s-staking-vault-v2';
-const DECIMALS = 1_000_000;
+const network          = new StacksMainnet()
+const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
+const STAKING_CONTRACT = 'b2s-staking-vault-v2'
+const DECIMALS         = 1_000_000
+const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 
 interface VaultInfo {
-  amount: number;
-  lockedAt: number;
-  lockBlocks: number;
-  multiplier: number;
+  amount: number
+  lockedAt: number
+  lockBlocks: number
+  multiplier: number
 }
 
 interface GlobalStats {
-  totalStaked: number;
-  totalVaults: number;
-  baseApy: number;
+  totalStaked: number
+  totalVaults: number
+  baseApy: number
 }
 
 async function fetchVault(address: string): Promise<VaultInfo | null> {
@@ -35,28 +36,19 @@ async function fetchVault(address: string): Promise<VaultInfo | null> {
       functionName: 'get-vault',
       functionArgs: [standardPrincipalCV(address)],
       senderAddress: address,
-    });
-    const json = cvToJSON(result);
-    const val = json?.value?.value;
-    if (!val) return null;
+    })
+    const json = cvToJSON(result)
+    const val  = json?.value?.value
+    if (!val) return null
 
-    const amount = Number(val.amount?.value || 0) / DECIMALS;
-    const lockedAt = Number(val['locked-at']?.value || 0);
-    const lockBlocks = Number(val['lock-blocks']?.value || 0);
+    const amount     = Number(val.amount?.value || 0) / DECIMALS
+    const lockedAt   = Number(val['locked-at']?.value || 0)
+    const lockBlocks = Number(val['lock-blocks']?.value || 0)
+    const multiplier = lockBlocks >= 2100 ? 3 : lockBlocks >= 1050 ? 2 : lockBlocks >= 525 ? 1.5 : 1
 
-    // Multiplier logic matching contract:
-    // >= 2100 blocks (~14 days) → 3x
-    // >= 1050 blocks (~7 days)  → 2x
-    // >= 525 blocks (~3.5 days) → 1.5x
-    // else                      → 1x
-    const multiplier =
-      lockBlocks >= 2100 ? 3 :
-      lockBlocks >= 1050 ? 2 :
-      lockBlocks >= 525  ? 1.5 : 1;
-
-    return { amount, lockedAt, lockBlocks, multiplier };
+    return { amount, lockedAt, lockBlocks, multiplier }
   } catch {
-    return null;
+    return null
   }
 }
 
@@ -69,150 +61,195 @@ async function fetchGlobalStats(): Promise<GlobalStats> {
       functionName: 'get-stats',
       functionArgs: [],
       senderAddress: CONTRACT_ADDRESS,
-    });
-    const json = cvToJSON(result);
-    const val = json?.value?.value || json?.value || {};
-
-    // base-apy stored as basis points (e.g. 1250 = 12.5%)
-    const rawApy = Number(val['base-apy']?.value || val['base-reward-rate']?.value || 0);
-    const baseApy = rawApy > 0 ? rawApy / 100 : 12.5;
-
+    })
+    const json   = cvToJSON(result)
+    const val    = json?.value?.value || json?.value || {}
+    const rawApy = Number(val['base-apy']?.value || val['base-reward-rate']?.value || 0)
     return {
       totalStaked: Number(val['total-staked']?.value || 0) / DECIMALS,
       totalVaults: Number(val['total-vaults']?.value || 0),
-      baseApy,
-    };
+      baseApy: rawApy > 0 ? rawApy / 100 : 12.5,
+    }
   } catch {
-    return { totalStaked: 0, totalVaults: 0, baseApy: 12.5 };
+    return { totalStaked: 0, totalVaults: 0, baseApy: 12.5 }
   }
 }
 
+const MULT_COLOR: Record<number, string> = {
+  3: '#00ff9f', 2: '#00d4ff', 1.5: '#ff00ff', 1: 'rgba(255,255,255,0.4)'
+}
+
+const MULT_LABEL: Record<number, string> = {
+  3: '3x // 14D_LOCK', 2: '2x // 7D_LOCK', 1.5: '1.5x // 3.5D_LOCK', 1: '1x // NO_LOCK'
+}
+
 export function StakingStats({ address }: StakingStatsProps) {
-  const [vault, setVault] = useState<VaultInfo | null>(null);
-  const [globalStats, setGlobalStats] = useState<GlobalStats | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [vault,       setVault]       = useState<VaultInfo | null>(null)
+  const [globalStats, setGlobalStats] = useState<GlobalStats | null>(null)
+  const [loading,     setLoading]     = useState(true)
 
   const fetchData = useCallback(async () => {
-    if (!address) return;
+    if (!address) return
     try {
-      const [vaultData, stats] = await Promise.all([
-        fetchVault(address),
-        fetchGlobalStats(),
-      ]);
-      setVault(vaultData);
-      setGlobalStats(stats);
-    } catch (error) {
-      console.error('Error fetching staking stats:', error);
+      const [vaultData, stats] = await Promise.all([fetchVault(address), fetchGlobalStats()])
+      setVault(vaultData)
+      setGlobalStats(stats)
+    } catch (e) {
+      console.error('StakingStats fetchData:', e)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  }, [address]);
+  }, [address])
 
   useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 30_000);
-    return () => clearInterval(interval);
-  }, [fetchData]);
+    fetchData()
+    const t = setInterval(fetchData, 30_000)
+    return () => clearInterval(t)
+  }, [fetchData])
 
-  const effectiveApy = globalStats
-    ? globalStats.baseApy * (vault?.multiplier || 1)
-    : 0;
+  const effectiveApy  = globalStats ? globalStats.baseApy * (vault?.multiplier || 1) : 12.5
+  const dailyRewards  = vault?.amount ? (vault.amount * effectiveApy) / 365 / 100 : 0
+  const multColor     = MULT_COLOR[vault?.multiplier || 1]
 
-  const dailyRewards = vault?.amount
-    ? (vault.amount * effectiveApy) / 365 / 100
-    : 0;
-
+  // ── Loading ──────────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className="bg-white/5 backdrop-blur-md rounded-xl p-6 border border-white/10">
-        <div className="animate-pulse">
-          <div className="h-6 bg-white/10 rounded w-1/3 mb-4"></div>
-          <div className="h-4 bg-white/10 rounded w-1/2"></div>
-        </div>
+      <div style={{
+        ...MONO,
+        background: 'rgba(255,255,255,0.02)',
+        border: '1px solid rgba(255,255,255,0.07)',
+        borderRadius: '14px',
+        padding: '20px',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: '12px',
+      }}>
+        {[...Array(3)].map((_, i) => (
+          <div key={i} style={{ height: '60px', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', animation: 'pulse 1.5s infinite' }} />
+        ))}
       </div>
-    );
+    )
   }
 
   return (
-    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 backdrop-blur-md rounded-xl p-6 border border-blue-500/20">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div style={{ ...MONO, color: '#fff' }}>
 
-        {/* Staked amount */}
-        <div className="text-center">
-          <p className="text-white/60 text-sm mb-2">Your Staked</p>
-          <p className="text-3xl font-bold text-white">
+      {/* Main stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px', marginBottom: '12px' }}>
+
+        {/* Staked */}
+        <div style={{
+          background: 'rgba(255,255,255,0.02)',
+          border: '1px solid rgba(0,212,255,0.15)',
+          borderRadius: '12px',
+          padding: '14px 16px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}>
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent)' }} />
+          <div style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)', marginBottom: '6px' }}>YOUR_STAKE</div>
+          <div style={{ fontSize: '22px', fontWeight: 700, color: '#00d4ff' }}>
             {vault?.amount
               ? vault.amount >= 1000
                 ? `${(vault.amount / 1000).toFixed(1)}K`
                 : vault.amount.toFixed(2)
               : '0'}
-          </p>
-          <p className="text-white/40 text-xs">$B2S</p>
-          {vault?.multiplier && vault.multiplier > 1 && (
-            <p className="text-yellow-400 text-xs mt-1 font-semibold">
-              {vault.multiplier}x lock multiplier
-            </p>
-          )}
+          </div>
+          <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.2)', marginTop: '2px' }}>$B2S</div>
         </div>
 
         {/* Daily rewards */}
-        <div className="text-center">
-          <p className="text-white/60 text-sm mb-2">Daily Rewards</p>
-          <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+        <div style={{
+          background: 'rgba(255,255,255,0.02)',
+          border: '1px solid rgba(0,255,159,0.15)',
+          borderRadius: '12px',
+          padding: '14px 16px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}>
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(0,255,159,0.4), transparent)' }} />
+          <div style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)', marginBottom: '6px' }}>DAILY_REWARDS</div>
+          <div style={{ fontSize: '22px', fontWeight: 700, color: '#00ff9f' }}>
             {dailyRewards > 0 ? dailyRewards.toFixed(4) : '—'}
-          </p>
-          <p className="text-white/40 text-xs">$B2S per day</p>
+          </div>
+          <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.2)', marginTop: '2px' }}>$B2S / DAY</div>
         </div>
 
-        {/* APY */}
-        <div className="text-center">
-          <p className="text-white/60 text-sm mb-2">
-            {vault?.multiplier && vault.multiplier > 1 ? 'Effective APY' : 'Base APY'}
-          </p>
-          <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">
-            {globalStats ? `${effectiveApy.toFixed(1)}%` : '—'}
-          </p>
-          <p className="text-white/40 text-xs">
-            {globalStats ? `Base: ${globalStats.baseApy.toFixed(1)}%` : 'Annual yield'}
-          </p>
+        {/* Effective APY */}
+        <div style={{
+          background: 'rgba(255,255,255,0.02)',
+          border: `1px solid ${multColor}22`,
+          borderRadius: '12px',
+          padding: '14px 16px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}>
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: `linear-gradient(90deg, transparent, ${multColor}40, transparent)` }} />
+          <div style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)', marginBottom: '6px' }}>
+            {vault?.multiplier && vault.multiplier > 1 ? 'EFFECTIVE_APY' : 'BASE_APY'}
+          </div>
+          <div style={{ fontSize: '22px', fontWeight: 700, color: multColor }}>
+            {effectiveApy.toFixed(1)}%
+          </div>
+          <div style={{ fontSize: '9px', color: multColor, marginTop: '2px', opacity: 0.7 }}>
+            {MULT_LABEL[vault?.multiplier || 1]}
+          </div>
         </div>
       </div>
 
       {/* Global stats footer */}
       {globalStats && (globalStats.totalStaked > 0 || globalStats.totalVaults > 0) && (
-        <div className="mt-4 pt-4 border-t border-white/10 flex justify-between text-xs text-white/40">
-          <span>
-            Total staked:{' '}
-            <span className="text-white/60">
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '10px 14px',
+          background: 'rgba(255,255,255,0.02)',
+          border: '1px solid rgba(255,255,255,0.06)',
+          borderRadius: '10px',
+          marginBottom: '10px',
+        }}>
+          <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', letterSpacing: '0.1em' }}>
+            TVL: <span style={{ color: '#00ff9f' }}>
               {globalStats.totalStaked >= 1_000_000
                 ? `${(globalStats.totalStaked / 1_000_000).toFixed(1)}M`
                 : globalStats.totalStaked >= 1000
                 ? `${(globalStats.totalStaked / 1000).toFixed(1)}K`
-                : globalStats.totalStaked.toFixed(0)}{' '}
-              $B2S
+                : globalStats.totalStaked.toFixed(0)} $B2S
             </span>
           </span>
-          <span>
-            Stakers: <span className="text-white/60">{globalStats.totalVaults}</span>
+          <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', letterSpacing: '0.1em' }}>
+            STAKERS: <span style={{ color: '#00d4ff' }}>{globalStats.totalVaults}</span>
           </span>
           <a
             href={`https://explorer.hiro.so/address/${CONTRACT_ADDRESS}.${STAKING_CONTRACT}?chain=mainnet`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-purple-400 hover:underline"
+            style={{ fontSize: '9px', color: '#ff00ff', letterSpacing: '0.1em', textDecoration: 'none' }}
           >
-            Explorer ↗
+            EXPLORER ↗
           </a>
         </div>
       )}
 
       {/* No stake CTA */}
       {!vault?.amount && (
-        <div className="mt-4 p-3 bg-blue-500/10 border-l-4 border-blue-500 rounded text-white/80 text-sm">
-          💡 <strong>Tip:</strong> Stake your $B2S tokens to start earning — up to{' '}
-          {globalStats ? `${(globalStats.baseApy * 3).toFixed(0)}%` : '37.5%'} APY with max lock!
+        <div style={{
+          padding: '10px 14px',
+          background: 'rgba(0,212,255,0.04)',
+          border: '1px solid rgba(0,212,255,0.12)',
+          borderLeft: '3px solid rgba(0,212,255,0.5)',
+          borderRadius: '8px',
+          fontSize: '11px',
+          color: 'rgba(255,255,255,0.4)',
+        }}>
+          <span style={{ color: '#00d4ff' }}>TIP</span> — Stake $B2S to earn up to{' '}
+          <span style={{ color: '#00ff9f', fontWeight: 700 }}>
+            {globalStats ? `${(globalStats.baseApy * 3).toFixed(0)}%` : '37.5%'} APY
+          </span>{' '}
+          with 14-day lock multiplier.
         </div>
       )}
     </div>
-  );
+  )
 }
