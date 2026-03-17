@@ -14,6 +14,7 @@
     "deploy:mainnet": "clarinet deploy --mainnet"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.79.0",
     "@coinbase/agentkit": "^0.10.4",
     "@coinbase/agentkit-langchain": "^0.3.0",
     "@langchain/groq": "^1.1.4",
@@ -22,8 +23,6 @@
     "@stacks/connect": "^7.10.2",
     "@stacks/network": "^6.17.0",
     "@stacks/stacks-blockchain-api-types": "^7.11.0",
-
-    "next": "14.2.35",
     "@stacks/transactions": "^6.17.0",
     "@stacks/wallet-sdk": "^7.2.0",
     "clsx": "^2.1.0",
@@ -31,7 +30,6 @@
     "langchain": "^1.2.30",
     "lucide-react": "^0.344.0",
     "next": "14.2.35",
-
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "recharts": "^2.12.0",

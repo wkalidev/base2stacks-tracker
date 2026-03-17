@@ -7,8 +7,6 @@ import { useBalance } from '@/hooks/useBalance'
 import { useToast } from '@/hooks/useToast'
 import { useDashboardStats } from '@/hooks/useDashboardStats'
 import { useStacksWebSocket } from '@/hooks/useStacksWebSocket'
-
-// ── UI Components (fichiers séparés — PAS de ui-primitives ici) ──────
 import { LiveIndicator } from '@/components/LiveIndicator'
 import { TransactionHistory } from '@/components/TransactionHistory'
 import { StakingStats } from '@/components/StakingStats'
@@ -27,7 +25,8 @@ import MarketData from '@/components/MarketData'
 import BridgeRouter from '@/components/BridgeRouter'
 
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
-const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
+const APP_URL          = 'https://base2stacks-tracker.vercel.app'
+const MONO             = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 
 function formatNumber(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
@@ -35,9 +34,53 @@ function formatNumber(n: number): string {
   return n.toString()
 }
 
+// ── Share Buttons ────────────────────────────────────────────────────
+function ShareButtons({ type, amount }: { type: 'claim' | 'stake' | 'app'; amount?: number }) {
+  const texts: Record<string, string> = {
+    claim: `🎁 Just claimed ${amount || 5} $B2S on Base2Stacks!\n🌉 Track cross-chain bridges & earn daily.\n👉 ${APP_URL}\n#B2S #Stacks #DeFi`,
+    stake: `💰 Just staked ${amount} $B2S on Base2Stacks!\n📈 Earning up to 37.5% APY.\n👉 ${APP_URL}\n#B2S #Stacks #DeFi`,
+    app:   `🌉 Base2Stacks Bridge Tracker is live!\nEarn $B2S by tracking cross-chain bridges.\n👉 ${APP_URL}\n#B2S #Stacks #Base #DeFi`,
+  }
+  const text         = texts[type]
+  const twitterUrl   = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`
+  const farcasterUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`
+
+  return (
+    <div className="flex items-center gap-2 mt-3 justify-center">
+      <span className="text-[9px] tracking-widest font-black text-white/20">SHARE</span>
+      <a
+        href={twitterUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-black tracking-widest transition-all hover:opacity-80"
+        style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}
+      >
+        𝕏 TWITTER
+      </a>
+      <a
+        href={farcasterUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-black tracking-widest transition-all hover:opacity-80"
+        style={{ background: 'rgba(124,58,237,0.1)', color: '#a78bfa', border: '1px solid rgba(124,58,237,0.2)' }}
+      >
+        🟣 FARCASTER
+      </a>
+    </div>
+  )
+}
+
 // ── Section wrapper ──────────────────────────────────────────────────
-function Section({ title, color = '#00d4ff', children, maxWidth = 'max-w-6xl' }: {
-  title: string; color?: string; children: React.ReactNode; maxWidth?: string
+function Section({
+  title,
+  color = '#00d4ff',
+  children,
+  maxWidth = 'max-w-6xl',
+}: {
+  title: string
+  color?: string
+  children: React.ReactNode
+  maxWidth?: string
 }) {
   return (
     <section className="container mx-auto px-4 py-10 sm:py-16">
@@ -58,19 +101,22 @@ function Section({ title, color = '#00d4ff', children, maxWidth = 'max-w-6xl' }:
   )
 }
 
+// ── Page ─────────────────────────────────────────────────────────────
 export default function Page() {
   const { mounted, connect, disconnect, isConnected, address } = useWallet()
-  const { claimDailyReward, stake, loading, error, txId } = useContract()
-  const { balance, loading: balanceLoading } = useBalance(address)
-  const { toasts, removeToast, success, error: showError } = useToast()
-  const dashStats = useDashboardStats()
+  const { claimDailyReward, stake, loading, error, txId }      = useContract()
+  const { balance, loading: balanceLoading }                    = useBalance(address)
+  const { toasts, removeToast, success, error: showError }      = useToast()
+  const dashStats                                               = useDashboardStats()
 
-  const [stakeAmount, setStakeAmount]       = useState('')
-  const [showStakeModal, setShowStakeModal] = useState(false)
-  const [showTxToast, setShowTxToast]       = useState(false)
-  const [showErrorToast, setShowErrorToast] = useState(false)
-  const [liveActivity, setLiveActivity]     = useState<string | null>(null)
-  const [statsKey, setStatsKey]             = useState(0)
+  const [stakeAmount, setStakeAmount]         = useState('')
+  const [showStakeModal, setShowStakeModal]   = useState(false)
+  const [showTxToast, setShowTxToast]         = useState(false)
+  const [showErrorToast, setShowErrorToast]   = useState(false)
+  const [liveActivity, setLiveActivity]       = useState<string | null>(null)
+  const [statsKey, setStatsKey]               = useState(0)
+  const [lastClaimAmount, setLastClaimAmount] = useState<number | null>(null)
+  const [lastStakeAmount, setLastStakeAmount] = useState<number | null>(null)
 
   const handleBlock = useCallback(() => setStatsKey(k => k + 1), [])
 
@@ -89,30 +135,51 @@ export default function Page() {
   }, [])
 
   const { connected: wsConnected, blockHeight } = useStacksWebSocket({
-    onBlock: handleBlock, onTransaction: handleTx,
-    contractFilter: CONTRACT_ADDRESS, enabled: true,
+    onBlock:        handleBlock,
+    onTransaction:  handleTx,
+    contractFilter: CONTRACT_ADDRESS,
+    enabled:        true,
   })
 
-  useEffect(() => { if (txId)  { setShowTxToast(true);   success('TX_SUBMITTED // OK') } }, [txId])
-  useEffect(() => { if (error) { setShowErrorToast(true) }                               }, [error])
+  useEffect(() => {
+    if (txId) { setShowTxToast(true); success('TX_SUBMITTED // OK') }
+  }, [txId])
+
+  useEffect(() => {
+    if (error) setShowErrorToast(true)
+  }, [error])
 
   if (!mounted) return null
 
-  const handleClaim = async () => { try { await claimDailyReward() } catch (e) { console.error(e) } }
+  const handleClaim = async () => {
+    try {
+      await claimDailyReward()
+      setLastClaimAmount(5)
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   const handleStake = async () => {
     if (!stakeAmount || parseFloat(stakeAmount) <= 0) { showError('Invalid amount'); return }
-    try { await stake(parseFloat(stakeAmount)); setShowStakeModal(false); setStakeAmount('') }
-    catch (e) { console.error(e) }
+    try {
+      const amt = parseFloat(stakeAmount)
+      await stake(amt)
+      setLastStakeAmount(amt)
+      setShowStakeModal(false)
+      setStakeAmount('')
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const shortAddress = (addr: string) => addr ? `${addr.slice(0, 6)}...${addr.slice(-4)}` : ''
 
   const STATS = [
-    { label: 'TRANSACTIONS',  value: dashStats.loading ? '···' : formatNumber(dashStats.totalTxCount),         color: '#00d4ff' },
-    { label: 'TOKEN_HOLDERS', value: dashStats.loading ? '···' : formatNumber(dashStats.totalHolders),         color: '#ff00ff' },
-    { label: 'TOTAL_SUPPLY',  value: dashStats.loading ? '···' : formatNumber(dashStats.totalSupply),          color: '#ffd700' },
-    { label: 'STX_IN_POOL',   value: dashStats.loading ? '···' : `${formatNumber(dashStats.totalStaked)} STX`, color: '#00ff9f' },
+    { label: 'TRANSACTIONS',  value: dashStats.loading ? '···' : formatNumber(dashStats.totalTxCount),          color: '#00d4ff' },
+    { label: 'TOKEN_HOLDERS', value: dashStats.loading ? '···' : formatNumber(dashStats.totalHolders),          color: '#ff00ff' },
+    { label: 'TOTAL_SUPPLY',  value: dashStats.loading ? '···' : formatNumber(dashStats.totalSupply),           color: '#ffd700' },
+    { label: 'STX_IN_POOL',   value: dashStats.loading ? '···' : `${formatNumber(dashStats.totalStaked)} STX`,  color: '#00ff9f' },
   ]
 
   return (
@@ -135,8 +202,10 @@ export default function Page() {
             <div className="flex items-center gap-3">
               <LiveIndicator connected={wsConnected} blockHeight={blockHeight} />
               {isConnected && address && (
-                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/[0.07] bg-white/[0.03] text-[10px] font-black tracking-widest"
-                     style={{ color: 'rgba(255,255,255,0.3)' }}>
+                <div
+                  className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/[0.07] bg-white/[0.03] text-[10px] font-black tracking-widest"
+                  style={{ color: 'rgba(255,255,255,0.3)' }}
+                >
                   {shortAddress(address)}
                 </div>
               )}
@@ -145,7 +214,7 @@ export default function Page() {
                 disabled={loading}
                 className="px-4 py-2 rounded-xl text-[10px] font-black tracking-widest transition-all hover:opacity-80 disabled:opacity-30"
                 style={{
-                  background: isConnected ? 'rgba(255,68,68,0.1)'   : 'rgba(0,212,255,0.1)',
+                  background: isConnected ? 'rgba(255,68,68,0.1)'          : 'rgba(0,212,255,0.1)',
                   border:     isConnected ? '1px solid rgba(255,68,68,0.3)' : '1px solid rgba(0,212,255,0.3)',
                   color:      isConnected ? '#ff4444' : '#00d4ff',
                 }}
@@ -166,12 +235,14 @@ export default function Page() {
       {/* ══ HERO ════════════════════════════════════════════════════ */}
       <section className="container mx-auto px-4 pt-16 pb-12 text-center">
         <div className="max-w-3xl mx-auto">
-
           <div className="relative inline-block mb-8">
             <div className="absolute inset-0 rounded-full blur-3xl opacity-30"
                  style={{ background: 'radial-gradient(circle, #00d4ff, #ff00ff)' }} />
-            <img src="/android-chrome-512x512.png" alt="Base2Stacks"
-                 className="relative mx-auto w-28 h-28 sm:w-36 sm:h-36 animate-float rounded-3xl" />
+            <img
+              src="/android-chrome-512x512.png"
+              alt="Base2Stacks"
+              className="relative mx-auto w-28 h-28 sm:w-36 sm:h-36 animate-float rounded-3xl"
+            />
           </div>
 
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00ff9f]/20 bg-[#00ff9f]/[0.06] mb-6">
@@ -184,8 +255,10 @@ export default function Page() {
           <h2 className="text-3xl sm:text-5xl font-black text-white mb-2 leading-none tracking-tight">
             TRACK CROSS-CHAIN
           </h2>
-          <h2 className="text-3xl sm:text-5xl font-black mb-6 leading-none tracking-tight"
-              style={{ color: '#00d4ff', textShadow: '0 0 40px rgba(0,212,255,0.4)' }}>
+          <h2
+            className="text-3xl sm:text-5xl font-black mb-6 leading-none tracking-tight"
+            style={{ color: '#00d4ff', textShadow: '0 0 40px rgba(0,212,255,0.4)' }}
+          >
             BRIDGES
           </h2>
           <p className="text-white/25 text-xs tracking-[0.2em] mb-10">
@@ -195,7 +268,8 @@ export default function Page() {
           {isConnected ? (
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <ButtonLoading
-                onClick={handleClaim} loading={loading}
+                onClick={handleClaim}
+                loading={loading}
                 className="px-8 py-3 rounded-xl text-xs font-black tracking-widest transition-all hover:opacity-80 disabled:opacity-30"
                 style={{ background: 'rgba(0,255,159,0.1)', border: '1px solid rgba(0,255,159,0.3)', color: '#00ff9f' }}
               >
@@ -210,15 +284,26 @@ export default function Page() {
               </button>
             </div>
           ) : (
-            <button onClick={connect}
+            <button
+              onClick={connect}
               className="px-10 py-3 rounded-xl text-xs font-black tracking-widest transition-all hover:opacity-80"
-              style={{ background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.35)', color: '#00d4ff', boxShadow: '0 0 30px rgba(0,212,255,0.1)' }}>
+              style={{
+                background: 'rgba(0,212,255,0.1)',
+                border:     '1px solid rgba(0,212,255,0.35)',
+                color:      '#00d4ff',
+                boxShadow:  '0 0 30px rgba(0,212,255,0.1)',
+              }}
+            >
               ▶ CONNECT_WALLET_TO_START
             </button>
           )}
 
+          {txId && lastClaimAmount && (
+            <ShareButtons type="claim" amount={lastClaimAmount} />
+          )}
+
           {isConnected && address && (
-            <div className="mt-8 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5 text-left space-y-4">
+            <div className="mt-8 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5 text-left">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <p className="text-[9px] tracking-[0.3em] font-black text-white/25 mb-1.5">WALLET_ADDRESS</p>
@@ -226,8 +311,10 @@ export default function Page() {
                 </div>
                 <div>
                   <p className="text-[9px] tracking-[0.3em] font-black text-white/25 mb-1.5">$B2S_BALANCE</p>
-                  <p className="text-3xl font-black tabular-nums"
-                     style={{ color: '#00d4ff', textShadow: '0 0 20px rgba(0,212,255,0.5)' }}>
+                  <p
+                    className="text-3xl font-black tabular-nums"
+                    style={{ color: '#00d4ff', textShadow: '0 0 20px rgba(0,212,255,0.5)' }}
+                  >
                     {balanceLoading ? '···' : balance.toFixed(2)}
                     <span className="text-sm ml-2 text-white/25">$B2S</span>
                   </p>
@@ -331,20 +418,55 @@ export default function Page() {
               <img src="/android-chrome-192x192.png" alt="B2S" className="w-7 h-7 rounded-xl" />
               <span className="text-xs font-black tracking-[0.2em] text-white/40">BASE2STACKS_TRACKER</span>
             </div>
+
             <p className="text-[10px] tracking-widest text-white/20">
-              BUILT WITH ❤️ BY <span style={{ color: '#00d4ff' }}>WKALIDEV(ZCODEBASE)</span> // MAINNET
+              BUILT WITH ❤️ BY{' '}
+              <a
+                href="https://github.com/wkalidev"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#00d4ff' }}
+                className="hover:opacity-80 transition-opacity"
+              >
+                WKALIDEV(ZCODEBASE)
+              </a>{' '}
+              // MAINNET
             </p>
-            <div className="flex items-center gap-6">
+
+            <div className="flex items-center gap-4 flex-wrap justify-center">
               {[
-                { label: 'GITHUB',    href: 'https://github.com/wkalidev/base2stacks-tracker' },
-                { label: 'TWITTER',   href: 'https://twitter.com/willycodexwar'               },
-                { label: 'FARCASTER', href: 'https://warpcast.com/willywarrior'               },
+                { label: 'GITHUB',    href: 'https://github.com/wkalidev/base2stacks-tracker'                              },
+                { label: 'TWITTER',   href: 'https://twitter.com/willycodexwar'                                             },
+                { label: 'FARCASTER', href: 'https://warpcast.com/willywarrior'                                             },
+                { label: 'EXPLORER',  href: `https://explorer.hiro.so/address/${CONTRACT_ADDRESS}?chain=mainnet`            },
               ].map(l => (
-                <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer"
-                   className="text-[9px] font-black tracking-[0.2em] text-white/20 hover:text-white/60 transition-colors">
+                <a
+                  key={l.label}
+                  href={l.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[9px] font-black tracking-[0.2em] text-white/20 hover:text-white/60 transition-colors"
+                >
                   {l.label}
                 </a>
               ))}
+
+              <a
+                href="https://talent.app/willywarrior"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black tracking-widest transition-all hover:scale-105"
+                style={{ background: 'rgba(249,115,22,0.12)', color: '#f97316', border: '1px solid rgba(249,115,22,0.25)' }}
+              >
+                🏆 TALENT.APP
+              </a>
+            </div>
+
+            <ShareButtons type="app" />
+
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+              <span className="text-[9px] tracking-widest text-white/20">LIVE ON STACKS MAINNET</span>
             </div>
           </div>
         </div>
@@ -352,11 +474,15 @@ export default function Page() {
 
       {/* ══ STAKING MODAL ════════════════════════════════════════════ */}
       {showStakeModal && (
-        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
-             onClick={() => setShowStakeModal(false)}>
-          <div className="relative rounded-2xl border border-white/[0.07] bg-black p-6 max-w-sm w-full"
-               style={{ boxShadow: '0 0 60px rgba(0,212,255,0.1)' }}
-               onClick={e => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowStakeModal(false)}
+        >
+          <div
+            className="relative rounded-2xl border border-white/[0.07] bg-black p-6 max-w-sm w-full"
+            style={{ boxShadow: '0 0 60px rgba(0,212,255,0.1)' }}
+            onClick={e => e.stopPropagation()}
+          >
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00d4ff]/40 to-transparent rounded-t-2xl" />
             <p className="text-[9px] tracking-[0.3em] font-black text-white/25 mb-1">STAKE_MODAL</p>
             <h3 className="text-white font-black text-xl mb-5">STAKE $B2S</h3>
@@ -364,7 +490,9 @@ export default function Page() {
               <p className="text-[9px] tracking-widest font-black text-white/25 mb-2">AMOUNT</p>
               <div className="relative">
                 <input
-                  type="number" value={stakeAmount} onChange={e => setStakeAmount(e.target.value)}
+                  type="number"
+                  value={stakeAmount}
+                  onChange={e => setStakeAmount(e.target.value)}
                   placeholder="0.0"
                   className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-lg font-black placeholder-white/20 focus:outline-none focus:border-[#00d4ff]/40 transition-colors"
                 />
@@ -372,16 +500,24 @@ export default function Page() {
               </div>
             </div>
             <div className="flex gap-2 mt-5">
-              <button onClick={() => setShowStakeModal(false)}
-                className="flex-1 py-3 rounded-xl text-xs font-black tracking-widest text-white/30 border border-white/[0.08] hover:border-white/20 transition-all">
+              <button
+                onClick={() => setShowStakeModal(false)}
+                className="flex-1 py-3 rounded-xl text-xs font-black tracking-widest text-white/30 border border-white/[0.08] hover:border-white/20 transition-all"
+              >
                 CANCEL
               </button>
-              <button onClick={handleStake} disabled={loading}
+              <button
+                onClick={handleStake}
+                disabled={loading}
                 className="flex-1 py-3 rounded-xl text-xs font-black tracking-widest transition-all hover:opacity-80 disabled:opacity-30"
-                style={{ background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.3)', color: '#00d4ff' }}>
+                style={{ background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.3)', color: '#00d4ff' }}
+              >
                 {loading ? '⏳ STAKING...' : '▶ CONFIRM_STAKE'}
               </button>
             </div>
+            {txId && lastStakeAmount && (
+              <ShareButtons type="stake" amount={lastStakeAmount} />
+            )}
           </div>
         </div>
       )}
