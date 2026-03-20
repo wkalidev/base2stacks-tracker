@@ -589,241 +589,272 @@ const IPFS_BADGES = [
   { tokenId:600, name:'B2S Badge #600', trait:'Galactic Degen', rarity:'legendary' as const, imageUrl:'https://gateway.pinata.cloud/ipfs/QmQYmriJTkuiWw4YyCD2ey3djC4dioRoF4g4PYYQk8h1pf' },
 ];
 
-type Rarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+type Rarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
+
+const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 
 const RARITY_COLOR: Record<Rarity, string> = {
-  common:    'from-gray-500 to-gray-600',
-  uncommon:  'from-green-500 to-emerald-600',
-  rare:      'from-blue-500 to-cyan-600',
-  epic:      'from-purple-500 to-pink-600',
-  legendary: 'from-orange-400 to-yellow-500',
-};
+  common:    'rgba(136,136,136,0.7)',
+  uncommon:  '#00ff9f',
+  rare:      '#00d4ff',
+  epic:      '#ff00ff',
+  legendary: '#ffd700',
+}
+
 const RARITY_BORDER: Record<Rarity, string> = {
-  common:    'border-gray-600/40',
-  uncommon:  'border-green-500/40',
-  rare:      'border-blue-500/40',
-  epic:      'border-purple-500/40',
-  legendary: 'border-yellow-400/70',
-};
-const RARITY_GLOW: Record<Rarity, string> = {
-  common:    '',
-  uncommon:  '',
-  rare:      'shadow-blue-500/20 shadow-lg',
-  epic:      'shadow-purple-500/30 shadow-xl',
-  legendary: 'shadow-yellow-400/40 shadow-2xl',
-};
+  common:    'rgba(136,136,136,0.2)',
+  uncommon:  'rgba(0,255,159,0.25)',
+  rare:      'rgba(0,212,255,0.3)',
+  epic:      'rgba(255,0,255,0.35)',
+  legendary: 'rgba(255,215,0,0.5)',
+}
+
 const RARITY_ICON: Record<Rarity, string> = {
-  common: '◆', uncommon: '◆◆', rare: '◆◆◆', epic: '★', legendary: '🌟',
-};
+  common: '◆', uncommon: '◆◆', rare: '◆◆◆', epic: '★', legendary: '✦',
+}
 
-function NFTImage({ badge, className = '' }: { badge: typeof IPFS_BADGES[0], className?: string }) {
-  const [gatewayIndex, setGatewayIndex] = useState(0);
-  const [loaded, setLoaded]             = useState(false);
-  const [failed, setFailed]             = useState(false);
-  const [retrying, setRetrying]         = useState(false);
-  const [timeoutId, setTimeoutId]       = useState<ReturnType<typeof setTimeout> | null>(null);
+const SERIES: Record<string, { label: string; color: string }> = {
+  infosec:  { label: 'INFOSEC',    color: '#00d4ff' },
+  glitch:   { label: 'GLITCH_ART', color: '#ff00ff' },
+  galactic: { label: 'GALACTIC',   color: '#ffd700' },
+}
 
-  const cid = extractCid(badge.imageUrl);
-  const src = getGatewayUrl(cid, gatewayIndex);
+function getSeries(tokenId: number): keyof typeof SERIES {
+  if (tokenId <= 170)  return 'infosec'
+  if (tokenId <= 500)  return 'glitch'
+  return 'galactic'
+}
 
-  // ✅ FIX: useEffect instead of useState for cleanup
-  useEffect(() => {
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, [timeoutId]);
+function NFTImage({ badge }: { badge: typeof IPFS_BADGES[0] }) {
+  const [gatewayIndex, setGatewayIndex] = useState(0)
+  const [loaded,       setLoaded]       = useState(false)
+  const [failed,       setFailed]       = useState(false)
+  const [retrying,     setRetrying]     = useState(false)
+  const [timeoutId,    setTimeoutId]    = useState<ReturnType<typeof setTimeout> | null>(null)
+
+  const cid = extractCid(badge.imageUrl)
+  const src = getGatewayUrl(cid, gatewayIndex)
+
+  useEffect(() => { return () => { if (timeoutId) clearTimeout(timeoutId) } }, [timeoutId])
 
   const handleError = useCallback(() => {
-    const nextIndex = gatewayIndex + 1;
-    if (nextIndex < GATEWAYS.length) {
-      const delay = nextIndex * 800;
-      setRetrying(true);
-      const t = setTimeout(() => {
-        setGatewayIndex(nextIndex);
-        setRetrying(false);
-      }, delay);
-      setTimeoutId(t);
-    } else {
-      setFailed(true);
-    }
-  }, [gatewayIndex]);
+    const next = gatewayIndex + 1
+    if (next < GATEWAYS.length) {
+      setRetrying(true)
+      const t = setTimeout(() => { setGatewayIndex(next); setRetrying(false) }, next * 800)
+      setTimeoutId(t)
+    } else { setFailed(true) }
+  }, [gatewayIndex])
 
-  if (failed) {
-    return (
-      <div className={`w-full h-full flex flex-col items-center justify-center bg-gray-800/80 ${className}`}>
-        <div className="text-xl mb-1 opacity-30">⬡</div>
-        <div className="text-gray-600 text-[9px]">#{badge.tokenId}</div>
-      </div>
-    );
-  }
+  if (failed) return (
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.03)' }}>
+      <div style={{ fontSize: '20px', opacity: 0.2, marginBottom: '4px' }}>⬡</div>
+      <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.2)', ...MONO }}>#{badge.tokenId}</div>
+    </div>
+  )
 
   return (
-    <div className="relative w-full h-full bg-gray-900">
+    <div style={{ position: 'relative', width: '100%', height: '100%', background: '#111' }}>
       {(!loaded || retrying) && (
-        <div className="absolute inset-0 bg-gray-800 animate-pulse" style={{ background: '#1f2937' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.03)', animation: 'pulse 1.5s infinite' }} />
       )}
       {!retrying && (
         <img
-          src={src}
-          alt={badge.name}
-          className={`w-full h-full object-cover transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
-          loading="lazy"
-          decoding="async"
+          src={src} alt={badge.name}
+          loading="lazy" decoding="async"
           onLoad={() => setLoaded(true)}
           onError={handleError}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: loaded ? 1 : 0, transition: 'opacity 0.4s ease' }}
         />
       )}
     </div>
-  );
+  )
 }
 
 export default function NFTMarketplace() {
-  const [filter, setFilter]     = useState<Rarity | 'all'>('all');
-  const [search, setSearch]     = useState('');
-  const [selected, setSelected] = useState<typeof IPFS_BADGES[0] | null>(null);
-  const [page, setPage]         = useState(0);
-  const PER_PAGE = 24;
+  const [filter,   setFilter]   = useState<Rarity | 'all' | keyof typeof SERIES>('all')
+  const [search,   setSearch]   = useState('')
+  const [selected, setSelected] = useState<typeof IPFS_BADGES[0] | null>(null)
+  const [page,     setPage]     = useState(0)
+  const PER_PAGE = 24
 
   const filtered = IPFS_BADGES.filter(b => {
-    if (filter !== 'all' && b.rarity !== filter) return false;
+    if (filter === 'infosec' || filter === 'glitch' || filter === 'galactic') {
+      if (getSeries(b.tokenId) !== filter) return false
+    } else if (filter !== 'all' && b.rarity !== filter) return false
     if (search && !b.name.toLowerCase().includes(search.toLowerCase()) &&
-        !b.trait.toLowerCase().includes(search.toLowerCase())) return false;
-    return true;
-  });
+        !b.trait.toLowerCase().includes(search.toLowerCase())) return false
+    return true
+  })
 
-  const pages     = Math.ceil(filtered.length / PER_PAGE);
-  const displayed = filtered.slice(page * PER_PAGE, (page + 1) * PER_PAGE);
+  const pages     = Math.ceil(filtered.length / PER_PAGE)
+  const displayed = filtered.slice(page * PER_PAGE, (page + 1) * PER_PAGE)
 
   const stats = {
     total:     IPFS_BADGES.length,
     legendary: IPFS_BADGES.filter(b => b.rarity === 'legendary').length,
     epic:      IPFS_BADGES.filter(b => b.rarity === 'epic').length,
     rare:      IPFS_BADGES.filter(b => b.rarity === 'rare').length,
-  };
+  }
+
+  const FILTER_TABS = [
+    { key: 'all',      label: `ALL (${IPFS_BADGES.length})`, color: '#fff'     },
+    { key: 'infosec',  label: 'INFOSEC #1-170',              color: '#00d4ff'  },
+    { key: 'glitch',   label: 'GLITCH #201-500',             color: '#ff00ff'  },
+    { key: 'galactic', label: 'GALACTIC #501-600',           color: '#ffd700'  },
+    { key: 'legendary',label: `✦ LEGENDARY`,                 color: '#ffd700'  },
+    { key: 'epic',     label: `★ EPIC`,                      color: '#ff00ff'  },
+    { key: 'rare',     label: `◆◆◆ RARE`,                    color: '#00d4ff'  },
+  ] as const
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-white">⬡ NFT Badge Collection</h2>
-          <p className="text-gray-400 text-sm mt-1">
-            {stats.total} badges on IPFS · {stats.legendary} 🌟 Legendary · {stats.epic} ★ Epic · {stats.rare} ◆◆◆ Rare
-          </p>
+    <div style={{ ...MONO, color: '#fff' }}>
+
+      {/* Header */}
+      <div style={{ marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+          <span style={{ fontSize: '10px', letterSpacing: '0.3em', color: '#ff6600' }}>NFT_BADGE_MARKETPLACE</span>
+        </div>
+        <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.2)', letterSpacing: '0.1em' }}>
+          {stats.total} BADGES ON IPFS · 3 SERIES · SIP-009 STANDARD
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {/* Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '8px', marginBottom: '16px' }}>
         {[
-          { label: 'Total on IPFS', value: stats.total,     color: 'text-white' },
-          { label: '🌟 Legendary',  value: stats.legendary,  color: 'text-yellow-400' },
-          { label: '★ Epic',        value: stats.epic,       color: 'text-purple-400' },
-          { label: '◆◆◆ Rare',     value: stats.rare,       color: 'text-blue-400' },
+          { label: 'TOTAL_BADGES', val: stats.total,     color: '#ff6600' },
+          { label: 'LEGENDARY',    val: stats.legendary,  color: '#ffd700' },
+          { label: 'EPIC',         val: stats.epic,       color: '#ff00ff' },
+          { label: 'RARE',         val: stats.rare,       color: '#00d4ff' },
         ].map(s => (
-          <div key={s.label} className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-3 text-center">
-            <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
-            <div className="text-gray-400 text-xs">{s.label}</div>
+          <div key={s.label} style={{ padding: '10px 12px', background: `${s.color}08`, border: `1px solid ${s.color}20`, borderRadius: '10px', textAlign: 'center' }}>
+            <div style={{ fontSize: '22px', fontWeight: 700, color: s.color }}>{s.val}</div>
+            <div style={{ fontSize: '8px', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.25)', marginTop: '2px' }}>{s.label}</div>
           </div>
         ))}
       </div>
 
-      <div className="flex flex-wrap gap-2 items-center">
+      {/* Search + filter */}
+      <div style={{ marginBottom: '14px' }}>
         <input
           value={search}
-          onChange={e => { setSearch(e.target.value); setPage(0); }}
-          placeholder="Search badge or trait..."
-          className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white placeholder-gray-500 flex-1 min-w-40"
+          onChange={e => { setSearch(e.target.value); setPage(0) }}
+          placeholder="SEARCH_BADGE_OR_TRAIT..."
+          style={{ ...MONO, width: '100%', padding: '10px 14px', boxSizing: 'border-box', borderRadius: '10px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: '12px', outline: 'none', marginBottom: '10px' }}
+          onFocus={e => e.target.style.borderColor = 'rgba(255,102,0,0.4)'}
+          onBlur={e  => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
         />
-        {(['all','legendary','epic','rare','uncommon','common'] as const).map(r => (
-          <button
-            key={r}
-            onClick={() => { setFilter(r); setPage(0); }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-all ${
-              filter === r
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-800 text-gray-400 hover:text-white border border-gray-700'
-            }`}
-          >
-            {r === 'all' ? `All (${IPFS_BADGES.length})` : `${RARITY_ICON[r]} ${r}`}
-          </button>
-        ))}
+        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+          {FILTER_TABS.map(t => (
+            <button key={t.key} onClick={() => { setFilter(t.key as any); setPage(0) }} style={{
+              ...MONO,
+              padding: '5px 12px', borderRadius: '20px', fontSize: '9px',
+              fontWeight: 700, letterSpacing: '0.1em', cursor: 'pointer',
+              border: filter === t.key ? `1px solid ${t.color}60` : '1px solid rgba(255,255,255,0.08)',
+              background: filter === t.key ? `${t.color}12` : 'rgba(255,255,255,0.02)',
+              color: filter === t.key ? t.color : 'rgba(255,255,255,0.35)',
+              transition: 'all 0.15s',
+            }}>
+              {t.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-        {displayed.map(badge => (
-          <div
-            key={badge.tokenId}
-            onClick={() => setSelected(badge)}
-            className={`relative bg-gray-800/60 border ${RARITY_BORDER[badge.rarity]} ${RARITY_GLOW[badge.rarity]}
-              rounded-xl overflow-hidden cursor-pointer hover:scale-105 transition-all duration-200 group`}
-          >
-            <div className="aspect-square w-full overflow-hidden bg-gray-900 isolate">
-              <NFTImage
-                badge={badge}
-                className="group-hover:scale-110 transition-transform duration-300"
-              />
+      {/* Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '8px', marginBottom: '16px' }}>
+        {displayed.map(badge => {
+          const rc    = RARITY_COLOR[badge.rarity]
+          const rb    = RARITY_BORDER[badge.rarity]
+          const serie = getSeries(badge.tokenId)
+          return (
+            <div
+              key={badge.tokenId}
+              onClick={() => setSelected(badge)}
+              style={{
+                background:   'rgba(255,255,255,0.02)',
+                border:       `1px solid ${rb}`,
+                borderRadius: '12px',
+                overflow:     'hidden',
+                cursor:       'pointer',
+                transition:   'all 0.2s',
+                position:     'relative',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.borderColor = rc }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)';    e.currentTarget.style.borderColor = rb }}
+            >
+              <div style={{ aspectRatio: '1', overflow: 'hidden', background: '#111' }}>
+                <NFTImage badge={badge} />
+              </div>
+              {/* Rarity badge */}
+              <div style={{ position: 'absolute', top: '6px', right: '6px', fontSize: '9px', fontWeight: 700, padding: '2px 6px', borderRadius: '10px', background: `${rc}20`, border: `1px solid ${rc}40`, color: rc }}>
+                {RARITY_ICON[badge.rarity]}
+              </div>
+              {/* Series dot */}
+              <div style={{ position: 'absolute', top: '6px', left: '6px', width: '6px', height: '6px', borderRadius: '50%', background: SERIES[serie].color, boxShadow: `0 0 6px ${SERIES[serie].color}` }} />
+              <div style={{ padding: '6px 8px' }}>
+                <div style={{ fontSize: '10px', fontWeight: 700, color: '#fff' }}>#{badge.tokenId}</div>
+                <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.35)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{badge.trait}</div>
+              </div>
             </div>
-            <div className={`absolute top-1.5 right-1.5 bg-gradient-to-r ${RARITY_COLOR[badge.rarity]}
-              text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full`}>
-              {RARITY_ICON[badge.rarity]}
-            </div>
-            <div className="p-2">
-              <div className="text-white text-[11px] font-semibold">#{badge.tokenId}</div>
-              <div className="text-gray-400 text-[10px] truncate">{badge.trait}</div>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
+      {/* Pagination */}
       {pages > 1 && (
-        <div className="flex items-center justify-center gap-3">
-          <button onClick={() => setPage(p => Math.max(0, p-1))} disabled={page===0}
-            className="px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-400 hover:text-white disabled:opacity-30">
-            ← Prev
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+          <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} style={{ ...MONO, padding: '7px 14px', borderRadius: '8px', fontSize: '10px', fontWeight: 700, cursor: page === 0 ? 'not-allowed' : 'pointer', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.4)', opacity: page === 0 ? 0.3 : 1 }}>
+            ← PREV
           </button>
-          <span className="text-gray-400 text-sm">{page+1} / {pages} &nbsp;·&nbsp; {filtered.length} badges</span>
-          <button onClick={() => setPage(p => Math.min(pages-1, p+1))} disabled={page===pages-1}
-            className="px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-400 hover:text-white disabled:opacity-30">
-            Next →
+          <span style={{ fontSize: '10px', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)' }}>
+            {page + 1} / {pages} · {filtered.length} BADGES
+          </span>
+          <button onClick={() => setPage(p => Math.min(pages - 1, p + 1))} disabled={page === pages - 1} style={{ ...MONO, padding: '7px 14px', borderRadius: '8px', fontSize: '10px', fontWeight: 700, cursor: page === pages - 1 ? 'not-allowed' : 'pointer', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.4)', opacity: page === pages - 1 ? 0.3 : 1 }}>
+            NEXT →
           </button>
         </div>
       )}
 
+      {/* Modal */}
       {selected && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.88)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '16px' }}
           onClick={() => setSelected(null)}>
-          <div className={`bg-gray-900 border ${RARITY_BORDER[selected.rarity]} ${RARITY_GLOW[selected.rarity]}
-            rounded-2xl max-w-sm w-full overflow-hidden`} onClick={e => e.stopPropagation()}>
-            <div className="aspect-square w-full bg-gray-800">
+          <div style={{ ...MONO, width: '100%', maxWidth: '340px', background: '#080b12', border: `1px solid ${RARITY_BORDER[selected.rarity]}`, borderRadius: '20px', overflow: 'hidden' }}
+            onClick={e => e.stopPropagation()}>
+            {/* Top glow */}
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: `linear-gradient(90deg, transparent, ${RARITY_COLOR[selected.rarity]}, transparent)`, pointerEvents: 'none' }} />
+            <div style={{ aspectRatio: '1', background: '#111' }}>
               <NFTImage badge={selected} />
             </div>
-            <div className="p-5 space-y-3">
-              <div className="flex items-start justify-between">
+            <div style={{ padding: '18px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                 <div>
-                  <h3 className="text-white font-bold text-lg">{selected.name}</h3>
-                  <p className="text-gray-400 text-sm">{selected.trait}</p>
+                  <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '2px' }}>{selected.name}</div>
+                  <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)' }}>{selected.trait}</div>
                 </div>
-                <span className={`bg-gradient-to-r ${RARITY_COLOR[selected.rarity]} text-white text-xs font-bold px-2 py-1 rounded-full`}>
-                  {RARITY_ICON[selected.rarity]} {selected.rarity}
+                <span style={{ fontSize: '9px', letterSpacing: '0.15em', padding: '3px 8px', borderRadius: '10px', background: `${RARITY_COLOR[selected.rarity]}15`, border: `1px solid ${RARITY_COLOR[selected.rarity]}35`, color: RARITY_COLOR[selected.rarity] }}>
+                  {RARITY_ICON[selected.rarity]} {selected.rarity.toUpperCase()}
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div className="bg-gray-800 rounded-lg p-2">
-                  <div className="text-gray-500 text-xs">Token ID</div>
-                  <div className="text-white font-mono">#{selected.tokenId}</div>
-                </div>
-                <div className="bg-gray-800 rounded-lg p-2">
-                  <div className="text-gray-500 text-xs">Rarity</div>
-                  <div className="text-white capitalize">{selected.rarity}</div>
-                </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '14px' }}>
+                {[
+                  { label: 'TOKEN_ID', val: `#${selected.tokenId}` },
+                  { label: 'SERIES',   val: SERIES[getSeries(selected.tokenId)].label },
+                ].map(r => (
+                  <div key={r.label} style={{ padding: '8px 10px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '8px' }}>
+                    <div style={{ fontSize: '8px', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.25)', marginBottom: '2px' }}>{r.label}</div>
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#fff' }}>{r.val}</div>
+                  </div>
+                ))}
               </div>
-              <div className="flex gap-2">
-                <a href={selected.imageUrl} target="_blank" rel="noopener noreferrer"
-                  className="flex-1 text-center bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-2 rounded-lg transition-colors">
-                  View on IPFS ↗
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <a href={selected.imageUrl} target="_blank" rel="noopener noreferrer" style={{ flex: 1, textAlign: 'center', padding: '10px', borderRadius: '10px', background: 'rgba(255,102,0,0.12)', border: '1px solid rgba(255,102,0,0.3)', color: '#ff6600', textDecoration: 'none', fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', ...MONO }}>
+                  VIEW_IPFS ↗
                 </a>
-                <button onClick={() => setSelected(null)}
-                  className="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm font-medium py-2 rounded-lg transition-colors">
-                  Close
+                <button onClick={() => setSelected(null)} style={{ flex: 1, padding: '10px', borderRadius: '10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', ...MONO }}>
+                  CLOSE
                 </button>
               </div>
             </div>
@@ -831,5 +862,5 @@ export default function NFTMarketplace() {
         </div>
       )}
     </div>
-  );
+  )
 }
