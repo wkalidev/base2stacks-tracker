@@ -26,6 +26,7 @@ import XPSystem from '@/components/XPSystem'
 import OnboardingWizard from '@/components/OnboardingWizard'
 import GalxeQuests from '@/components/GalxeQuests'
 import HeroAnimated from '@/components/HeroAnimated'
+import PortfolioSummary from '@/components/PortfolioSummary'
 
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 const APP_URL          = 'https://base2stacks-tracker.vercel.app'
@@ -309,6 +310,10 @@ export default function Page() {
 
       <Section title="// GALXE_QUESTS" color="#ffd700" maxWidth="max-w-5xl">
         <GalxeQuests userAddress={address} />
+      </Section>
+
+      <Section title="// PORTFOLIO_SUMMARY" color="#00d4ff" maxWidth="max-w-4xl">
+        <PortfolioSummary />
       </Section>
 
       {/* ══ FOOTER ══════════════════════════════════════════════════ */}
