@@ -27,6 +27,9 @@ import OnboardingWizard from '@/components/OnboardingWizard'
 import GalxeQuests from '@/components/GalxeQuests'
 import HeroAnimated from '@/components/HeroAnimated'
 import PortfolioSummary from '@/components/PortfolioSummary'
+import DailyStreak from '@/components/DailyStreak'
+import LiveActivityFeed from '@/components/LiveActivityFeed'
+import { AchievementManager } from '@/components/AchievementUnlock'
 
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 const APP_URL          = 'https://base2stacks-tracker.vercel.app'
@@ -91,14 +94,15 @@ export default function Page() {
   const { toasts, removeToast, success, error: showError }      = useToast()
   const dashStats                                               = useDashboardStats()
 
-  const [stakeAmount,     setStakeAmount]     = useState('')
-  const [showStakeModal,  setShowStakeModal]  = useState(false)
-  const [showTxToast,     setShowTxToast]     = useState(false)
-  const [showErrorToast,  setShowErrorToast]  = useState(false)
-  const [liveActivity,    setLiveActivity]    = useState<string | null>(null)
-  const [statsKey,        setStatsKey]        = useState(0)
-  const [lastClaimAmount, setLastClaimAmount] = useState<number | null>(null)
-  const [lastStakeAmount, setLastStakeAmount] = useState<number | null>(null)
+  const [stakeAmount,      setStakeAmount]      = useState('')
+  const [showStakeModal,   setShowStakeModal]   = useState(false)
+  const [showTxToast,      setShowTxToast]      = useState(false)
+  const [showErrorToast,   setShowErrorToast]   = useState(false)
+  const [liveActivity,     setLiveActivity]     = useState<string | null>(null)
+  const [statsKey,         setStatsKey]         = useState(0)
+  const [lastClaimAmount,  setLastClaimAmount]  = useState<number | null>(null)
+  const [lastStakeAmount,  setLastStakeAmount]  = useState<number | null>(null)
+  const [unlockedAchievements, setUnlockedAchievements] = useState<string[]>([])
 
   const handleBlock = useCallback(() => setStatsKey(k => k + 1), [])
 
@@ -106,11 +110,11 @@ export default function Page() {
     const fn   = tx.contract_call?.function_name
     const addr = tx.sender_address?.slice(0, 8) ?? '?'
     const map: Record<string, string> = {
-      'stake':       `STAKE_TX // ${addr}`,
-      'unstake':     `UNSTAKE_TX // ${addr}`,
-      'claim-daily': `CLAIM_TX // ${addr}`,
-      'vote':        `VOTE_TX // ${addr}`,
-      'bridge':      `BRIDGE_TX // ${tx.tx_id?.slice(0, 10)}`,
+      'stake':               `STAKE_TX // ${addr}`,
+      'unstake':             `UNSTAKE_TX // ${addr}`,
+      'claim-daily-reward':  `CLAIM_TX // ${addr}`,
+      'vote':                `VOTE_TX // ${addr}`,
+      'verify-bridge':       `BRIDGE_TX // ${tx.tx_id?.slice(0, 10)}`,
     }
     if (map[fn]) setLiveActivity(map[fn])
     setTimeout(() => setLiveActivity(null), 5000)
@@ -132,8 +136,11 @@ export default function Page() {
   if (!mounted) return null
 
   const handleClaim = async () => {
-    try { await claimDailyReward(); setLastClaimAmount(5) }
-    catch (e) { console.error(e) }
+    try {
+      await claimDailyReward()
+      setLastClaimAmount(5)
+      setUnlockedAchievements(prev => [...prev, 'first_claim'])
+    } catch (e) { console.error(e) }
   }
 
   const handleStake = async () => {
@@ -144,6 +151,11 @@ export default function Page() {
       setLastStakeAmount(amt)
       setShowStakeModal(false)
       setStakeAmount('')
+      setUnlockedAchievements(prev => {
+        const next = [...prev, 'first_stake']
+        if (amt >= 1000) next.push('staker_1k')
+        return next
+      })
     } catch (e) { console.error(e) }
   }
 
@@ -154,6 +166,9 @@ export default function Page() {
 
       {/* Onboarding */}
       <OnboardingWizard />
+
+      {/* Achievement system */}
+      <AchievementManager unlockedIds={unlockedAchievements} />
 
       {/* ══ HEADER ══════════════════════════════════════════════════ */}
       <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-black/80 backdrop-blur-xl">
@@ -207,7 +222,7 @@ export default function Page() {
         onConnect={connect}
       />
 
-      {/* ══ WALLET INFO (si connecté) ════════════════════════════════ */}
+      {/* ══ WALLET INFO (connecté) ════════════════════════════════════ */}
       {isConnected && address && (
         <section className="container mx-auto px-4 pb-8">
           <div className="max-w-3xl mx-auto space-y-4">
@@ -244,13 +259,31 @@ export default function Page() {
         </section>
       )}
 
-      {/* ══ SECTIONS ════════════════════════════════════════════════ */}
+      {/* ══ SECTIONS — connecté ══════════════════════════════════════ */}
 
       {isConnected && address && (
         <Section title="// YOUR_PROGRESSION" color="#ffd700" maxWidth="max-w-3xl" id="progression">
           <XPSystem />
         </Section>
       )}
+
+      {isConnected && address && (
+        <Section title="// DAILY_STREAK" color="#ff6600" maxWidth="max-w-3xl">
+          <DailyStreak />
+        </Section>
+      )}
+
+      {isConnected && address && (
+        <Section title="// PORTFOLIO_SUMMARY" color="#00d4ff" maxWidth="max-w-4xl">
+          <PortfolioSummary />
+        </Section>
+      )}
+
+      {/* ══ SECTIONS — publiques ══════════════════════════════════════ */}
+
+      <Section title="// LIVE_ACTIVITY" color="#00ff9f" maxWidth="max-w-3xl">
+        <LiveActivityFeed />
+      </Section>
 
       <Section title="// MARKET_DATA" color="#ffd700" maxWidth="max-w-5xl">
         <MarketData />
@@ -310,10 +343,6 @@ export default function Page() {
 
       <Section title="// GALXE_QUESTS" color="#ffd700" maxWidth="max-w-5xl">
         <GalxeQuests userAddress={address} />
-      </Section>
-
-      <Section title="// PORTFOLIO_SUMMARY" color="#00d4ff" maxWidth="max-w-4xl">
-        <PortfolioSummary />
       </Section>
 
       {/* ══ FOOTER ══════════════════════════════════════════════════ */}
