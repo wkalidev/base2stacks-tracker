@@ -20,15 +20,15 @@ const DECIMALS         = 1_000_000
 const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 
 interface Proposal {
-  id: number
-  title: string
+  id:          number
+  title:       string
   description: string
-  category: string
-  yesVotes: number
-  noVotes: number
-  endBlock: number
-  status: 'active' | 'passed' | 'failed' | 'executed'
-  proposer: string
+  category:    string
+  yesVotes:    number
+  noVotes:     number
+  endBlock:    number
+  status:      'active' | 'passed' | 'failed' | 'executed'
+  proposer:    string
 }
 
 const CAT_COLOR: Record<string, string> = {
@@ -51,14 +51,12 @@ async function fetchCurrentBlock(): Promise<number> {
     const r = await fetch(`${HIRO_API}/extended/v1/block?limit=1`)
     const d = await r.json()
     return d.results?.[0]?.height || 0
-  } catch {
-    return 0
-  }
+  } catch { return 0 }
 }
 
 async function fetchProposalsFromTxs(): Promise<Proposal[]> {
   try {
-    const res = await fetch(
+    const res  = await fetch(
       `${HIRO_API}/extended/v1/address/${CONTRACT_ADDRESS}.${GOV_CONTRACT}/transactions?limit=50`,
       { headers: { Accept: 'application/json' } }
     )
@@ -68,34 +66,26 @@ async function fetchProposalsFromTxs(): Promise<Proposal[]> {
     let id = 1
 
     for (const tx of data.results || []) {
-      if (
-        tx.tx_type === 'contract_call' &&
-        tx.contract_call?.function_name === 'create-proposal' &&
-        tx.tx_status === 'success'
-      ) {
+      if (tx.tx_type === 'contract_call' && tx.contract_call?.function_name === 'create-proposal' && tx.tx_status === 'success') {
         const args = tx.contract_call?.function_args || []
         proposals.push({
-          id: id++,
+          id:          id++,
           title:       args[0]?.repr?.replace(/^u?"/, '').replace(/"$/, '') || `Proposal #${id}`,
           description: args[1]?.repr?.replace(/^u?"/, '').replace(/"$/, '') || '',
-          category:    args[2]?.repr?.replace(/^"/, '').replace(/"$/, '') || 'general',
+          category:    args[2]?.repr?.replace(/^"/, '').replace(/"$/, '')   || 'general',
           endBlock:    args[3]?.repr ? parseInt(args[3].repr.replace('u', '')) : 0,
-          yesVotes: 0,
-          noVotes: 0,
-          status: 'active',
+          yesVotes: 0, noVotes: 0, status: 'active',
           proposer: tx.sender_address,
         })
       }
     }
     return proposals
-  } catch {
-    return []
-  }
+  } catch { return [] }
 }
 
 async function fetchVotesForProposal(proposalId: number): Promise<{ yes: number; no: number }> {
   try {
-    const res = await fetch(
+    const res  = await fetch(
       `${HIRO_API}/extended/v1/address/${CONTRACT_ADDRESS}.${GOV_CONTRACT}/transactions?limit=50`,
       { headers: { Accept: 'application/json' } }
     )
@@ -104,22 +94,14 @@ async function fetchVotesForProposal(proposalId: number): Promise<{ yes: number;
     let yes = 0, no = 0
 
     for (const tx of data.results || []) {
-      if (
-        tx.tx_type === 'contract_call' &&
-        tx.contract_call?.function_name === 'vote' &&
-        tx.tx_status === 'success'
-      ) {
-        const args = tx.contract_call?.function_args || []
-        const txProposalId = args[0]?.repr ? parseInt(args[0].repr.replace('u', '')) : -1
-        if (txProposalId === proposalId) {
-          args[1]?.repr === 'true' ? yes++ : no++
-        }
+      if (tx.tx_type === 'contract_call' && tx.contract_call?.function_name === 'vote' && tx.tx_status === 'success') {
+        const args       = tx.contract_call?.function_args || []
+        const txPropId   = args[0]?.repr ? parseInt(args[0].repr.replace('u', '')) : -1
+        if (txPropId === proposalId) { args[1]?.repr === 'true' ? yes++ : no++ }
       }
     }
     return { yes, no }
-  } catch {
-    return { yes: 0, no: 0 }
-  }
+  } catch { return { yes: 0, no: 0 } }
 }
 
 export default function GovernanceDAO() {
@@ -135,73 +117,46 @@ export default function GovernanceDAO() {
   const [newProposal,     setNewProposal]     = useState({ title: '', description: '', category: 'economic', days: '7' })
   const [error,           setError]           = useState<string | null>(null)
   const [lastUpdated,     setLastUpdated]     = useState<Date | null>(null)
+  const [filter,          setFilter]          = useState<'all' | 'active' | 'passed' | 'failed'>('all')
 
   const fetchVotingPower = useCallback(async () => {
     if (!address) return
     try {
       const result = await callReadOnlyFunction({
-        network,
-        contractAddress: CONTRACT_ADDRESS,
-        contractName: STAKING_CONTRACT,
-        functionName: 'get-vault',
-        functionArgs: [standardPrincipalCV(address)],
-        senderAddress: address,
+        network, contractAddress: CONTRACT_ADDRESS, contractName: STAKING_CONTRACT,
+        functionName: 'get-vault', functionArgs: [standardPrincipalCV(address)], senderAddress: address,
       })
-      const json = cvToJSON(result)
-      setVotingPower(Number(json?.value?.value?.amount?.value || 0) / DECIMALS)
-    } catch {
-      setVotingPower(0)
-    }
+      setVotingPower(Number(cvToJSON(result)?.value?.value?.amount?.value || 0) / DECIMALS)
+    } catch { setVotingPower(0) }
   }, [address])
 
   const loadData = useCallback(async () => {
     try {
-      setLoading(true)
-      setError(null)
+      setLoading(true); setError(null)
       const [block, raw] = await Promise.all([fetchCurrentBlock(), fetchProposalsFromTxs()])
       setCurrentBlock(block)
-
-      const enriched = await Promise.all(
-        raw.map(async p => {
-          const votes   = await fetchVotesForProposal(p.id)
-          const expired = block > p.endBlock && p.endBlock > 0
-          const status: Proposal['status'] = expired
-            ? votes.yes > votes.no ? 'passed' : 'failed'
-            : 'active'
-          return { ...p, yesVotes: votes.yes, noVotes: votes.no, status }
-        })
-      )
-      setProposals(enriched)
-      setLastUpdated(new Date())
-    } catch {
-      setError('RPC_ERROR: failed to load governance data')
-    } finally {
-      setLoading(false)
-    }
+      const enriched = await Promise.all(raw.map(async p => {
+        const votes   = await fetchVotesForProposal(p.id)
+        const expired = block > p.endBlock && p.endBlock > 0
+        const status: Proposal['status'] = expired ? (votes.yes > votes.no ? 'passed' : 'failed') : 'active'
+        return { ...p, yesVotes: votes.yes, noVotes: votes.no, status }
+      }))
+      setProposals(enriched); setLastUpdated(new Date())
+    } catch { setError('RPC_ERROR: failed to load governance data') }
+    finally { setLoading(false) }
   }, [])
 
-  useEffect(() => {
-    loadData()
-    const t = setInterval(loadData, 120_000)
-    return () => clearInterval(t)
-  }, [loadData])
-
-  useEffect(() => {
-    if (address) fetchVotingPower()
-  }, [address, fetchVotingPower])
+  useEffect(() => { loadData(); const t = setInterval(loadData, 120_000); return () => clearInterval(t) }, [loadData])
+  useEffect(() => { if (address) fetchVotingPower() }, [address, fetchVotingPower])
 
   const handleVote = async (proposalId: number, voteYes: boolean) => {
     if (!address) return
     setVotingLoading(prev => ({ ...prev, [proposalId]: true }))
     try {
       await openContractCall({
-        network,
-        contractAddress: CONTRACT_ADDRESS,
-        contractName: GOV_CONTRACT,
-        functionName: 'vote',
-        functionArgs: [uintCV(proposalId), boolCV(voteYes)],
-        postConditionMode: PostConditionMode.Allow,
-        anchorMode: AnchorMode.Any,
+        network, contractAddress: CONTRACT_ADDRESS, contractName: GOV_CONTRACT,
+        functionName: 'vote', functionArgs: [uintCV(proposalId), boolCV(voteYes)],
+        postConditionMode: PostConditionMode.Allow, anchorMode: AnchorMode.Any,
         onFinish: (d) => {
           setTxIds(prev => ({ ...prev, [proposalId]: d.txId }))
           setUserVotes(prev => ({ ...prev, [proposalId]: true }))
@@ -210,18 +165,14 @@ export default function GovernanceDAO() {
         },
         onCancel: () => setVotingLoading(prev => ({ ...prev, [proposalId]: false })),
       })
-    } catch {
-      setVotingLoading(prev => ({ ...prev, [proposalId]: false }))
-    }
+    } catch { setVotingLoading(prev => ({ ...prev, [proposalId]: false })) }
   }
 
   const handleCreateProposal = async () => {
     if (!address || !newProposal.title) return
     try {
       await openContractCall({
-        network,
-        contractAddress: CONTRACT_ADDRESS,
-        contractName: GOV_CONTRACT,
+        network, contractAddress: CONTRACT_ADDRESS, contractName: GOV_CONTRACT,
         functionName: 'create-proposal',
         functionArgs: [
           stringUtf8CV(newProposal.title),
@@ -229,289 +180,276 @@ export default function GovernanceDAO() {
           stringAsciiCV(newProposal.category),
           uintCV(parseInt(newProposal.days) * 144),
         ],
-        postConditionMode: PostConditionMode.Allow,
-        anchorMode: AnchorMode.Any,
-        onFinish: () => {
-          setShowCreateModal(false)
-          setNewProposal({ title: '', description: '', category: 'economic', days: '7' })
-          setTimeout(loadData, 5000)
-        },
+        postConditionMode: PostConditionMode.Allow, anchorMode: AnchorMode.Any,
+        onFinish: () => { setShowCreateModal(false); setNewProposal({ title: '', description: '', category: 'economic', days: '7' }); setTimeout(loadData, 5000) },
         onCancel: () => {},
       })
-    } catch (err) {
-      console.error('createProposal:', err)
-    }
+    } catch (err) { console.error('createProposal:', err) }
   }
 
-  // ── Not connected ──────────────────────────────────────────────────────────
-  if (!isConnected) {
-    return (
-      <div style={MONO} className="rounded-2xl border border-[#ff00ff]/20 bg-black/70 p-10 text-center">
-        <p className="text-5xl mb-4">🏛️</p>
-        <p className="text-white font-black tracking-widest mb-1">WALLET_NOT_CONNECTED</p>
-        <p className="text-white/30 text-xs tracking-wider">Connect to participate in B2S governance</p>
-      </div>
-    )
-  }
+  const filtered = filter === 'all' ? proposals : proposals.filter(p => p.status === filter)
+
+  if (!isConnected) return (
+    <div style={{ ...MONO, background: 'rgba(255,0,255,0.03)', border: '1px solid rgba(255,0,255,0.15)', borderRadius: '16px', padding: '48px', textAlign: 'center' }}>
+      <div style={{ fontSize: '36px', marginBottom: '12px' }}>🏛️</div>
+      <div style={{ fontSize: '13px', fontWeight: 700, color: '#fff', marginBottom: '4px', letterSpacing: '0.1em' }}>WALLET_NOT_CONNECTED</div>
+      <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em' }}>Connect to participate in B2S governance</div>
+    </div>
+  )
 
   return (
-    <div style={MONO} className="space-y-5">
+    <div style={{ ...MONO, color: '#fff' }}>
 
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl border border-[#ff00ff]/20 bg-black/70 p-5">
-        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,0,255,0.01) 3px,rgba(255,0,255,0.01) 4px)' }} />
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#ff00ff]/60 to-transparent" />
-        <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 rounded-full bg-[#ff00ff] animate-pulse" style={{ boxShadow: '0 0 8px #ff00ff' }} />
-              <span className="text-[#ff00ff] text-[10px] tracking-[0.3em] font-black">GOVERNANCE DAO // ON-CHAIN</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#ff00ff', boxShadow: '0 0 8px #ff00ff', animation: 'pulse 2s infinite', display: 'inline-block' }} />
+            <span style={{ fontSize: '10px', letterSpacing: '0.3em', color: '#ff00ff' }}>GOVERNANCE_DAO // ON-CHAIN</span>
+          </div>
+          <div style={{ fontSize: '22px', fontWeight: 700, marginBottom: '2px' }}>PROTOCOL_VOTING</div>
+          {lastUpdated && (
+            <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.2)', letterSpacing: '0.1em' }}>
+              LAST_SYNC: {lastUpdated.toLocaleTimeString()}
             </div>
-            <h2 className="text-2xl font-black text-white tracking-tight">PROTOCOL VOTING</h2>
-            {lastUpdated && (
-              <p className="text-white/20 text-[10px] mt-1">LAST_SYNC: {lastUpdated.toLocaleTimeString()}</p>
-            )}
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={loadData}
-              className="p-2 rounded-xl border border-white/10 bg-white/[0.04] text-white/40 hover:text-white transition-all"
-            >
-              ⟳
-            </button>
-            <button
-              onClick={() => setShowCreateModal(true)}
-              disabled={votingPower < 10000}
-              title={votingPower < 10000 ? 'Need 10,000 $B2S staked' : ''}
-              className="px-4 py-2 rounded-xl text-[10px] font-black tracking-widest transition-all disabled:opacity-30"
-              style={{ background: 'rgba(255,0,255,0.12)', border: '1px solid rgba(255,0,255,0.3)', color: '#ff00ff' }}
-            >
-              + CREATE PROPOSAL
-            </button>
-          </div>
+          )}
+        </div>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <button onClick={loadData} style={{ ...MONO, padding: '8px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', fontSize: '14px' }}>⟳</button>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            disabled={votingPower < 10000}
+            title={votingPower < 10000 ? 'Need 10,000 $B2S staked' : ''}
+            style={{ ...MONO, padding: '8px 16px', background: 'rgba(255,0,255,0.12)', border: '1px solid rgba(255,0,255,0.3)', borderRadius: '10px', color: '#ff00ff', cursor: votingPower >= 10000 ? 'pointer' : 'not-allowed', fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', opacity: votingPower < 10000 ? 0.5 : 1 }}
+          >
+            + CREATE_PROPOSAL
+          </button>
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      {/* Stats row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px', marginBottom: '20px' }}>
         {[
-          { label: 'VOTING_POWER', val: `${votingPower.toLocaleString()} $B2S`, color: '#ff00ff', warn: votingPower < 10000 },
-          { label: 'BLOCK_HEIGHT', val: `#${currentBlock.toLocaleString()}`,    color: '#00d4ff', warn: false },
+          { label: 'VOTING_POWER', val: `${votingPower >= 1000 ? `${(votingPower/1000).toFixed(1)}K` : votingPower.toFixed(0)} $B2S`, color: '#ff00ff', warn: votingPower < 10000 },
+          { label: 'BLOCK_HEIGHT', val: `#${currentBlock.toLocaleString()}`,   color: '#00d4ff', warn: false },
           { label: 'PROPOSALS',    val: String(proposals.length),               color: '#00ff9f', warn: false },
+          { label: 'ACTIVE',       val: String(proposals.filter(p => p.status === 'active').length), color: '#ffd700', warn: false },
         ].map(s => (
-          <div key={s.label} className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4">
-            <p className="text-white/25 text-[9px] tracking-widest mb-1">{s.label}</p>
-            <p className="font-black text-lg" style={{ color: s.color, textShadow: `0 0 12px ${s.color}50` }}>{s.val}</p>
-            {s.warn && <p className="text-[#ffd700] text-[9px] mt-1 tracking-wider">⚠ NEED 10K $B2S TO PROPOSE</p>}
+          <div key={s.label} style={{ padding: '12px 14px', background: `${s.color}06`, border: `1px solid ${s.color}18`, borderRadius: '12px', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: `linear-gradient(90deg, transparent, ${s.color}40, transparent)` }} />
+            <div style={{ fontSize: '9px', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.25)', marginBottom: '4px' }}>{s.label}</div>
+            <div style={{ fontSize: '17px', fontWeight: 700, color: s.color }}>{s.val}</div>
+            {s.warn && <div style={{ fontSize: '8px', color: '#ffd700', marginTop: '2px', letterSpacing: '0.1em' }}>⚠ NEED 10K TO PROPOSE</div>}
           </div>
+        ))}
+      </div>
+
+      {/* Filter tabs */}
+      <div style={{ display: 'flex', gap: '4px', padding: '4px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', width: 'fit-content', marginBottom: '16px' }}>
+        {(['all', 'active', 'passed', 'failed'] as const).map(f => (
+          <button key={f} onClick={() => setFilter(f)} style={{
+            ...MONO,
+            padding: '6px 14px', borderRadius: '8px', fontSize: '10px',
+            fontWeight: 700, letterSpacing: '0.12em', cursor: 'pointer', border: 'none',
+            background: filter === f ? 'rgba(255,0,255,0.12)' : 'transparent',
+            color:      filter === f ? '#ff00ff' : 'rgba(255,255,255,0.3)',
+            transition: 'all 0.15s',
+          }}>
+            {f.toUpperCase()}
+          </button>
         ))}
       </div>
 
       {/* Error */}
       {error && (
-        <div className="rounded-xl border border-[#ff4444]/30 bg-[#ff4444]/[0.06] px-4 py-3 text-[#ff4444] text-xs font-mono">
+        <div style={{ padding: '10px 14px', background: 'rgba(255,68,68,0.06)', border: '1px solid rgba(255,68,68,0.2)', borderRadius: '10px', fontSize: '11px', color: '#ff4444', marginBottom: '12px' }}>
           ⚠ {error}
         </div>
       )}
 
       {/* Loading */}
       {loading && (
-        <div className="space-y-2">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-32 rounded-xl border border-white/[0.05] bg-white/[0.02] animate-pulse" />
+            <div key={i} style={{ height: '120px', background: 'rgba(255,255,255,0.02)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.05)', animation: 'pulse 1.5s infinite' }} />
           ))}
         </div>
       )}
 
       {/* Empty */}
-      {!loading && proposals.length === 0 && (
-        <div className="text-center py-16 rounded-2xl border border-white/[0.07] bg-black/40">
-          <p className="text-4xl mb-3">🗳️</p>
-          <p className="text-white font-black tracking-widest mb-2">NO_PROPOSALS_FOUND</p>
-          <p className="text-white/25 text-xs">Requires 10,000 $B2S staked in b2s-staking-vault-v2</p>
+      {!loading && filtered.length === 0 && (
+        <div style={{ textAlign: 'center', padding: '48px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px' }}>
+          <div style={{ fontSize: '36px', marginBottom: '12px' }}>🗳️</div>
+          <div style={{ fontSize: '13px', fontWeight: 700, color: '#fff', marginBottom: '4px', letterSpacing: '0.1em' }}>
+            {filter === 'all' ? 'NO_PROPOSALS_FOUND' : `NO_${filter.toUpperCase()}_PROPOSALS`}
+          </div>
+          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', letterSpacing: '0.1em' }}>
+            Requires 10,000 $B2S staked in b2s-staking-vault-v2
+          </div>
         </div>
       )}
 
       {/* Proposals */}
-      <div className="space-y-4">
-        {proposals.map(p => {
-          const total      = p.yesVotes + p.noVotes
-          const yesPct     = total > 0 ? (p.yesVotes / total) * 100 : 50
-          const blocksLeft = p.endBlock - currentBlock
-          const daysLeft   = blocksLeft > 0 ? (blocksLeft / 144).toFixed(1) : '0'
-          const catColor   = CAT_COLOR[p.category]    || '#ffffff'
-          const statusColor = STATUS_COLOR[p.status]  || '#ffffff'
+      {!loading && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {filtered.map(p => {
+            const total      = p.yesVotes + p.noVotes
+            const yesPct     = total > 0 ? (p.yesVotes / total) * 100 : 50
+            const blocksLeft = p.endBlock - currentBlock
+            const daysLeft   = blocksLeft > 0 ? (blocksLeft / 144).toFixed(1) : '0'
+            const catColor   = CAT_COLOR[p.category]  || '#ffffff'
+            const stColor    = STATUS_COLOR[p.status] || '#ffffff'
+            const quorum     = total >= 20
 
-          return (
-            <div
-              key={p.id}
-              className="relative overflow-hidden rounded-2xl border border-white/[0.07] bg-black/50 transition-all duration-300 hover:border-white/15"
-            >
-              <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg,transparent,${statusColor}50,transparent)` }} />
+            return (
+              <div key={p.id} style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${stColor}18`, borderRadius: '16px', overflow: 'hidden', position: 'relative' }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: `linear-gradient(90deg, transparent, ${stColor}50, transparent)` }} />
 
-              <div className="p-5">
-                {/* Proposal header */}
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <span className="text-white/30 font-black text-sm font-mono">#{String(p.id).padStart(3, '0')}</span>
-                  <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest"
-                    style={{ color: statusColor, background: `${statusColor}15`, border: `1px solid ${statusColor}30` }}>
-                    {p.status.toUpperCase()}
-                  </span>
-                  <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest"
-                    style={{ color: catColor, background: `${catColor}10`, border: `1px solid ${catColor}25` }}>
-                    {p.category.toUpperCase()}
-                  </span>
-                  {blocksLeft > 0 && (
-                    <span className="text-white/25 text-[10px] font-mono">⏱ {daysLeft} days</span>
-                  )}
-                </div>
-
-                <h3 className="text-white font-black text-base tracking-wide mb-1">{p.title}</h3>
-                {p.description && (
-                  <p className="text-white/35 text-xs leading-relaxed mb-3">{p.description}</p>
-                )}
-                <a
-                  href={`https://explorer.hiro.so/address/${p.proposer}?chain=mainnet`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white/20 text-[10px] font-mono hover:text-white/50 transition-colors"
-                >
-                  BY: {p.proposer.slice(0, 8)}...{p.proposer.slice(-4)}
-                </a>
-
-                {/* Vote bar */}
-                <div className="mt-4 mb-4">
-                  <div className="flex justify-between text-[10px] font-mono mb-1.5">
-                    <span style={{ color: '#00ff9f' }}>YES {p.yesVotes} [{yesPct.toFixed(1)}%]</span>
-                    <span className="text-white/20">{total} TOTAL</span>
-                    <span style={{ color: '#ff4444' }}>[{(100 - yesPct).toFixed(1)}%] {p.noVotes} NO</span>
+                <div style={{ padding: '18px 20px' }}>
+                  {/* Header badges */}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
+                    <span style={{ ...MONO, fontSize: '11px', fontWeight: 700, color: 'rgba(255,255,255,0.3)' }}>#{String(p.id).padStart(3, '0')}</span>
+                    <span style={{ fontSize: '8px', letterSpacing: '0.15em', padding: '2px 8px', borderRadius: '10px', background: `${stColor}15`, border: `1px solid ${stColor}30`, color: stColor }}>
+                      {p.status.toUpperCase()}
+                    </span>
+                    <span style={{ fontSize: '8px', letterSpacing: '0.12em', padding: '2px 8px', borderRadius: '10px', background: `${catColor}10`, border: `1px solid ${catColor}25`, color: catColor }}>
+                      {p.category.toUpperCase()}
+                    </span>
+                    {blocksLeft > 0 && (
+                      <span style={{ fontSize: '9px', color: 'rgba(255,255,255,0.25)', letterSpacing: '0.05em' }}>⏱ {daysLeft}d left</span>
+                    )}
+                    {!quorum && (
+                      <span style={{ fontSize: '8px', padding: '2px 8px', borderRadius: '10px', background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.2)', color: '#ffd700', letterSpacing: '0.1em' }}>
+                        NO_QUORUM
+                      </span>
+                    )}
                   </div>
-                  <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-                    <div className="flex h-full">
-                      <div
-                        className="h-full rounded-l-full transition-all duration-700"
-                        style={{ width: `${yesPct}%`, background: 'linear-gradient(90deg,#00ff9f,#00d4ff)' }}
-                      />
-                      <div
-                        className="h-full rounded-r-full transition-all duration-700"
-                        style={{ width: `${100 - yesPct}%`, background: 'linear-gradient(90deg,#ff6644,#ff4444)' }}
-                      />
+
+                  {/* Title + description */}
+                  <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff', marginBottom: '4px', letterSpacing: '0.02em' }}>{p.title}</div>
+                  {p.description && (
+                    <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', marginBottom: '8px', lineHeight: 1.6 }}>{p.description}</div>
+                  )}
+                  <a href={`https://explorer.hiro.so/address/${p.proposer}?chain=mainnet`} target="_blank" rel="noopener noreferrer"
+                    style={{ fontSize: '9px', color: 'rgba(255,255,255,0.2)', letterSpacing: '0.08em', textDecoration: 'none' }}>
+                    BY: {p.proposer.slice(0, 8)}···{p.proposer.slice(-4)}
+                  </a>
+
+                  {/* Vote bar */}
+                  <div style={{ marginTop: '14px', marginBottom: '14px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                      <span style={{ fontSize: '9px', fontWeight: 700, color: '#00ff9f', letterSpacing: '0.1em' }}>YES {p.yesVotes} [{yesPct.toFixed(1)}%]</span>
+                      <span style={{ fontSize: '9px', color: 'rgba(255,255,255,0.2)' }}>{total} VOTES</span>
+                      <span style={{ fontSize: '9px', fontWeight: 700, color: '#ff4444', letterSpacing: '0.1em' }}>[{(100-yesPct).toFixed(1)}%] {p.noVotes} NO</span>
+                    </div>
+                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ display: 'flex', height: '100%' }}>
+                        <div style={{ width: `${yesPct}%`, background: 'linear-gradient(90deg, #00ff9f, #00d4ff)', transition: 'width 0.7s ease' }} />
+                        <div style={{ width: `${100-yesPct}%`, background: 'linear-gradient(90deg, #ff6644, #ff4444)', transition: 'width 0.7s ease' }} />
+                      </div>
                     </div>
                   </div>
+
+                  {/* Vote buttons */}
+                  {p.status === 'active' && !userVotes[p.id] && (
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                      {[
+                        { label: '✓ VOTE_YES', vote: true,  color: '#00ff9f' },
+                        { label: '✗ VOTE_NO',  vote: false, color: '#ff4444' },
+                      ].map(btn => (
+                        <button key={String(btn.vote)} onClick={() => handleVote(p.id, btn.vote)}
+                          disabled={!!votingLoading[p.id] || votingPower === 0}
+                          style={{
+                            ...MONO,
+                            padding: '10px', borderRadius: '10px', fontSize: '10px',
+                            fontWeight: 700, letterSpacing: '0.12em', cursor: 'pointer',
+                            background: `${btn.color}10`, border: `1px solid ${btn.color}35`, color: btn.color,
+                            opacity: votingPower === 0 ? 0.3 : 1, transition: 'all 0.15s',
+                          }}>
+                          {votingLoading[p.id] ? '⏳ PENDING...' : btn.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {userVotes[p.id] && (
+                    <div style={{ textAlign: 'center', padding: '8px', fontSize: '10px', fontWeight: 700, letterSpacing: '0.15em', color: '#00ff9f' }}>
+                      ✓ VOTE_RECORDED_ON-CHAIN
+                    </div>
+                  )}
+
+                  {votingPower === 0 && p.status === 'active' && !userVotes[p.id] && (
+                    <div style={{ textAlign: 'center', padding: '8px', fontSize: '9px', color: 'rgba(255,255,255,0.2)', letterSpacing: '0.1em' }}>
+                      STAKE_$B2S_TO_GAIN_VOTING_POWER
+                    </div>
+                  )}
+
+                  {txIds[p.id] && (
+                    <div style={{ marginTop: '10px', padding: '8px 12px', background: 'rgba(0,255,159,0.05)', border: '1px solid rgba(0,255,159,0.2)', borderRadius: '8px' }}>
+                      <a href={`https://explorer.hiro.so/txid/${txIds[p.id]}?chain=mainnet`} target="_blank" rel="noopener noreferrer"
+                        style={{ fontSize: '9px', color: '#00ff9f', letterSpacing: '0.1em', textDecoration: 'none' }}>
+                        ✓ TX_SUBMITTED → VIEW_EXPLORER ↗
+                      </a>
+                    </div>
+                  )}
                 </div>
-
-                {/* Vote buttons */}
-                {p.status === 'active' && !userVotes[p.id] && (
-                  <div className="grid grid-cols-2 gap-2">
-                    {[
-                      { label: '✓ VOTE YES', vote: true,  color: '#00ff9f' },
-                      { label: '✗ VOTE NO',  vote: false, color: '#ff4444' },
-                    ].map(btn => (
-                      <button
-                        key={String(btn.vote)}
-                        onClick={() => handleVote(p.id, btn.vote)}
-                        disabled={!!votingLoading[p.id] || votingPower === 0}
-                        className="py-2.5 rounded-xl text-xs font-black tracking-widest transition-all disabled:opacity-30 hover:opacity-80"
-                        style={{ background: `${btn.color}12`, border: `1px solid ${btn.color}40`, color: btn.color }}
-                      >
-                        {votingLoading[p.id] ? '⏳ PENDING...' : btn.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {userVotes[p.id] && (
-                  <div className="py-2 text-center text-[10px] font-black tracking-widest" style={{ color: '#00ff9f' }}>
-                    ✓ VOTE_RECORDED ON-CHAIN
-                  </div>
-                )}
-
-                {votingPower === 0 && p.status === 'active' && (
-                  <p className="text-white/20 text-[10px] text-center mt-2 tracking-wider">
-                    STAKE $B2S TO GAIN VOTING POWER
-                  </p>
-                )}
-
-                {txIds[p.id] && (
-                  <div className="mt-3 px-3 py-2 rounded-xl border border-[#00ff9f]/20 bg-[#00ff9f]/[0.05]">
-                    <a
-                      href={`https://explorer.hiro.so/txid/${txIds[p.id]}?chain=mainnet`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#00ff9f] text-[10px] font-mono hover:underline"
-                    >
-                      ✓ TX_SUBMITTED → VIEW_EXPLORER ↗
-                    </a>
-                  </div>
-                )}
               </div>
-            </div>
-          )
-        })}
-      </div>
+            )
+          })}
+        </div>
+      )}
 
       {/* Create Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div style={MONO} className="relative w-full max-w-xl rounded-2xl overflow-hidden border border-[#ff00ff]/20 bg-black/95">
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#ff00ff]/60 to-transparent" />
-            <div className="p-7">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="w-2 h-2 rounded-full bg-[#ff00ff] animate-pulse" />
-                <span className="text-[#ff00ff] text-[10px] tracking-[0.3em] font-black">
-                  CREATE_PROPOSAL // REQUIRES 10K $B2S
-                </span>
-              </div>
-              <h3 className="text-xl font-black text-white mb-5">NEW GOVERNANCE PROPOSAL</h3>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '16px' }}
+          onClick={() => setShowCreateModal(false)}>
+          <div style={{ ...MONO, width: '100%', maxWidth: '520px', background: '#080b12', border: '1px solid rgba(255,0,255,0.25)', borderRadius: '20px', overflow: 'hidden', position: 'relative' }}
+            onClick={e => e.stopPropagation()}>
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,0,255,0.8), transparent)' }} />
 
-              <div className="space-y-4 mb-6">
+            <div style={{ padding: '24px' }}>
+              <div style={{ fontSize: '9px', letterSpacing: '0.3em', color: '#ff00ff', marginBottom: '4px' }}>CREATE_PROPOSAL // REQUIRES 10K $B2S</div>
+              <div style={{ fontSize: '20px', fontWeight: 700, color: '#fff', marginBottom: '20px' }}>NEW_GOVERNANCE_PROPOSAL</div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '20px' }}>
                 <div>
-                  <label className="text-white/30 text-[9px] tracking-widest font-black block mb-1.5">TITLE</label>
-                  <input
-                    type="text"
-                    value={newProposal.title}
-                    onChange={e => setNewProposal(p => ({ ...p, title: e.target.value }))}
+                  <div style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.3)', marginBottom: '6px' }}>TITLE</div>
+                  <input type="text" value={newProposal.title} onChange={e => setNewProposal(p => ({ ...p, title: e.target.value }))}
                     placeholder="Adjust fee structure v2..."
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff00ff]/40 transition-colors"
+                    style={{ ...MONO, width: '100%', padding: '10px 14px', boxSizing: 'border-box', borderRadius: '10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: '14px', outline: 'none' }}
+                    onFocus={e => e.target.style.borderColor = 'rgba(255,0,255,0.4)'}
+                    onBlur={e  => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                   />
                 </div>
                 <div>
-                  <label className="text-white/30 text-[9px] tracking-widest font-black block mb-1.5">DESCRIPTION</label>
-                  <textarea
-                    rows={3}
-                    value={newProposal.description}
-                    onChange={e => setNewProposal(p => ({ ...p, description: e.target.value }))}
+                  <div style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.3)', marginBottom: '6px' }}>DESCRIPTION</div>
+                  <textarea rows={3} value={newProposal.description} onChange={e => setNewProposal(p => ({ ...p, description: e.target.value }))}
                     placeholder="Detailed proposal description..."
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff00ff]/40 transition-colors resize-none"
+                    style={{ ...MONO, width: '100%', padding: '10px 14px', boxSizing: 'border-box', borderRadius: '10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: '13px', outline: 'none', resize: 'none' }}
+                    onFocus={e => e.target.style.borderColor = 'rgba(255,0,255,0.4)'}
+                    onBlur={e  => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   <div>
-                    <label className="text-white/30 text-[9px] tracking-widest font-black block mb-1.5">CATEGORY</label>
-                    <select
-                      value={newProposal.category}
-                      onChange={e => setNewProposal(p => ({ ...p, category: e.target.value }))}
-                      className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-white text-sm focus:outline-none"
-                    >
-                      {Object.keys(CAT_COLOR).map(c => (
-                        <option key={c} value={c}>{c.toUpperCase()}</option>
-                      ))}
+                    <div style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.3)', marginBottom: '6px' }}>CATEGORY</div>
+                    <select value={newProposal.category} onChange={e => setNewProposal(p => ({ ...p, category: e.target.value }))}
+                      style={{ ...MONO, width: '100%', padding: '10px 14px', boxSizing: 'border-box', borderRadius: '10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: '12px', outline: 'none' }}>
+                      {Object.keys(CAT_COLOR).map(c => <option key={c} value={c}>{c.toUpperCase()}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label className="text-white/30 text-[9px] tracking-widest font-black block mb-1.5">DURATION</label>
-                    <div className="flex gap-1">
+                    <div style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.3)', marginBottom: '6px' }}>DURATION</div>
+                    <div style={{ display: 'flex', gap: '4px' }}>
                       {['7', '14', '30'].map(d => (
-                        <button
-                          key={d}
-                          onClick={() => setNewProposal(p => ({ ...p, days: d }))}
-                          className="flex-1 py-2.5 rounded-xl text-xs font-black transition-all"
-                          style={{
-                            background: newProposal.days === d ? 'rgba(255,0,255,0.15)' : 'rgba(255,255,255,0.04)',
-                            border: `1px solid ${newProposal.days === d ? 'rgba(255,0,255,0.4)' : 'rgba(255,255,255,0.1)'}`,
-                            color: newProposal.days === d ? '#ff00ff' : 'rgba(255,255,255,0.3)',
-                          }}
-                        >
+                        <button key={d} onClick={() => setNewProposal(p => ({ ...p, days: d }))} style={{
+                          ...MONO,
+                          flex: 1, padding: '10px 4px', borderRadius: '8px', fontSize: '11px',
+                          fontWeight: 700, cursor: 'pointer', border: 'none',
+                          background: newProposal.days === d ? 'rgba(255,0,255,0.15)' : 'rgba(255,255,255,0.04)',
+                          outline: newProposal.days === d ? '1px solid rgba(255,0,255,0.4)' : '1px solid rgba(255,255,255,0.1)',
+                          color: newProposal.days === d ? '#ff00ff' : 'rgba(255,255,255,0.3)',
+                        }}>
                           {d}d
                         </button>
                       ))}
@@ -520,20 +458,12 @@ export default function GovernanceDAO() {
                 </div>
               </div>
 
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowCreateModal(false)}
-                  className="flex-1 py-3 rounded-xl text-xs font-black tracking-widest border border-white/10 bg-white/[0.04] text-white/40 hover:text-white transition-all"
-                >
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button onClick={() => setShowCreateModal(false)} style={{ ...MONO, flex: 1, padding: '12px', borderRadius: '10px', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', cursor: 'pointer', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.35)' }}>
                   CANCEL
                 </button>
-                <button
-                  onClick={handleCreateProposal}
-                  disabled={!newProposal.title}
-                  className="flex-1 py-3 rounded-xl text-xs font-black tracking-widest transition-all disabled:opacity-30 hover:opacity-80"
-                  style={{ background: 'rgba(255,0,255,0.15)', border: '1px solid rgba(255,0,255,0.4)', color: '#ff00ff' }}
-                >
-                  DEPLOY PROPOSAL 🚀
+                <button onClick={handleCreateProposal} disabled={!newProposal.title} style={{ ...MONO, flex: 1, padding: '12px', borderRadius: '10px', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', cursor: 'pointer', background: 'rgba(255,0,255,0.15)', border: '1px solid rgba(255,0,255,0.4)', color: '#ff00ff', opacity: !newProposal.title ? 0.4 : 1 }}>
+                  DEPLOY_PROPOSAL 🚀
                 </button>
               </div>
             </div>
