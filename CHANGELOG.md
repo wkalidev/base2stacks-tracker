@@ -83,4 +83,7 @@ All notable changes to Base2Stacks Tracker.
 ---
 
 **Format**: [Keep a Changelog](https://keepachangelog.com/)
-**Versioning**: [Semantic Versioning](https://semver.org/)
+**Versioning**: [Semantic Versioning](https://semver.org/)## v1.2.0
+- Add AI Agent with Claude
+- Add share buttons Twitter/Farcaster
+- Add talent.app footer link
