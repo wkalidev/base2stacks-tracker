@@ -14,3 +14,20 @@ export function isValidLockPeriod(blocks: number): boolean {
 export function sanitizeAmount(amount: string): number {
   return Math.max(0, parseFloat(amount) || 0)
 }
+
+// Keep backwards compatibility
+export function isInRange(value: bigint, min: bigint, max: bigint): boolean {
+  return value >= min && value <= max
+}
+
+export function isNonZero(value: bigint): boolean {
+  return value > 0n
+}
+
+export function isValidLength(str: string, maxLen: number): boolean {
+  return str.length <= maxLen
+}
+
+export function isValidProposalTitle(title: string): boolean {
+  return title.length > 0 && title.length <= 100
+}
