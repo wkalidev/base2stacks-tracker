@@ -43,8 +43,8 @@ export function estimateRewards(amount: bigint, lock: LockDuration, days: bigint
 // Display helpers
 // ============================================================
 
-export const formatB2S = (raw: bigint) => formatAmount(raw, 6);
-export const formatSTX = (raw: bigint) => formatAmount(raw, 6);
+export const formatB2S = (raw: bigint) => formatAmount(Number(raw), 6);
+export const formatSTX = (raw: bigint) => formatAmount(Number(raw), 6);
 export const parseB2S  = (display: string) => parseAmount(display, 6);
 
 // ============================================================
