@@ -20,3 +20,12 @@ export function formatB2S(amount: number): string {
 export function formatSTX(amount: number): string {
   return formatToken(amount, 'STX', 4)
 }
+
+// backwards compatibility for toolkit.ts
+export function formatAmount(amount: number, decimals = B2S_DECIMALS): string {
+  return (amount / 10 ** decimals).toFixed(6)
+}
+
+export function parseAmount(amount: string, decimals = B2S_DECIMALS): number {
+  return Math.floor(parseFloat(amount) * 10 ** decimals)
+}
