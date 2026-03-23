@@ -1,36 +1,16 @@
-// Stacks Clarity Toolkit - Validation Helpers (TypeScript)
-
-/**
- * Check if a string is a valid Stacks mainnet address
- */
-export function isValidStacksAddress(addr: string): boolean {
-  return /^SP[0-9A-Z]{38,39}$/.test(addr) || /^ST[0-9A-Z]{38,39}$/.test(addr);
+export function isValidStacksAddress(address: string): boolean {
+  return /^S[PM][0-9A-Z]{38,39}$/.test(address)
 }
 
-/**
- * Check if value is in range [min, max]
- */
-export function isInRange(value: bigint, min: bigint, max: bigint): boolean {
-  return value >= min && value <= max;
+export function isValidAmount(amount: string): boolean {
+  const n = parseFloat(amount)
+  return !isNaN(n) && n > 0
 }
 
-/**
- * Check if string length is within max
- */
-export function isValidLength(str: string, maxLen: number): boolean {
-  return str.length <= maxLen;
+export function isValidLockPeriod(blocks: number): boolean {
+  return blocks >= 0 && blocks <= 52560
 }
 
-/**
- * Check if amount is non-zero
- */
-export function isNonZero(value: bigint): boolean {
-  return value > 0n;
-}
-
-/**
- * Validate a proposal title (max 100 chars, non-empty)
- */
-export function isValidProposalTitle(title: string): boolean {
-  return title.length > 0 && title.length <= 100;
+export function sanitizeAmount(amount: string): number {
+  return Math.max(0, parseFloat(amount) || 0)
 }
