@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 
-const HIRO_API         = 'https://api.mainnet.hiro.so'
+const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 
@@ -32,7 +32,7 @@ const TX_MAP: Record<string, { color: string; icon: string; label: string }> = {
 async function fetchActivity(): Promise<ActivityItem[]> {
   try {
     const res  = await fetch(
-      `${HIRO_API}/extended/v1/address/${CONTRACT_ADDRESS}.b2s-token/transactions?limit=20`,
+      `${hiroUrl(`/extended/v1/address/${CONTRACT_ADDRESS}.b2s-token/transactions?limit=20`)}`,
       { headers: { Accept: 'application/json' } }
     )
     if (!res.ok) return []

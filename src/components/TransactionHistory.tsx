@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { exportToCSV, exportToJSON } from '@/utils/exportCSV'
 
-const HIRO_API         = 'https://api.mainnet.hiro.so'
+const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 const DECIMALS         = 1_000_000
 
@@ -49,8 +49,8 @@ function classifyTx(tx: any) {
 
 async function fetchAddressTransactions(address: string): Promise<Transaction[]> {
   const [res, mempoolRes] = await Promise.all([
-    fetch(`${HIRO_API}/extended/v1/address/${address}/transactions?limit=50`, { headers: { Accept: 'application/json' }, cache: 'no-store' }),
-    fetch(`${HIRO_API}/extended/v1/address/${address}/mempool?limit=20`, { headers: { Accept: 'application/json' }, cache: 'no-store' }),
+    fetch(`${hiroUrl(`/extended/v1/address/${address}/transactions?limit=50`)}`, { headers: { Accept: 'application/json' }, cache: 'no-store' }),
+    fetch(`${hiroUrl(`/extended/v1/address/${address}/mempool?limit=20`)}`, { headers: { Accept: 'application/json' }, cache: 'no-store' }),
   ])
   if (!res.ok) return []
   const [data, mempoolData] = await Promise.all([res.json(), mempoolRes.ok ? mempoolRes.json() : { results: [] }])

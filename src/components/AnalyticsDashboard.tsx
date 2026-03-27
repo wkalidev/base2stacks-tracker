@@ -5,7 +5,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const HIRO_API        = 'https://api.hiro.so';
+const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`
 const CONTRACT        = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96';
 const TOKEN_CONTRACT  = `${CONTRACT}.b2s-token`;
 const POOL_CONTRACT   = `${CONTRACT}.b2s-liquidity-pool-v5`;
@@ -47,13 +47,13 @@ export const AnalyticsDashboard: React.FC<{ refreshInterval?: number }> = ({ ref
   const fetchMetrics = useCallback(async () => {
     try {
       const [tokenTx, holderRes, poolTx, rewardsTx] = await Promise.all([
-        fetch(`${HIRO_API}/extended/v1/address/${TOKEN_CONTRACT}/transactions?limit=1`),
-        fetch(`${HIRO_API}/extended/v1/tokens/ft/${TOKEN_CONTRACT}/holders?limit=1`),
-        fetch(`${HIRO_API}/extended/v1/address/${POOL_CONTRACT}/transactions?limit=1`),
-        fetch(`${HIRO_API}/extended/v1/address/${REWARDS_CONTRACT}/transactions?limit=1`),
+        fetch(`${hiroUrl(`/extended/v1/address/${TOKEN_CONTRACT}/transactions?limit=1`)}`),
+        fetch(`${hiroUrl(`/extended/v1/tokens/ft/${TOKEN_CONTRACT}/holders?limit=1`)}`),
+        fetch(`${hiroUrl(`/extended/v1/address/${POOL_CONTRACT}/transactions?limit=1`)}`),
+        fetch(`${hiroUrl(`/extended/v1/address/${REWARDS_CONTRACT}/transactions?limit=1`)}`),
       ]);
       const [tokenData, holderData, poolData, rewardsData] = await Promise.all([tokenTx.json(), holderRes.json(), poolTx.json(), rewardsTx.json()]);
-      const metaRes = await fetch(`${HIRO_API}/metadata/v1/ft/${TOKEN_CONTRACT}`);
+      const metaRes = await fetch(`${hiroUrl(`/metadata/v1/ft/${TOKEN_CONTRACT}`)}`);
       const meta    = await metaRes.json();
       setMetrics({ totalTxCount: tokenData.total || 0, holders: holderData.total || 0, totalSupply: meta.total_supply ? Number(meta.total_supply) / 1_000_000 : 0, poolTxCount: poolData.total || 0, rewardsTxCount: rewardsData.total || 0, loading: false });
       setLastUpdate(new Date().toLocaleTimeString());
@@ -62,7 +62,7 @@ export const AnalyticsDashboard: React.FC<{ refreshInterval?: number }> = ({ ref
 
   const fetchTxHistory = useCallback(async () => {
     try {
-      const res  = await fetch(`${HIRO_API}/extended/v1/address/${TOKEN_CONTRACT}/transactions?limit=50&offset=0`);
+      const res  = await fetch(`${hiroUrl(`/extended/v1/address/${TOKEN_CONTRACT}/transactions?limit=50&offset=0`)}`);
       const data = await res.json();
       const byDay: Record<string, number> = {};
       (data.results || []).forEach((tx: any) => { const d = tx.burn_block_time_iso?.slice(0,10); if (d) byDay[d] = (byDay[d] || 0) + 1; });
@@ -73,7 +73,7 @@ export const AnalyticsDashboard: React.FC<{ refreshInterval?: number }> = ({ ref
 
   const fetchHolderDistribution = useCallback(async () => {
     try {
-      const res  = await fetch(`${HIRO_API}/extended/v1/tokens/ft/${TOKEN_CONTRACT}/holders?limit=200`);
+      const res  = await fetch(`${hiroUrl(`/extended/v1/tokens/ft/${TOKEN_CONTRACT}/holders?limit=200`)}`);
       const data = await res.json();
       const buckets: Record<string, number> = { '0–100': 0, '100–1K': 0, '1K–10K': 0, '10K–100K': 0, '100K+': 0 };
       (data.results || []).forEach((h: any) => {

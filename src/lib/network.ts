@@ -1,7 +1,7 @@
 export const NETWORKS = {
   mainnet: {
     name:    'Stacks Mainnet',
-    api:     'https://api.mainnet.hiro.so',
+    api:     '/api/hiro',
     explorer:'https://explorer.hiro.so',
   },
   testnet: {

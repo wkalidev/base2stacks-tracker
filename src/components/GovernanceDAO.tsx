@@ -15,7 +15,7 @@ const network          = new StacksMainnet()
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 const GOV_CONTRACT     = 'b2s-governance'
 const STAKING_CONTRACT = 'b2s-staking-vault-v2'
-const HIRO_API         = 'https://api.mainnet.hiro.so'
+const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`
 const DECIMALS         = 1_000_000
 const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 
@@ -48,7 +48,7 @@ const STATUS_COLOR: Record<string, string> = {
 
 async function fetchCurrentBlock(): Promise<number> {
   try {
-    const r = await fetch(`${HIRO_API}/extended/v1/block?limit=1`)
+    const r = await fetch(`${hiroUrl(`/extended/v1/block?limit=1`)}`)
     const d = await r.json()
     return d.results?.[0]?.height || 0
   } catch { return 0 }
@@ -57,7 +57,7 @@ async function fetchCurrentBlock(): Promise<number> {
 async function fetchProposalsFromTxs(): Promise<Proposal[]> {
   try {
     const res  = await fetch(
-      `${HIRO_API}/extended/v1/address/${CONTRACT_ADDRESS}.${GOV_CONTRACT}/transactions?limit=50`,
+      `${hiroUrl(`/extended/v1/address/${CONTRACT_ADDRESS}.${GOV_CONTRACT}/transactions?limit=50`)}`,
       { headers: { Accept: 'application/json' } }
     )
     if (!res.ok) return []
@@ -86,7 +86,7 @@ async function fetchProposalsFromTxs(): Promise<Proposal[]> {
 async function fetchVotesForProposal(proposalId: number): Promise<{ yes: number; no: number }> {
   try {
     const res  = await fetch(
-      `${HIRO_API}/extended/v1/address/${CONTRACT_ADDRESS}.${GOV_CONTRACT}/transactions?limit=50`,
+      `${hiroUrl(`/extended/v1/address/${CONTRACT_ADDRESS}.${GOV_CONTRACT}/transactions?limit=50`)}`,
       { headers: { Accept: 'application/json' } }
     )
     if (!res.ok) return { yes: 0, no: 0 }

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 
 const TOKEN_CONTRACT   = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-token'
 const STAKING_CONTRACT = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.b2s-staking-vault-v2'
-const HIRO_API         = 'https://api.mainnet.hiro.so'
+const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`
 const DECIMALS         = 1_000_000
 
 interface LeaderboardEntry {
@@ -26,7 +26,7 @@ async function fetchOnChainStats(): Promise<OnChainStats> {
   try {
     const [addr, name] = STAKING_CONTRACT.split('.')
     const res = await fetch(
-      `${HIRO_API}/v2/contracts/call-read/${addr}/${name}/get-stats`,
+      `${hiroUrl(`/v2/contracts/call-read/${addr}/${name}/get-stats`)}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -51,7 +51,7 @@ async function fetchTxStakers(contractAddress: string, source: 'vault' | 'token'
   const stakers = new Map<string, { staked: number; multiplier: number; unlockBlock: number; source: 'vault' | 'token' }>()
   try {
     const res = await fetch(
-      `${HIRO_API}/extended/v1/address/${contractAddress}/transactions?limit=50&offset=0`,
+      `${hiroUrl(`/extended/v1/address/${contractAddress}/transactions?limit=50&offset=0`)}`,
       { headers: { Accept: 'application/json' } }
     )
     if (!res.ok) return stakers

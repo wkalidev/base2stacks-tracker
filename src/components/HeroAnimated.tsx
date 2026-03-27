@@ -4,9 +4,11 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useWallet } from '@/hooks/useWallet'
 import { useContract } from '@/hooks/useContract'
 import { useDashboardStats } from '@/hooks/useDashboardStats'
+const TYPEWRITER_TEXTS = ['EARN $B2S DAILY', 'STAKE & EARN 37.5% APY', 'BRIDGE BASE → STACKS', 'VOTE ON GOVERNANCE', 'COLLECT NFT BADGES']
+
 
 const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
-const HIRO_API = 'https://api.mainnet.hiro.so'
+const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`
 
 // ── Particle system ───────────────────────────────────────────────────────────
 interface Particle {
@@ -233,7 +235,7 @@ export default function HeroAnimated({ onClaim, onStake, onConnect }: HeroAnimat
   // Live block height
   const fetchBlock = useCallback(async () => {
     try {
-      const res  = await fetch(`${HIRO_API}/extended/v1/block?limit=1`)
+      const res  = await fetch(`${hiroUrl(`/extended/v1/block?limit=1`)}`)
       const data = await res.json()
       setBlockHeight(data.results?.[0]?.height || 0)
     } catch { /* silent */ }
@@ -365,7 +367,7 @@ export default function HeroAnimated({ onClaim, onStake, onConnect }: HeroAnimat
           <div style={{ fontSize: '13px', marginBottom: '28px', minHeight: '24px', animation: 'fadeUp 0.5s ease 0.4s both' }}>
             <Typewriter
               color="#00ff9f"
-              texts={['EARN $B2S DAILY', 'STAKE & EARN 37.5% APY', 'BRIDGE BASE → STACKS', 'VOTE ON GOVERNANCE', 'COLLECT NFT BADGES']}
+              texts={TYPEWRITER_TEXTS}
             />
           </div>
 
