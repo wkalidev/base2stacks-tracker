@@ -5,7 +5,7 @@ export const APP_GITHUB    = 'https://github.com/wkalidev/base2stacks-tracker'
 export const APP_FARCASTER = 'https://warpcast.com/willywarrior'
 
 export const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
-export const HIRO_API         = 'https://api.mainnet.hiro.so'
+export const HIRO_API         = '/api/hiro'
 
 export const DAILY_REWARD = 5
 export const BASE_APY     = 12.5

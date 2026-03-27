@@ -7,7 +7,7 @@ import { StacksMainnet } from '@stacks/network'
 
 const network          = new StacksMainnet()
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
-const HIRO_API         = 'https://api.mainnet.hiro.so'
+const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`
 const DECIMALS         = 1_000_000
 const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 
@@ -148,7 +148,7 @@ async function fetchPortfolio(address: string): Promise<Portfolio> {
 
   try {
     // Wallet balance
-    const balRes  = await fetch(`${HIRO_API}/extended/v1/tokens/ft/${CONTRACT_ADDRESS}.b2s-token/holders?principal=${address}`)
+    const balRes  = await fetch(`${hiroUrl(`/extended/v1/tokens/ft/${CONTRACT_ADDRESS}.b2s-token/holders?principal=${address}`)}`)
     if (balRes.ok) {
       const balData = await balRes.json()
       result.wallet = Number(balData.results?.[0]?.balance || 0) / DECIMALS

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useWallet } from '@/hooks/useWallet'
 
-const HIRO_API         = 'https://api.mainnet.hiro.so'
+const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 
@@ -31,7 +31,7 @@ async function fetchStreakData(address: string): Promise<StreakData> {
 
   try {
     const res  = await fetch(
-      `${HIRO_API}/extended/v1/address/${address}/transactions?limit=50`,
+      `${hiroUrl(`/extended/v1/address/${address}/transactions?limit=50`)}`,
       { headers: { Accept: 'application/json' } }
     )
     if (!res.ok) return result

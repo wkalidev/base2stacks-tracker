@@ -1,7 +1,7 @@
 export const CONFIG = {
   CONTRACT_ADDRESS: 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96',
   APP_URL:          'https://base2stacks-tracker.vercel.app',
-  HIRO_API:         'https://api.mainnet.hiro.so',
+  HIRO_API:         '/api/hiro',
   DAILY_REWARD:     5,
   BASE_APY:         12.5,
   MAX_APY:          37.5,

@@ -27,7 +27,7 @@ const LEVELS = [
   { level: 8,  name: 'B2S_LEGEND',    minXP: 12000, color: '#ffffff', icon: '★' },
 ]
 
-const HIRO_API         = 'https://api.mainnet.hiro.so'
+const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 
@@ -39,7 +39,7 @@ async function calculateXPFromChain(address: string): Promise<{ xp: number; brea
   try {
     // Fetch all transactions involving user
     const res = await fetch(
-      `${HIRO_API}/extended/v1/address/${address}/transactions?limit=50`,
+      `${hiroUrl(`/extended/v1/address/${address}/transactions?limit=50`)}`,
       { headers: { Accept: 'application/json' } }
     )
     if (!res.ok) return { xp: 0, breakdown }
@@ -93,7 +93,7 @@ async function calculateXPFromChain(address: string): Promise<{ xp: number; brea
 
     // Check NFT badges
     const badgeRes = await fetch(
-      `${HIRO_API}/extended/v1/tokens/nft/holdings?principal=${address}&asset_identifiers=${CONTRACT_ADDRESS}.b2s-badges::b2s-badge&limit=1`,
+      `${hiroUrl(`/extended/v1/tokens/nft/holdings?principal=${address}&asset_identifiers=${CONTRACT_ADDRESS}.b2s-badges::b2s-badge&limit=1`)}`,
       { headers: { Accept: 'application/json' } }
     )
     if (badgeRes.ok) {
