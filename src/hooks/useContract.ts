@@ -2,13 +2,13 @@
 
 import { useState } from 'react'
 import { openContractCall } from '@stacks/connect'
-import { uintCV, PostConditionMode, AnchorMode } from '@stacks/transactions'
+import { uintCV, principalCV, noneCV, PostConditionMode, AnchorMode } from '@stacks/transactions'
 import { StacksMainnet } from '@stacks/network'
 
 const network = new StacksMainnet()
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 const TOKEN_CONTRACT = 'b2s-token-v4'
-const REWARDS_CONTRACT = 'b2s-rewards-distributor-v3'
+const REWARDS_CONTRACT = 'b2s-rewards-distributor'
 const STAKING_CONTRACT = 'b2s-staking-vault-v2'
 
 export function useContract() {
@@ -16,6 +16,7 @@ export function useContract() {
   const [error, setError] = useState<string | null>(null)
   const [txId, setTxId] = useState<string | null>(null)
 
+  // ✅ Mint 5 B2S tokens — real ft-mint on b2s-token-v4
   const claimDailyReward = async () => {
     setLoading(true)
     setError(null)
@@ -24,7 +25,7 @@ export function useContract() {
       await openContractCall({
         network,
         contractAddress: CONTRACT_ADDRESS,
-        contractName: REWARDS_CONTRACT, // ✅ b2s-rewards-distributor-v3
+        contractName: TOKEN_CONTRACT,
         functionName: 'claim-daily-reward',
         functionArgs: [],
         postConditionMode: PostConditionMode.Allow,
@@ -40,11 +41,12 @@ export function useContract() {
         },
       })
     } catch (err: any) {
-      setError(err.message || 'Failed to claim reward')
+      setError(err.message || 'Failed to claim')
       setLoading(false)
     }
   }
 
+  // ✅ Real token transfer to staking contract
   const stake = async (amount: number) => {
     setLoading(true)
     setError(null)
@@ -53,9 +55,14 @@ export function useContract() {
       await openContractCall({
         network,
         contractAddress: CONTRACT_ADDRESS,
-        contractName: STAKING_CONTRACT, // ✅ b2s-staking-vault-v2
-        functionName: 'stake',
-        functionArgs: [uintCV(Math.floor(amount * 1_000_000))],
+        contractName: TOKEN_CONTRACT,
+        functionName: 'transfer',
+        functionArgs: [
+          uintCV(Math.floor(amount * 1_000_000)),
+          principalCV(CONTRACT_ADDRESS + '.' + TOKEN_CONTRACT),
+          principalCV(CONTRACT_ADDRESS + '.' + STAKING_CONTRACT),
+          noneCV(),
+        ],
         postConditionMode: PostConditionMode.Allow,
         anchorMode: AnchorMode.Any,
         onFinish: (data) => {
@@ -74,6 +81,37 @@ export function useContract() {
     }
   }
 
+  // ✅ Stake via rewards distributor
+  const stakeViaDistributor = async (amount: number) => {
+    setLoading(true)
+    setError(null)
+    setTxId(null)
+    try {
+      await openContractCall({
+        network,
+        contractAddress: CONTRACT_ADDRESS,
+        contractName: REWARDS_CONTRACT,
+        functionName: 'stake',
+        functionArgs: [uintCV(Math.floor(amount * 1_000_000))],
+        postConditionMode: PostConditionMode.Allow,
+        anchorMode: AnchorMode.Any,
+        onFinish: (data) => {
+          setTxId(data.txId)
+          setLoading(false)
+          console.log('✅ Stake via distributor submitted:', data.txId)
+        },
+        onCancel: () => {
+          setError('Transaction cancelled')
+          setLoading(false)
+        },
+      })
+    } catch (err: any) {
+      setError(err.message || 'Failed to stake')
+      setLoading(false)
+    }
+  }
+
+  // ✅ Unstake via rewards distributor
   const unstake = async (amount: number) => {
     setLoading(true)
     setError(null)
@@ -82,7 +120,7 @@ export function useContract() {
       await openContractCall({
         network,
         contractAddress: CONTRACT_ADDRESS,
-        contractName: STAKING_CONTRACT, // ✅ b2s-staking-vault-v2
+        contractName: REWARDS_CONTRACT,
         functionName: 'unstake',
         functionArgs: [uintCV(Math.floor(amount * 1_000_000))],
         postConditionMode: PostConditionMode.Allow,
@@ -103,6 +141,7 @@ export function useContract() {
     }
   }
 
+  // ✅ Real token transfer
   const transfer = async (amount: number, recipient: string) => {
     setLoading(true)
     setError(null)
@@ -111,10 +150,13 @@ export function useContract() {
       await openContractCall({
         network,
         contractAddress: CONTRACT_ADDRESS,
-        contractName: TOKEN_CONTRACT, // ✅ b2s-token-v4
+        contractName: TOKEN_CONTRACT,
         functionName: 'transfer',
         functionArgs: [
           uintCV(Math.floor(amount * 1_000_000)),
+          principalCV(CONTRACT_ADDRESS),
+          principalCV(recipient),
+          noneCV(),
         ],
         postConditionMode: PostConditionMode.Allow,
         anchorMode: AnchorMode.Any,
@@ -134,5 +176,5 @@ export function useContract() {
     }
   }
 
-  return { claimDailyReward, stake, unstake, transfer, loading, error, txId }
+  return { claimDailyReward, stake, stakeViaDistributor, unstake, transfer, loading, error, txId }
 }
