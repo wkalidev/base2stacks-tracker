@@ -3,56 +3,59 @@ import { NextRequest, NextResponse } from 'next/server'
 const HIRO_BASE = 'https://api.hiro.so'
 const HIRO_MAINNET = 'https://api.mainnet.hiro.so'
 
+async function proxyRequest(path: string, options: RequestInit = {}) {
+  const base = path.startsWith('/metadata') ? HIRO_BASE : HIRO_MAINNET
+  
+  const response = await fetch(`${base}${path}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    next: { revalidate: 30 },
+  })
+
+  let data
+  try {
+    data = await response.json()
+  } catch {
+    data = { results: [], total: 0 }
+  }
+
+  if (!response.ok) {
+    return NextResponse.json(
+      { results: [], total: 0, error: data?.error ?? 'Not found' },
+      { status: 200 }
+    )
+  }
+
+  return NextResponse.json(data, { status: 200 })
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const path = searchParams.get('path')
-
-  if (!path) {
-    return NextResponse.json({ error: 'Missing path parameter' }, { status: 400 })
-  }
-
-  const base = path.startsWith('/metadata') ? HIRO_BASE : HIRO_MAINNET
+  if (!path) return NextResponse.json({ error: 'Missing path' }, { status: 400 })
 
   try {
-    const response = await fetch(`${base}${path}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      next: { revalidate: 30 },
-    })
-
-    const data = await response.json()
-    return NextResponse.json(data, { status: response.status })
-  } catch (error) {
-    return NextResponse.json({ error: 'Hiro API error' }, { status: 500 })
+    return await proxyRequest(path)
+  } catch {
+    return NextResponse.json({ results: [], total: 0 }, { status: 200 })
   }
 }
 
 export async function POST(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const path = searchParams.get('path')
-
-  if (!path) {
-    return NextResponse.json({ error: 'Missing path parameter' }, { status: 400 })
-  }
-
-  const base = path.startsWith('/metadata') ? HIRO_BASE : HIRO_MAINNET
+  if (!path) return NextResponse.json({ error: 'Missing path' }, { status: 400 })
 
   try {
     const body = await request.json()
-    const response = await fetch(`${base}${path}`, {
+    return await proxyRequest(path, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
       body: JSON.stringify(body),
     })
-
-    const data = await response.json()
-    return NextResponse.json(data, { status: response.status })
-  } catch (error) {
-    return NextResponse.json({ error: 'Hiro API error' }, { status: 500 })
+  } catch {
+    return NextResponse.json({ result: null }, { status: 200 })
   }
 }
