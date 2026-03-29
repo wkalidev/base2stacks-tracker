@@ -14,6 +14,7 @@ interface StreakData {
   canClaim:   boolean
   totalClaims: number
   history:    boolean[] // last 14 days — true = claimed
+  perfectWeek: boolean
 }
 
 const STREAK_MILESTONES = [
@@ -27,6 +28,7 @@ async function fetchStreakData(address: string): Promise<StreakData> {
   const result: StreakData = {
     current: 0, longest: 0, lastClaim: null,
     canClaim: true, totalClaims: 0, history: Array(14).fill(false),
+    perfectWeek: false 
   }
 
   try {
@@ -62,6 +64,9 @@ async function fetchStreakData(address: string): Promise<StreakData> {
       const key = d.toISOString().slice(0, 10)
       result.history[i] = claimedDays.has(key)
     }
+
+    const last7Days = result.history.slice(-7)
+    result.perfectWeek = last7Days.every(Boolean)
 
     // Last claim
     result.lastClaim = claims[0]?.burn_block_time_iso?.slice(0, 10) || null
@@ -242,6 +247,22 @@ export default function DailyStreak() {
                 </div>
               )}
             </div>
+              {/*Perfect Week Logic */}
+            {streak.perfectWeek && (
+  <div style={{
+    marginBottom: '12px',
+    padding: '8px 12px',
+    borderRadius: '8px',
+    background: 'rgba(0,255,159,0.08)',
+    border: '1px solid rgba(0,255,159,0.25)',
+    textAlign: 'center',
+    fontSize: '10px',
+    letterSpacing: '0.15em',
+    color: '#00ff9f'
+  }}>
+      PERFECT_WEEK — BONUS ACTIVE
+  </div>
+)}
 
             {/* 14-day calendar */}
             <div style={{ marginBottom: '12px' }}>
