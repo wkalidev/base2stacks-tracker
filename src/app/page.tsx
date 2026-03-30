@@ -30,8 +30,6 @@ import PortfolioSummary from '@/components/PortfolioSummary'
 import DailyStreak from '@/components/DailyStreak'
 import LiveActivityFeed from '@/components/LiveActivityFeed'
 import { AchievementManager } from '@/components/AchievementUnlock'
-import PolymarketFeed from '@/components/PolymarketFeed'
-
 
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 const APP_URL          = 'https://base2stacks-tracker.vercel.app'
@@ -343,9 +341,6 @@ export default function Page() {
         <PredictionMarket />
       </Section>
 
-      <Section title="// POLYMARKET_MARKETS" color="#00ff9f" maxWidth="max-w-5xl">
-        <PolymarketFeed apiKey={process.env.NEXT_PUBLIC_POLYMARKET_API_KEY} />
-      </Section>
 
       <Section title="// GALXE_QUESTS" color="#ffd700" maxWidth="max-w-5xl">
         <GalxeQuests userAddress={address} />
