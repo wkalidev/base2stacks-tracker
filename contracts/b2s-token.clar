@@ -53,6 +53,12 @@
   { amount: uint, staked-at: uint }
 )
 
+;; Reputation tracker
+(define-map tracker-reputation
+  { tracker: principal }
+  { score: uint }
+)
+
 (define-data-var total-staked uint u0)
 
 ;; Read-Only Functions
@@ -97,6 +103,10 @@
 
 (define-read-only (get-total-staked)
   (ok (var-get total-staked))
+)
+
+(define-read-only (get-reputation (tracker principal))
+  (default-to { score: u0 } (map-get? tracker-reputation { tracker: tracker }))
 )
 
 ;; Public Functions
@@ -180,16 +190,28 @@
     ;; Mint reward to tracker
     (try! (ft-mint? b2s-token reward-amount tracker))
     
-    ;; Update tracker rewards
+    ;; Update tracker rewards + reputation
     (let
-      ((current-stats (get-tracker-stats tracker)))
-      (map-set tracker-stats
-        { tracker: tracker }
-        {
-          total-tracked: (get total-tracked current-stats),
-          total-rewards: (+ (get total-rewards current-stats) reward-amount),
-          last-claim: block-height
-        }
+      (
+        (current-stats (get-tracker-stats tracker))
+        (rep (get-reputation tracker))
+      )
+      (begin
+        ;; Update stats
+        (map-set tracker-stats
+          { tracker: tracker }
+          {
+            total-tracked: (get total-tracked current-stats),
+            total-rewards: (+ (get total-rewards current-stats) reward-amount),
+            last-claim: block-height
+          }
+        )
+
+        ;; Update reputation
+        (map-set tracker-reputation
+          { tracker: tracker }
+          { score: (+ (get score rep) u1) }
+        )
       )
     )
     
