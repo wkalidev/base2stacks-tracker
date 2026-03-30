@@ -1,4 +1,4 @@
-const HIRO_WS = 'wss://api.mainnet.hiro.so'
+const HIRO_WS = 'wss://api.hiro.so'
 
 export function createStacksWebSocket(
   onMessage: (data: any) => void,
