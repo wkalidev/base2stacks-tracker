@@ -16,7 +16,6 @@ export function useContract() {
   const [error, setError] = useState<string | null>(null)
   const [txId, setTxId] = useState<string | null>(null)
 
-  // ✅ Mint 5 B2S tokens — real ft-mint on b2s-token-v4
   const claimDailyReward = async () => {
     setLoading(true)
     setError(null)
@@ -30,15 +29,8 @@ export function useContract() {
         functionArgs: [],
         postConditionMode: PostConditionMode.Allow,
         anchorMode: AnchorMode.Any,
-        onFinish: (data) => {
-          setTxId(data.txId)
-          setLoading(false)
-          console.log('✅ Claim submitted:', data.txId)
-        },
-        onCancel: () => {
-          setError('Transaction cancelled')
-          setLoading(false)
-        },
+        onFinish: (data) => { setTxId(data.txId); setLoading(false) },
+        onCancel: () => { setError('Cancelled'); setLoading(false) },
       })
     } catch (err: any) {
       setError(err.message || 'Failed to claim')
@@ -46,43 +38,8 @@ export function useContract() {
     }
   }
 
-  // ✅ Real token transfer to staking contract
+  // ✅ Stake via b2s-rewards-distributor (no token transfer needed)
   const stake = async (amount: number) => {
-    setLoading(true)
-    setError(null)
-    setTxId(null)
-    try {
-      await openContractCall({
-        network,
-        contractAddress: CONTRACT_ADDRESS,
-        contractName: TOKEN_CONTRACT,
-        functionName: 'transfer',
-        functionArgs: [
-          uintCV(Math.floor(amount * 1_000_000)),
-          principalCV(CONTRACT_ADDRESS + '.' + TOKEN_CONTRACT),
-          principalCV(CONTRACT_ADDRESS + '.' + STAKING_CONTRACT),
-          noneCV(),
-        ],
-        postConditionMode: PostConditionMode.Allow,
-        anchorMode: AnchorMode.Any,
-        onFinish: (data) => {
-          setTxId(data.txId)
-          setLoading(false)
-          console.log('✅ Stake submitted:', data.txId)
-        },
-        onCancel: () => {
-          setError('Transaction cancelled')
-          setLoading(false)
-        },
-      })
-    } catch (err: any) {
-      setError(err.message || 'Failed to stake')
-      setLoading(false)
-    }
-  }
-
-  // ✅ Stake via rewards distributor
-  const stakeViaDistributor = async (amount: number) => {
     setLoading(true)
     setError(null)
     setTxId(null)
@@ -95,15 +52,8 @@ export function useContract() {
         functionArgs: [uintCV(Math.floor(amount * 1_000_000))],
         postConditionMode: PostConditionMode.Allow,
         anchorMode: AnchorMode.Any,
-        onFinish: (data) => {
-          setTxId(data.txId)
-          setLoading(false)
-          console.log('✅ Stake via distributor submitted:', data.txId)
-        },
-        onCancel: () => {
-          setError('Transaction cancelled')
-          setLoading(false)
-        },
+        onFinish: (data) => { setTxId(data.txId); setLoading(false) },
+        onCancel: () => { setError('Cancelled'); setLoading(false) },
       })
     } catch (err: any) {
       setError(err.message || 'Failed to stake')
@@ -111,7 +61,7 @@ export function useContract() {
     }
   }
 
-  // ✅ Unstake via rewards distributor
+  // ✅ Unstake via b2s-rewards-distributor
   const unstake = async (amount: number) => {
     setLoading(true)
     setError(null)
@@ -125,15 +75,8 @@ export function useContract() {
         functionArgs: [uintCV(Math.floor(amount * 1_000_000))],
         postConditionMode: PostConditionMode.Allow,
         anchorMode: AnchorMode.Any,
-        onFinish: (data) => {
-          setTxId(data.txId)
-          setLoading(false)
-          console.log('✅ Unstake submitted:', data.txId)
-        },
-        onCancel: () => {
-          setError('Transaction cancelled')
-          setLoading(false)
-        },
+        onFinish: (data) => { setTxId(data.txId); setLoading(false) },
+        onCancel: () => { setError('Cancelled'); setLoading(false) },
       })
     } catch (err: any) {
       setError(err.message || 'Failed to unstake')
@@ -141,8 +84,8 @@ export function useContract() {
     }
   }
 
-  // ✅ Real token transfer
-  const transfer = async (amount: number, recipient: string) => {
+  // ✅ Real token transfer — sender must be the connected wallet
+  const transfer = async (amount: number, sender: string, recipient: string) => {
     setLoading(true)
     setError(null)
     setTxId(null)
@@ -154,21 +97,14 @@ export function useContract() {
         functionName: 'transfer',
         functionArgs: [
           uintCV(Math.floor(amount * 1_000_000)),
-          principalCV(CONTRACT_ADDRESS),
+          principalCV(sender),
           principalCV(recipient),
           noneCV(),
         ],
         postConditionMode: PostConditionMode.Allow,
         anchorMode: AnchorMode.Any,
-        onFinish: (data) => {
-          setTxId(data.txId)
-          setLoading(false)
-          console.log('✅ Transfer submitted:', data.txId)
-        },
-        onCancel: () => {
-          setError('Transaction cancelled')
-          setLoading(false)
-        },
+        onFinish: (data) => { setTxId(data.txId); setLoading(false) },
+        onCancel: () => { setError('Cancelled'); setLoading(false) },
       })
     } catch (err: any) {
       setError(err.message || 'Failed to transfer')
@@ -176,5 +112,59 @@ export function useContract() {
     }
   }
 
-  return { claimDailyReward, stake, stakeViaDistributor, unstake, transfer, loading, error, txId }
+  // ✅ Place bet on prediction market
+  const placeBet = async (marketId: number, vote: boolean, amount: number) => {
+    setLoading(true)
+    setError(null)
+    setTxId(null)
+    try {
+      await openContractCall({
+        network,
+        contractAddress: CONTRACT_ADDRESS,
+        contractName: 'b2s-prediction-market',
+        functionName: 'place-bet',
+        functionArgs: [
+          uintCV(marketId),
+          { type: 4, value: vote } as any,
+          uintCV(Math.floor(amount * 1_000_000)),
+        ],
+        postConditionMode: PostConditionMode.Allow,
+        anchorMode: AnchorMode.Any,
+        onFinish: (data) => { setTxId(data.txId); setLoading(false) },
+        onCancel: () => { setError('Cancelled'); setLoading(false) },
+      })
+    } catch (err: any) {
+      setError(err.message || 'Failed to place bet')
+      setLoading(false)
+    }
+  }
+
+  // ✅ Create prediction market
+  const createMarket = async (question: string, category: string, deadlineBlocks: number) => {
+    setLoading(true)
+    setError(null)
+    setTxId(null)
+    try {
+      await openContractCall({
+        network,
+        contractAddress: CONTRACT_ADDRESS,
+        contractName: 'b2s-prediction-market',
+        functionName: 'create-market',
+        functionArgs: [
+          { type: 14, data: question } as any,
+          { type: 13, data: category } as any,
+          uintCV(deadlineBlocks),
+        ],
+        postConditionMode: PostConditionMode.Allow,
+        anchorMode: AnchorMode.Any,
+        onFinish: (data) => { setTxId(data.txId); setLoading(false) },
+        onCancel: () => { setError('Cancelled'); setLoading(false) },
+      })
+    } catch (err: any) {
+      setError(err.message || 'Failed to create market')
+      setLoading(false)
+    }
+  }
+
+  return { claimDailyReward, stake, unstake, transfer, placeBet, createMarket, loading, error, txId }
 }
