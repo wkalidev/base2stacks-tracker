@@ -7,7 +7,7 @@ import {
 
 const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`
 const CONTRACT        = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96';
-const TOKEN_CONTRACT  = `${CONTRACT}.b2s-token`;
+const TOKEN_CONTRACT  = `${CONTRACT}.b2s-token-v4`;
 const POOL_CONTRACT   = `${CONTRACT}.b2s-liquidity-pool-v5`;
 const REWARDS_CONTRACT= `${CONTRACT}.b2s-rewards-distributor-v3`;
 
