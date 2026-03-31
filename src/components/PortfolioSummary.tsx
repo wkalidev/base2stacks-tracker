@@ -148,7 +148,7 @@ async function fetchPortfolio(address: string): Promise<Portfolio> {
 
   try {
     // Wallet balance
-    const balRes  = await fetch(`${hiroUrl(`/extended/v1/tokens/ft/${CONTRACT_ADDRESS}.b2s-token/holders?principal=${address}`)}`)
+    const balRes  = await fetch(`${hiroUrl(`/extended/v1/tokens/ft/${CONTRACT_ADDRESS}.b2s-token-v4/holders?principal=${address}`)}`)
     if (balRes.ok) {
       const balData = await balRes.json()
       result.wallet = Number(balData.results?.[0]?.balance || 0) / DECIMALS
