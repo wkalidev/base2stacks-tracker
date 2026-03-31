@@ -20,6 +20,9 @@ interface ActivityItem {
 const TX_MAP: Record<string, { color: string; icon: string; label: string }> = {
   'stake':             { color: '#00ff9f', icon: '💎', label: 'STAKED'     },
   'unstake':           { color: '#ff4444', icon: '↩',  label: 'UNSTAKED'   },
+  'create-market':     { color: '#00d4ff', icon: '🎯', label: 'MARKET'     },
+  'place-bet':         { color: '#ff9f00', icon: '🎲', label: 'BET'        },
+  'claim-rewards':     { color: '#ffd700', icon: '🎁', label: 'CLAIMED'    },
   'claim-daily-reward':{ color: '#ffd700', icon: '🎁', label: 'CLAIMED'    },
   'claim':             { color: '#ffd700', icon: '🎁', label: 'CLAIMED'    },
   'vote':              { color: '#cc00ff', icon: '🗳️', label: 'VOTED'      },
@@ -39,7 +42,7 @@ async function fetchActivity(): Promise<ActivityItem[]> {
     const data = await res.json()
 
     return (data.results || [])
-      .filter((tx: any) => tx.tx_status === 'success' && tx.tx_type === 'contract_call')
+      .filter((tx: any) => tx.tx_type === 'contract_call')
       .slice(0, 12)
       .map((tx: any) => {
         const fn     = tx.contract_call?.function_name || 'transfer'
