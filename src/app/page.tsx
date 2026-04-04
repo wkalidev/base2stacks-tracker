@@ -19,6 +19,7 @@ import RewardsDistributor from '@/components/RewardsDistributor'
 import GovernanceDAO from '@/components/GovernanceDAO'
 import NFTMarketplace from '@/components/NFTMarketplace'
 import LiquidityPool from '@/components/LiquidityPool'
+import SBTCDashboard from '@/components/SBTCDashboard'
 import PredictionMarket from '@/components/PredictionMarket'
 import MarketData from '@/components/MarketData'
 import BridgeRouter from '@/components/BridgeRouter'
@@ -331,6 +332,7 @@ export default function Page() {
 
       <Section title="// LIQUIDITY_POOL" color="#00ff9f" maxWidth="max-w-7xl">
         <LiquidityPool />
+        <SBTCDashboard userAddress={walletAddress} />
       </Section>
 
       <Section title="// CROSS_CHAIN_BRIDGE" color="#00d4ff" maxWidth="max-w-6xl">
