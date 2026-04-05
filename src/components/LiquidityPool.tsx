@@ -12,7 +12,7 @@ import { StacksMainnet } from '@stacks/network'
 const network          = new StacksMainnet()
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 // ✅ v6 — fonctions réelles : get-reserves, add-b2s-stx, swap-b2s-for-stx, swap-stx-for-b2s
-const POOL_CONTRACT    = 'b2s-liquidity-pool-v6'
+const POOL_CONTRACT    = 'b2s-liquidity-pool-v5'
 
 const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 
