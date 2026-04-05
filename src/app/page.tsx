@@ -332,7 +332,7 @@ export default function Page() {
 
       <Section title="// LIQUIDITY_POOL" color="#00ff9f" maxWidth="max-w-7xl">
         <LiquidityPool />
-        <SBTCDashboard userAddress={walletAddress} />
+        <SBTCDashboard userAddress={address} />
       </Section>
 
       <Section title="// CROSS_CHAIN_BRIDGE" color="#00d4ff" maxWidth="max-w-6xl">
