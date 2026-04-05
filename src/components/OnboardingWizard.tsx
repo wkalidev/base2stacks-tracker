@@ -75,7 +75,7 @@ const STEPS: Step[] = [
   },
   {
     id: 7,
-    title: 'YOU\'RE READY',
+    title: "YOU'RE READY",
     subtitle: 'LFG_ANON',
     description: 'Join hundreds of builders on Stacks mainnet. Bridge, stake, vote, predict — and earn $B2S for everything you do.',
     icon: '🚀',
@@ -100,7 +100,6 @@ export default function OnboardingWizard({ onComplete, defaultVisible = false }:
   const isLast      = step === STEPS.length - 1
   const progress    = ((step + 1) / STEPS.length) * 100
 
-  // Check localStorage — don't show if already seen
   useEffect(() => {
     const seen = localStorage.getItem('b2s_onboarding_done')
     if (!seen && !defaultVisible) setVisible(true)
@@ -112,6 +111,14 @@ export default function OnboardingWizard({ onComplete, defaultVisible = false }:
     return () => clearTimeout(t)
   }, [step])
 
+  // ✅ complete défini avant next pour éviter le warning de deps
+  const complete = useCallback(() => {
+    localStorage.setItem('b2s_onboarding_done', '1')
+    setVisible(false)
+    onComplete?.()
+  }, [onComplete])
+
+  // ✅ Fix — complete ajouté dans les deps
   const next = useCallback(() => {
     if (isLast) {
       complete()
@@ -122,7 +129,7 @@ export default function OnboardingWizard({ onComplete, defaultVisible = false }:
       setStep(s => s + 1)
       setExiting(false)
     }, 200)
-  }, [isLast])
+  }, [isLast, complete])
 
   const prev = useCallback(() => {
     if (step === 0) return
@@ -133,11 +140,7 @@ export default function OnboardingWizard({ onComplete, defaultVisible = false }:
     }, 200)
   }, [step])
 
-  const complete = useCallback(() => {
-    localStorage.setItem('b2s_onboarding_done', '1')
-    setVisible(false)
-    onComplete?.()
-  }, [onComplete])
+  void checked
 
   if (!visible) return null
 
@@ -156,10 +159,6 @@ export default function OnboardingWizard({ onComplete, defaultVisible = false }:
           from { transform: scale(0.85); opacity: 0; }
           to   { transform: scale(1);    opacity: 1; }
         }
-        @keyframes pulse-ring {
-          0%   { box-shadow: 0 0 0 0px currentColor; }
-          100% { box-shadow: 0 0 0 16px transparent; }
-        }
         @keyframes shimmer {
           0%   { transform: translateX(-100%); }
           100% { transform: translateX(400%); }
@@ -176,62 +175,40 @@ export default function OnboardingWizard({ onComplete, defaultVisible = false }:
         }
       `}</style>
 
-      {/* Backdrop */}
       <div
         style={{
-          position:       'fixed',
-          inset:          0,
-          zIndex:         100,
-          background:     'rgba(0,0,0,0.92)',
-          backdropFilter: 'blur(8px)',
-          display:        'flex',
-          alignItems:     'center',
-          justifyContent: 'center',
-          padding:        '16px',
+          position: 'fixed', inset: 0, zIndex: 100,
+          background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px',
         }}
         onClick={e => { if (e.target === e.currentTarget) complete() }}
       >
-
-        {/* Card */}
         <div style={{
-          ...MONO,
-          width:        '100%',
-          maxWidth:     '420px',
-          background:   '#080b12',
-          border:       `1px solid ${currentStep.color}30`,
-          borderRadius: '24px',
-          overflow:     'hidden',
-          position:     'relative',
-          animation:    'scaleIn 0.35s cubic-bezier(0.34,1.56,0.64,1)',
-          boxShadow:    `0 0 60px ${currentStep.color}15, 0 32px 80px rgba(0,0,0,0.8)`,
-          transition:   'border-color 0.4s ease, box-shadow 0.4s ease',
+          ...MONO, width: '100%', maxWidth: '420px',
+          background: '#080b12', border: `1px solid ${currentStep.color}30`,
+          borderRadius: '24px', overflow: 'hidden', position: 'relative',
+          animation: 'scaleIn 0.35s cubic-bezier(0.34,1.56,0.64,1)',
+          boxShadow: `0 0 60px ${currentStep.color}15, 0 32px 80px rgba(0,0,0,0.8)`,
+          transition: 'border-color 0.4s ease, box-shadow 0.4s ease',
         }}>
 
-          {/* Scanline effect */}
           <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', borderRadius: '24px' }}>
             <div style={{ position: 'absolute', width: '100%', height: '2px', background: `linear-gradient(90deg, transparent, ${currentStep.color}20, transparent)`, animation: 'scan 5s linear infinite' }} />
           </div>
 
-          {/* Top accent line */}
           <div style={{ height: '2px', background: `linear-gradient(90deg, transparent, ${currentStep.color}, transparent)`, transition: 'all 0.4s ease' }} />
 
-          {/* Progress bar */}
           <div style={{ height: '3px', background: 'rgba(255,255,255,0.05)', position: 'relative' }}>
             <div style={{
-              position:   'absolute',
-              left:       0,
-              top:        0,
-              height:     '100%',
-              width:      `${progress}%`,
+              position: 'absolute', left: 0, top: 0, height: '100%',
+              width: `${progress}%`,
               background: `linear-gradient(90deg, ${currentStep.color}80, ${currentStep.color})`,
-              transition: 'width 0.5s cubic-bezier(0.4,0,0.2,1)',
-              overflow:   'hidden',
+              transition: 'width 0.5s cubic-bezier(0.4,0,0.2,1)', overflow: 'hidden',
             }}>
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)', animation: 'shimmer 1.5s linear infinite' }} />
             </div>
           </div>
 
-          {/* Step counter */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px 0' }}>
             <div style={{ display: 'flex', gap: '5px' }}>
               {STEPS.map((_, i) => (
@@ -239,49 +216,33 @@ export default function OnboardingWizard({ onComplete, defaultVisible = false }:
                   key={i}
                   onClick={() => { if (i < step) setStep(i) }}
                   style={{
-                    width:        i === step ? '16px' : '5px',
-                    height:       '5px',
-                    borderRadius: '3px',
-                    background:   i === step ? currentStep.color : i < step ? `${currentStep.color}50` : 'rgba(255,255,255,0.1)',
-                    transition:   'all 0.3s ease',
-                    cursor:       i < step ? 'pointer' : 'default',
+                    width: i === step ? '16px' : '5px', height: '5px', borderRadius: '3px',
+                    background: i === step ? currentStep.color : i < step ? `${currentStep.color}50` : 'rgba(255,255,255,0.1)',
+                    transition: 'all 0.3s ease', cursor: i < step ? 'pointer' : 'default',
                   }}
                 />
               ))}
             </div>
-            <button
-              onClick={complete}
-              style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.2)', cursor: 'pointer', fontSize: '11px', letterSpacing: '0.1em', ...MONO }}
-            >
+            <button onClick={complete} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.2)', cursor: 'pointer', fontSize: '11px', letterSpacing: '0.1em', ...MONO }}>
               SKIP
             </button>
           </div>
 
-          {/* Content */}
           <div style={{
-            padding:   '24px 24px 28px',
+            padding: '24px 24px 28px',
             animation: entering ? 'fadeUp 0.35s ease' : exiting ? 'fadeDown 0.2s ease' : 'none',
           }}>
 
-            {/* Icon */}
             <div style={{
-              width:          '80px',
-              height:         '80px',
-              borderRadius:   '24px',
-              background:     `${currentStep.color}12`,
-              border:         `1px solid ${currentStep.color}30`,
-              display:        'flex',
-              alignItems:     'center',
-              justifyContent: 'center',
-              fontSize:       '36px',
-              marginBottom:   '20px',
-              animation:      'float 3s ease-in-out infinite',
-              transition:     'all 0.4s ease',
+              width: '80px', height: '80px', borderRadius: '24px',
+              background: `${currentStep.color}12`, border: `1px solid ${currentStep.color}30`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '36px', marginBottom: '20px',
+              animation: 'float 3s ease-in-out infinite', transition: 'all 0.4s ease',
             }}>
               {currentStep.icon}
             </div>
 
-            {/* Title */}
             <div style={{ fontSize: '10px', letterSpacing: '0.3em', color: currentStep.color, marginBottom: '4px', transition: 'color 0.4s ease' }}>
               {currentStep.title}
             </div>
@@ -292,96 +253,51 @@ export default function OnboardingWizard({ onComplete, defaultVisible = false }:
               {currentStep.description}
             </div>
 
-            {/* Action button */}
             {currentStep.action && (
               <a
                 href={currentStep.action.href || '#'}
                 target={currentStep.action.href?.startsWith('http') ? '_blank' : '_self'}
                 rel="noopener noreferrer"
                 style={{
-                  display:        'block',
-                  textAlign:      'center',
-                  padding:        '12px',
-                  borderRadius:   '12px',
-                  marginBottom:   '12px',
-                  fontSize:       '11px',
-                  fontWeight:     700,
-                  letterSpacing:  '0.12em',
-                  background:     `${currentStep.color}12`,
-                  border:         `1px solid ${currentStep.color}35`,
-                  color:          currentStep.color,
-                  textDecoration: 'none',
-                  transition:     'all 0.2s ease',
-                  ...MONO,
+                  display: 'block', textAlign: 'center', padding: '12px', borderRadius: '12px',
+                  marginBottom: '12px', fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em',
+                  background: `${currentStep.color}12`, border: `1px solid ${currentStep.color}35`,
+                  color: currentStep.color, textDecoration: 'none', transition: 'all 0.2s ease', ...MONO,
                 }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = `${currentStep.color}20`
-                  e.currentTarget.style.transform  = 'translateY(-1px)'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = `${currentStep.color}12`
-                  e.currentTarget.style.transform  = 'translateY(0)'
-                }}
+                onMouseEnter={e => { e.currentTarget.style.background = `${currentStep.color}20`; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = `${currentStep.color}12`; e.currentTarget.style.transform = 'translateY(0)' }}
               >
                 {currentStep.action.label}
               </a>
             )}
 
-            {/* Nav buttons */}
             <div style={{ display: 'flex', gap: '10px' }}>
               {step > 0 && (
-                <button
-                  onClick={prev}
-                  style={{
-                    ...MONO,
-                    flex:          '0 0 auto',
-                    padding:       '12px 16px',
-                    borderRadius:  '12px',
-                    fontSize:      '11px',
-                    fontWeight:    700,
-                    letterSpacing: '0.1em',
-                    background:    'rgba(255,255,255,0.04)',
-                    border:        '1px solid rgba(255,255,255,0.08)',
-                    color:         'rgba(255,255,255,0.3)',
-                    cursor:        'pointer',
-                    transition:    'all 0.15s',
-                  }}
+                <button onClick={prev} style={{
+                  ...MONO, flex: '0 0 auto', padding: '12px 16px', borderRadius: '12px',
+                  fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em',
+                  background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+                  color: 'rgba(255,255,255,0.3)', cursor: 'pointer', transition: 'all 0.15s',
+                }}
                   onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)' }}
                   onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.3)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
                 >
                   ←
                 </button>
               )}
-              <button
-                onClick={next}
-                style={{
-                  ...MONO,
-                  flex:          1,
-                  padding:       '12px',
-                  borderRadius:  '12px',
-                  fontSize:      '11px',
-                  fontWeight:    700,
-                  letterSpacing: '0.12em',
-                  background:    `${currentStep.color}18`,
-                  border:        `1px solid ${currentStep.color}45`,
-                  color:         currentStep.color,
-                  cursor:        'pointer',
-                  transition:    'all 0.2s ease',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = `${currentStep.color}28`
-                  e.currentTarget.style.transform  = 'translateY(-1px)'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = `${currentStep.color}18`
-                  e.currentTarget.style.transform  = 'translateY(0)'
-                }}
+              <button onClick={next} style={{
+                ...MONO, flex: 1, padding: '12px', borderRadius: '12px',
+                fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em',
+                background: `${currentStep.color}18`, border: `1px solid ${currentStep.color}45`,
+                color: currentStep.color, cursor: 'pointer', transition: 'all 0.2s ease',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.background = `${currentStep.color}28`; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = `${currentStep.color}18`; e.currentTarget.style.transform = 'translateY(0)' }}
               >
                 {isLast ? '▶ ENTER_THE_APP' : `NEXT → ${step + 2}/${STEPS.length}`}
               </button>
             </div>
 
-            {/* Don't show again */}
             {isLast && (
               <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '14px', cursor: 'pointer' }}>
                 <input
@@ -391,7 +307,7 @@ export default function OnboardingWizard({ onComplete, defaultVisible = false }:
                   style={{ accentColor: currentStep.color, width: '14px', height: '14px' }}
                 />
                 <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', letterSpacing: '0.1em' }}>
-                  DON'T SHOW AGAIN
+                  {"DON'T SHOW AGAIN"}
                 </span>
               </label>
             )}
