@@ -12,24 +12,28 @@ import { StacksMainnet } from '@stacks/network'
 const MONO             = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 const network          = new StacksMainnet()
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
+// ✅ b2s-fee-router
+// get-stats()            → tuple direct { total-volume, total-fees, bridge-count, fee-bps, paused }
+// get-user-stats(principal) → tuple direct { bridge-count, volume }
+// record-bridge(amount)  → (ok { fee-paid, bridge-count })
 const FEE_ROUTER       = 'b2s-fee-router'
 const DECIMALS         = 1_000_000
 
 const BRIDGE_CHAINS = [
-  { chain: 'Ethereum', symbol: 'ETH',    color: '#627EEA' },
-  { chain: 'Base',     symbol: 'BASE',   color: '#0052FF' },
-  { chain: 'BNB',      symbol: 'BNB',    color: '#F3BA2F' },
-  { chain: 'Polygon',  symbol: 'MATIC',  color: '#8247E5' },
-  { chain: 'Stacks',   symbol: 'STX',    color: '#FF5500' },
+  { chain: 'Ethereum', symbol: 'ETH',   color: '#627EEA' },
+  { chain: 'Base',     symbol: 'BASE',  color: '#0052FF' },
+  { chain: 'BNB',      symbol: 'BNB',   color: '#F3BA2F' },
+  { chain: 'Polygon',  symbol: 'MATIC', color: '#8247E5' },
+  { chain: 'Stacks',   symbol: 'STX',   color: '#FF5500' },
 ]
 
 const BRIDGE_LIST = [
-  { name: 'Stargate',      url: 'https://stargate.finance',           tag: 'RECOMMENDED', color: '#00ff9f', routes: 20 },
-  { name: 'deBridge',      url: 'https://app.debridge.com/r/32893',   tag: 'AFFILIATE',   color: '#ff00ff', routes: 8  },
-  { name: 'Across',        url: 'https://across.to',                  tag: 'FAST',        color: '#00d4ff', routes: 10 },
-  { name: 'Celer cBridge', url: 'https://cbridge.celer.network',      tag: 'MULTI-CHAIN', color: '#ffd700', routes: 15 },
-  { name: 'Orbiter',       url: 'https://www.orbiter.finance',        tag: 'ZK-POWERED',  color: '#cc00ff', routes: 6  },
-  { name: 'Jupiter',       url: 'https://jup.ag/?ref=j5ft3v5m26eu',   tag: 'AFFILIATE',   color: '#f7931a', routes: 5  },
+  { name: 'Stargate',      url: 'https://stargate.finance',         tag: 'RECOMMENDED', color: '#00ff9f', routes: 20 },
+  { name: 'deBridge',      url: 'https://app.debridge.com/r/32893', tag: 'AFFILIATE',   color: '#ff00ff', routes: 8  },
+  { name: 'Across',        url: 'https://across.to',                tag: 'FAST',        color: '#00d4ff', routes: 10 },
+  { name: 'Celer cBridge', url: 'https://cbridge.celer.network',    tag: 'MULTI-CHAIN', color: '#ffd700', routes: 15 },
+  { name: 'Orbiter',       url: 'https://www.orbiter.finance',      tag: 'ZK-POWERED',  color: '#cc00ff', routes: 6  },
+  { name: 'Jupiter',       url: 'https://jup.ag/?ref=j5ft3v5m26eu', tag: 'AFFILIATE',   color: '#f7931a', routes: 5  },
 ]
 
 interface BridgeStats {
@@ -47,13 +51,17 @@ interface UserStats {
 
 export default function BridgeRouter() {
   const { address, isConnected } = useWallet()
-  const [activeTab,     setActiveTab]     = useState<'bridge' | 'record' | 'stats'>('bridge')
-  const [recordAmount,  setRecordAmount]  = useState('')
-  const [loading,       setLoading]       = useState(false)
-  const [txId,          setTxId]          = useState<string | null>(null)
-  const [stats,         setStats]         = useState<BridgeStats>({ totalVolume: 0, totalFees: 0, bridgeCount: 0, feeBps: 30, loading: true })
-  const [userStats,     setUserStats]     = useState<UserStats>({ bridgeCount: 0, volume: 0 })
+  const [activeTab,    setActiveTab]    = useState<'bridge' | 'record' | 'stats'>('bridge')
+  const [recordAmount, setRecordAmount] = useState('')
+  const [loading,      setLoading]      = useState(false)
+  const [txId,         setTxId]         = useState<string | null>(null)
+  const [stats,        setStats]        = useState<BridgeStats>({
+    totalVolume: 0, totalFees: 0, bridgeCount: 0, feeBps: 30, loading: true,
+  })
+  const [userStats, setUserStats] = useState<UserStats>({ bridgeCount: 0, volume: 0 })
 
+  // ─── Fetch global stats ────────────────────────────────────────────────────
+  // get-stats retourne un tuple DIRECT (pas ok), donc cvToJSON(res).value est le tuple
   const fetchStats = useCallback(async () => {
     try {
       const result = await callReadOnlyFunction({
@@ -61,31 +69,42 @@ export default function BridgeRouter() {
         functionName: 'get-stats', functionArgs: [],
         senderAddress: address || CONTRACT_ADDRESS,
       })
-      const data = cvToJSON(result).value
+      const data = cvToJSON(result)
+      // tuple direct → data.value contient les champs
+      const val  = data?.value ?? data
       setStats({
-        totalVolume: Number(data['total-volume']?.value || 0) / DECIMALS,
-        totalFees:   Number(data['total-fees']?.value   || 0) / DECIMALS,
-        bridgeCount: Number(data['bridge-count']?.value || 0),
-        feeBps:      Number(data['fee-bps']?.value      || 30),
+        totalVolume: Number(val?.['total-volume']?.value ?? 0) / DECIMALS,
+        totalFees:   Number(val?.['total-fees']?.value   ?? 0) / DECIMALS,
+        bridgeCount: Number(val?.['bridge-count']?.value ?? 0),
+        feeBps:      Number(val?.['fee-bps']?.value      ?? 30),
         loading:     false,
       })
-    } catch { setStats(p => ({ ...p, loading: false })) }
+    } catch (e) {
+      console.error('fetchStats:', e)
+      setStats(p => ({ ...p, loading: false }))
+    }
   }, [address])
 
+  // ─── Fetch user stats ──────────────────────────────────────────────────────
+  // get-user-stats retourne un tuple direct { bridge-count, volume }
   const fetchUserStats = useCallback(async () => {
     if (!address) return
     try {
       const result = await callReadOnlyFunction({
         network, contractAddress: CONTRACT_ADDRESS, contractName: FEE_ROUTER,
-        functionName: 'get-user-stats', functionArgs: [standardPrincipalCV(address)],
+        functionName: 'get-user-stats',
+        functionArgs: [standardPrincipalCV(address)],
         senderAddress: address,
       })
-      const data = cvToJSON(result).value
+      const data = cvToJSON(result)
+      const val  = data?.value ?? data
       setUserStats({
-        bridgeCount: Number(data['bridge-count']?.value || 0),
-        volume:      Number(data.volume?.value          || 0) / DECIMALS,
+        bridgeCount: Number(val?.['bridge-count']?.value ?? 0),
+        volume:      Number(val?.['volume']?.value       ?? 0) / DECIMALS,
       })
-    } catch {}
+    } catch (e) {
+      console.error('fetchUserStats:', e)
+    }
   }, [address])
 
   useEffect(() => {
@@ -96,8 +115,12 @@ export default function BridgeRouter() {
 
   useEffect(() => { if (address) fetchUserStats() }, [address, fetchUserStats])
 
-  const feePreview = recordAmount ? ((parseFloat(recordAmount) * stats.feeBps) / 10000).toFixed(4) : '0'
+  const feePreview = recordAmount
+    ? ((parseFloat(recordAmount) * stats.feeBps) / 10000).toFixed(4)
+    : '0'
 
+  // ─── Record bridge ─────────────────────────────────────────────────────────
+  // record-bridge(amount uint) → transfère fee-bps% en STX (treasury + rewards pool)
   const handleRecord = async () => {
     if (!address || !recordAmount || parseFloat(recordAmount) <= 0) return
     setLoading(true); setTxId(null)
@@ -118,9 +141,9 @@ export default function BridgeRouter() {
 
   const STAT_CARDS = [
     { label: 'VOLUME',   val: stats.loading ? '···' : `${stats.totalVolume >= 1000 ? `${(stats.totalVolume/1000).toFixed(1)}K` : stats.totalVolume.toFixed(0)}`, color: '#00d4ff' },
-    { label: 'FEES',     val: stats.loading ? '···' : stats.totalFees.toFixed(2),                                                                                color: '#00ff9f' },
-    { label: 'BRIDGES',  val: stats.loading ? '···' : String(stats.bridgeCount),                                                                                 color: '#ff00ff' },
-    { label: 'FEE_RATE', val: `${(stats.feeBps / 100).toFixed(1)}%`,                                                                                             color: '#ffd700' },
+    { label: 'FEES',     val: stats.loading ? '···' : stats.totalFees.toFixed(2),  color: '#00ff9f' },
+    { label: 'BRIDGES',  val: stats.loading ? '···' : String(stats.bridgeCount),   color: '#ff00ff' },
+    { label: 'FEE_RATE', val: `${(stats.feeBps / 100).toFixed(1)}%`,               color: '#ffd700' },
   ]
 
   return (
@@ -131,15 +154,13 @@ export default function BridgeRouter() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
             <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#00d4ff', boxShadow: '0 0 8px #00d4ff', animation: 'pulse 2s infinite', display: 'inline-block' }} />
-            <span style={{ fontSize: '10px', letterSpacing: '0.3em', color: '#00d4ff' }}>FEE_ROUTER // B2S-FEE-ROUTER</span>
+            <span style={{ fontSize: '10px', letterSpacing: '0.3em', color: '#00d4ff' }}>FEE_ROUTER // {FEE_ROUTER}</span>
           </div>
           <div style={{ fontSize: '22px', fontWeight: 700, marginBottom: '2px' }}>CROSS-CHAIN_BRIDGE</div>
           <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', letterSpacing: '0.1em' }}>
             {(stats.feeBps / 100).toFixed(1)}% FEE → 50% TREASURY · 50% STAKERS
           </div>
         </div>
-
-        {/* Stat cards */}
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           {STAT_CARDS.map(s => (
             <div key={s.label} style={{ padding: '8px 12px', background: `${s.color}08`, border: `1px solid ${s.color}20`, borderRadius: '10px', textAlign: 'center', minWidth: '64px' }}>
@@ -166,8 +187,7 @@ export default function BridgeRouter() {
       <div style={{ display: 'flex', gap: '4px', padding: '4px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', width: 'fit-content', marginBottom: '20px' }}>
         {(['bridge', 'record', 'stats'] as const).map(tab => (
           <button key={tab} onClick={() => setActiveTab(tab)} style={{
-            ...MONO,
-            padding: '7px 18px', borderRadius: '8px', fontSize: '10px',
+            ...MONO, padding: '7px 18px', borderRadius: '8px', fontSize: '10px',
             fontWeight: 700, letterSpacing: '0.15em', cursor: 'pointer', border: 'none',
             background: activeTab === tab ? 'rgba(0,212,255,0.12)' : 'transparent',
             color:      activeTab === tab ? '#00d4ff' : 'rgba(255,255,255,0.3)',
@@ -181,12 +201,11 @@ export default function BridgeRouter() {
       {/* ── TAB: BRIDGE ── */}
       {activeTab === 'bridge' && (
         <div>
-          {/* Steps */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '16px' }}>
             {[
-              { n: '01', title: 'SELECT_SOURCE', desc: 'Choose chain + token',   color: '#00d4ff' },
+              { n: '01', title: 'SELECT_SOURCE', desc: 'Choose chain + token',    color: '#00d4ff' },
               { n: '02', title: 'BRIDGE',        desc: 'Best route, 20+ bridges', color: '#ff00ff' },
-              { n: '03', title: 'RECEIVE',       desc: 'USDCx or STX on Stacks', color: '#00ff9f' },
+              { n: '03', title: 'RECEIVE',        desc: 'USDCx or STX on Stacks', color: '#00ff9f' },
             ].map(s => (
               <div key={s.n} style={{ padding: '14px', background: `${s.color}06`, border: `1px solid ${s.color}18`, borderRadius: '12px' }}>
                 <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.2em', color: s.color, marginBottom: '4px' }}>{s.n}</div>
@@ -196,19 +215,13 @@ export default function BridgeRouter() {
             ))}
           </div>
 
-          {/* Bridge cards */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '8px', marginBottom: '14px' }}>
             {BRIDGE_LIST.map(b => (
               <a key={b.name} href={b.url} target="_blank" rel="noopener noreferrer" style={{
-                display:        'block',
-                textDecoration: 'none',
-                padding:        '14px 16px',
-                background:     `${b.color}06`,
-                border:         `1px solid ${b.color}18`,
-                borderLeft:     `3px solid ${b.color}`,
-                borderRadius:   '12px',
-                transition:     'all 0.2s',
-                cursor:         'pointer',
+                display: 'block', textDecoration: 'none',
+                padding: '14px 16px', background: `${b.color}06`,
+                border: `1px solid ${b.color}18`, borderLeft: `3px solid ${b.color}`,
+                borderRadius: '12px', transition: 'all 0.2s', cursor: 'pointer',
               }}
               onMouseEnter={e => { e.currentTarget.style.background = `${b.color}12`; e.currentTarget.style.transform = 'translateY(-2px)' }}
               onMouseLeave={e => { e.currentTarget.style.background = `${b.color}06`; e.currentTarget.style.transform = 'translateY(0)' }}
@@ -241,24 +254,14 @@ export default function BridgeRouter() {
           <div style={{ padding: '20px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px' }}>
             <div style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)', marginBottom: '4px' }}>RECORD_BRIDGE_TX</div>
             <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', marginBottom: '16px', lineHeight: 1.6 }}>
-              Bridged via external protocol? Log it here.{' '}
-              <span style={{ color: '#ffd700' }}>{(stats.feeBps / 100).toFixed(1)}%</span> fee split between treasury + stakers.
+              Bridged via external protocol ? Log it ici.{' '}
+              <span style={{ color: '#ffd700' }}>{(stats.feeBps / 100).toFixed(1)}%</span> fee split entre treasury + stakers.
             </div>
 
             <div style={{ position: 'relative', marginBottom: '12px' }}>
-              <input
-                type="number"
-                value={recordAmount}
-                onChange={e => setRecordAmount(e.target.value)}
+              <input type="number" value={recordAmount} onChange={e => setRecordAmount(e.target.value)}
                 placeholder="0.0"
-                style={{
-                  ...MONO,
-                  width: '100%', padding: '12px 48px 12px 14px',
-                  boxSizing: 'border-box', borderRadius: '12px',
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  color: '#fff', fontSize: '20px', fontWeight: 700, outline: 'none',
-                }}
+                style={{ ...MONO, width: '100%', padding: '12px 48px 12px 14px', boxSizing: 'border-box', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: '20px', fontWeight: 700, outline: 'none' }}
                 onFocus={e => e.target.style.borderColor = 'rgba(0,212,255,0.4)'}
                 onBlur={e  => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
               />
@@ -268,10 +271,10 @@ export default function BridgeRouter() {
             {recordAmount && parseFloat(recordAmount) > 0 && (
               <div style={{ marginBottom: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px', overflow: 'hidden' }}>
                 {[
-                  { label: 'BRIDGE_AMOUNT',  val: `${parseFloat(recordAmount).toFixed(4)} STX`,     color: 'rgba(255,255,255,0.5)' },
-                  { label: `FEE_(${(stats.feeBps/100).toFixed(1)}%)`, val: `-${feePreview} STX`,    color: '#ffd700' },
-                  { label: '→ 50%_TREASURY', val: `${(parseFloat(feePreview)/2).toFixed(4)} STX`,   color: 'rgba(255,255,255,0.3)' },
-                  { label: '→ 50%_STAKERS',  val: `${(parseFloat(feePreview)/2).toFixed(4)} STX`,   color: '#00ff9f' },
+                  { label: 'BRIDGE_AMOUNT',  val: `${parseFloat(recordAmount).toFixed(4)} STX`,                      color: 'rgba(255,255,255,0.5)' },
+                  { label: `FEE_(${(stats.feeBps/100).toFixed(1)}%)`, val: `-${feePreview} STX`,                    color: '#ffd700' },
+                  { label: '→ 50%_TREASURY', val: `${(parseFloat(feePreview)/2).toFixed(4)} STX`,                   color: 'rgba(255,255,255,0.3)' },
+                  { label: '→ 50%_STAKERS',  val: `${(parseFloat(feePreview)/2).toFixed(4)} STX`,                   color: '#00ff9f' },
                 ].map(row => (
                   <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 14px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                     <span style={{ fontSize: '9px', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.25)' }}>{row.label}</span>
@@ -287,13 +290,11 @@ export default function BridgeRouter() {
               </div>
             ) : (
               <button onClick={handleRecord} disabled={!recordAmount || parseFloat(recordAmount) <= 0 || loading} style={{
-                ...MONO,
-                width: '100%', padding: '13px', borderRadius: '12px',
+                ...MONO, width: '100%', padding: '13px', borderRadius: '12px',
                 fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em',
                 cursor: loading ? 'not-allowed' : 'pointer',
                 background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.3)', color: '#00d4ff',
-                opacity: (!recordAmount || parseFloat(recordAmount) <= 0) ? 0.4 : 1,
-                transition: 'all 0.15s',
+                opacity: (!recordAmount || parseFloat(recordAmount) <= 0) ? 0.4 : 1, transition: 'all 0.15s',
               }}>
                 {loading ? '⏳ RECORDING...' : '▶ RECORD_BRIDGE_TX'}
               </button>
@@ -339,10 +340,10 @@ export default function BridgeRouter() {
                   GLOBAL_STATS
                 </div>
                 {[
-                  { label: 'TOTAL_BRIDGES',  val: String(stats.bridgeCount),                                       color: '' },
-                  { label: 'TOTAL_VOLUME',   val: `${stats.totalVolume.toLocaleString()} STX`,                     color: '' },
-                  { label: 'FEES_COLLECTED', val: `${stats.totalFees.toFixed(4)} STX`,                             color: '#00ff9f' },
-                  { label: 'FEE_RATE',       val: `${(stats.feeBps / 100).toFixed(1)}%`,                           color: '#ffd700' },
+                  { label: 'TOTAL_BRIDGES',  val: String(stats.bridgeCount),              color: '' },
+                  { label: 'TOTAL_VOLUME',   val: `${stats.totalVolume.toLocaleString()} STX`, color: '' },
+                  { label: 'FEES_COLLECTED', val: `${stats.totalFees.toFixed(4)} STX`,    color: '#00ff9f' },
+                  { label: 'FEE_RATE',       val: `${(stats.feeBps / 100).toFixed(1)}%`,  color: '#ffd700' },
                 ].map(row => (
                   <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 16px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                     <span style={{ fontSize: '9px', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.25)' }}>{row.label}</span>
