@@ -11,7 +11,6 @@ import { StacksMainnet } from '@stacks/network'
 
 const network          = new StacksMainnet()
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
-// ✅ v6 — fonctions réelles : get-reserves, add-b2s-stx, swap-b2s-for-stx, swap-stx-for-b2s
 const POOL_CONTRACT    = 'b2s-liquidity-pool-v5'
 
 const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
@@ -42,8 +41,9 @@ export default function LiquidityPool() {
     reserveB2S: 0, reserveSTX: 0, loading: true,
   })
 
-  // ─── Fetch reserves via get-reserves ──────────────────────────────────────
-  // get-reserves retourne (ok { b2s-stx-b: uint, b2s-stx-s: uint })
+  // ─── Fetch reserves ────────────────────────────────────────────────────────
+  // get-reserves retourne un TUPLE DIRECT (pas ok wrappé)
+  // { b2s: uint, stx: uint }
   const fetchPool = useCallback(async () => {
     try {
       const sender = address || CONTRACT_ADDRESS
@@ -55,12 +55,12 @@ export default function LiquidityPool() {
         functionArgs:    [],
         senderAddress:   sender,
       })
-      const data = cvToJSON(res)
-      // get-reserves retourne (ok { b2s-stx-b, b2s-stx-s })
-      const inner = data?.value?.value ?? data?.value ?? {}
+      const data  = cvToJSON(res)
+      // tuple direct → data.value contient { b2s, stx }
+      const inner = data?.value ?? data ?? {}
       setPool({
-        reserveB2S: Number(inner['b2s-stx-b']?.value ?? 0) / 1_000_000,
-        reserveSTX: Number(inner['b2s-stx-s']?.value ?? 0) / 1_000_000,
+        reserveB2S: Number(inner['b2s']?.value ?? 0) / 1_000_000,
+        reserveSTX: Number(inner['stx']?.value ?? 0) / 1_000_000,
         loading:    false,
       })
     } catch (e) {
@@ -75,19 +75,20 @@ export default function LiquidityPool() {
     return () => clearInterval(t)
   }, [fetchPool])
 
-  // ─── AMM price calc (constant product) ───────────────────────────────────
+  // ─── AMM price calc ────────────────────────────────────────────────────────
   useEffect(() => {
     if (!inputAmount || parseFloat(inputAmount) <= 0 || pool.loading) {
       setOutputAmount('0'); return
     }
-    const input   = parseFloat(inputAmount)
-    const FEE_NUM = 9975; const FEE_DENOM = 10000
+    const input      = parseFloat(inputAmount)
+    // v5 : fee = 25/10000 = 0.25%
+    const FEE_ADJ    = 10000 - 25
     const [rIn, rOut] = swapDir === 'stx-to-b2s'
       ? [pool.reserveSTX, pool.reserveB2S]
       : [pool.reserveB2S, pool.reserveSTX]
 
-    const f   = input * FEE_NUM
-    const out = (f * rOut) / (rIn * FEE_DENOM + f)
+    const amtWithFee = input * FEE_ADJ
+    const out        = (amtWithFee * rOut) / (rIn * 10000 + amtWithFee)
     setOutputAmount(rIn > 0 && rOut > 0 ? out.toFixed(6) : '0')
   }, [inputAmount, swapDir, pool])
 
@@ -98,15 +99,14 @@ export default function LiquidityPool() {
     setInputAmount(''); setOutputAmount('0')
   }
 
-  // ─── Swap ─────────────────────────────────────────────────────────────────
-  // v6 fonctions : swap-stx-for-b2s(in, min-out) / swap-b2s-for-stx(in, min-out)
+  // ─── Swap ──────────────────────────────────────────────────────────────────
   const handleSwap = async () => {
     if (!address || !inputAmount || parseFloat(inputAmount) <= 0) return
     setLoading(true); setTxId(null); setTxType('SWAP')
     try {
-      const microIn  = Math.floor(parseFloat(inputAmount)  * 1_000_000)
-      const minOut   = Math.floor(parseFloat(outputAmount) * (1 - slippage / 100) * 1_000_000)
-      const fnName   = swapDir === 'stx-to-b2s' ? 'swap-stx-for-b2s' : 'swap-b2s-for-stx'
+      const microIn = Math.floor(parseFloat(inputAmount)  * 1_000_000)
+      const minOut  = Math.floor(parseFloat(outputAmount) * (1 - slippage / 100) * 1_000_000)
+      const fnName  = swapDir === 'stx-to-b2s' ? 'swap-stx-for-b2s' : 'swap-b2s-for-stx'
       await openContractCall({
         network, contractAddress: CONTRACT_ADDRESS, contractName: POOL_CONTRACT,
         functionName: fnName,
@@ -121,18 +121,19 @@ export default function LiquidityPool() {
     } catch { setLoading(false) }
   }
 
-  // ─── Add liquidity ────────────────────────────────────────────────────────
-  // v6 fonction : add-b2s-stx(b uint, s uint)
+  // ─── Add liquidity ─────────────────────────────────────────────────────────
+  // ✅ v5 : add-liquidity(b2s uint, stx uint, min-lp uint)
   const handleAddLiquidity = async () => {
     if (!address || !b2sAmount || !stxAmount) return
     setLoading(true); setTxType('ADD_LIQUIDITY')
     try {
       await openContractCall({
         network, contractAddress: CONTRACT_ADDRESS, contractName: POOL_CONTRACT,
-        functionName: 'add-b2s-stx',
+        functionName: 'add-liquidity',
         functionArgs: [
           uintCV(Math.floor(parseFloat(b2sAmount) * 1_000_000)),
           uintCV(Math.floor(parseFloat(stxAmount)  * 1_000_000)),
+          uintCV(0), // min-lp-tokens : 0 = pas de slippage check
         ],
         postConditionMode: PostConditionMode.Allow, anchorMode: AnchorMode.Any,
         onFinish: (data) => {
@@ -144,10 +145,10 @@ export default function LiquidityPool() {
     } catch { setLoading(false) }
   }
 
-  const fromLabel  = swapDir === 'stx-to-b2s' ? 'STX'  : '$B2S'
-  const toLabel    = swapDir === 'stx-to-b2s' ? '$B2S' : 'STX'
-  const fromColor  = swapDir === 'stx-to-b2s' ? '#5546ff' : '#00ff9f'
-  const toColor    = swapDir === 'stx-to-b2s' ? '#00ff9f' : '#5546ff'
+  const fromLabel   = swapDir === 'stx-to-b2s' ? 'STX'  : '$B2S'
+  const toLabel     = swapDir === 'stx-to-b2s' ? '$B2S' : 'STX'
+  const fromColor   = swapDir === 'stx-to-b2s' ? '#5546ff' : '#00ff9f'
+  const toColor     = swapDir === 'stx-to-b2s' ? '#00ff9f' : '#5546ff'
   const priceImpact = inputAmount && parseFloat(inputAmount) > 0 && pool.reserveSTX > 0
     ? Math.min((parseFloat(inputAmount) / pool.reserveSTX) * 100, 99).toFixed(2) : '0.00'
 
@@ -215,7 +216,6 @@ export default function LiquidityPool() {
 
           {/* Swap box */}
           <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', overflow: 'hidden' }}>
-            {/* Input */}
             <div style={{ padding: '16px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
               <div style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)', marginBottom: '8px' }}>SELLING</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -227,7 +227,6 @@ export default function LiquidityPool() {
               </div>
             </div>
 
-            {/* Flip */}
             <div style={{ display: 'flex', justifyContent: 'center', padding: '8px', background: 'rgba(255,255,255,0.02)' }}>
               <button onClick={handleFlip} style={{
                 ...MONO, width: '32px', height: '32px', borderRadius: '8px',
@@ -239,7 +238,6 @@ export default function LiquidityPool() {
               }}>⇅</button>
             </div>
 
-            {/* Output */}
             <div style={{ padding: '16px' }}>
               <div style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)', marginBottom: '8px' }}>BUYING</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -253,7 +251,6 @@ export default function LiquidityPool() {
             </div>
           </div>
 
-          {/* Swap details */}
           {inputAmount && parseFloat(inputAmount) > 0 && (
             <div style={{ marginTop: '10px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '12px', overflow: 'hidden' }}>
               {[
@@ -297,7 +294,6 @@ export default function LiquidityPool() {
       {/* ── LIQUIDITY TAB ── */}
       {activeTab === 'liquidity' && (
         <div style={{ maxWidth: '480px' }}>
-
           <div style={{ padding: '18px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '14px', marginBottom: '12px' }}>
             <div style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)', marginBottom: '14px' }}>ADD_LIQUIDITY // B2S + STX</div>
 
@@ -337,7 +333,7 @@ export default function LiquidityPool() {
           )}
 
           <div style={{ marginTop: '12px', padding: '12px 16px', background: 'rgba(0,212,255,0.04)', border: '1px solid rgba(0,212,255,0.12)', borderLeft: '3px solid rgba(0,212,255,0.5)', borderRadius: '8px', fontSize: '11px', color: 'rgba(255,255,255,0.35)' }}>
-            <span style={{ color: '#00d4ff' }}>AMM_INFO</span> — Formule x×y=k. Fee 0.25%. Pool B2S/STX uniquement sur v6.
+            <span style={{ color: '#00d4ff' }}>AMM_INFO</span> — Formule x×y=k. Fee 0.25%. Pool B2S/STX sur v5.
           </div>
         </div>
       )}

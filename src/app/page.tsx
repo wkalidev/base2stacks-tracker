@@ -36,7 +36,6 @@ const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 const APP_URL          = 'https://base2stacks-tracker.vercel.app'
 const MONO             = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 
-// ── Share Buttons ──────────────────────────────────────────────────────────────
 function ShareButtons({ type, amount }: { type: 'claim' | 'stake' | 'app'; amount?: number }) {
   const texts: Record<string, string> = {
     claim: `🎁 Just claimed ${amount || 5} $B2S on Base2Stacks!\n🌉 Track cross-chain bridges & earn daily.\n👉 ${APP_URL}\n#B2S #Stacks #DeFi`,
@@ -64,7 +63,6 @@ function ShareButtons({ type, amount }: { type: 'claim' | 'stake' | 'app'; amoun
   )
 }
 
-// ── Section wrapper ────────────────────────────────────────────────────────────
 function Section({
   title, color = '#00d4ff', children, maxWidth = 'max-w-6xl', id,
 }: {
@@ -87,7 +85,6 @@ function Section({
   )
 }
 
-// ── Page ───────────────────────────────────────────────────────────────────────
 export default function Page() {
   const { mounted, connect, disconnect, isConnected, address } = useWallet()
   const { claimDailyReward, stake, loading, error, txId }      = useContract()
@@ -111,11 +108,11 @@ export default function Page() {
     const fn   = tx.contract_call?.function_name
     const addr = tx.sender_address?.slice(0, 8) ?? '?'
     const map: Record<string, string> = {
-      'stake':               `STAKE_TX // ${addr}`,
-      'unstake':             `UNSTAKE_TX // ${addr}`,
-      'claim-daily-reward':  `CLAIM_TX // ${addr}`,
-      'vote':                `VOTE_TX // ${addr}`,
-      'verify-bridge':       `BRIDGE_TX // ${tx.tx_id?.slice(0, 10)}`,
+      'stake':              `STAKE_TX // ${addr}`,
+      'unstake':            `UNSTAKE_TX // ${addr}`,
+      'claim-daily-reward': `CLAIM_TX // ${addr}`,
+      'vote':               `VOTE_TX // ${addr}`,
+      'verify-bridge':      `BRIDGE_TX // ${tx.tx_id?.slice(0, 10)}`,
     }
     if (map[fn]) setLiveActivity(map[fn])
     setTimeout(() => setLiveActivity(null), 5000)
@@ -126,13 +123,18 @@ export default function Page() {
     contractFilter: CONTRACT_ADDRESS, enabled: true,
   })
 
+  // ✅ Fix 1 — success ajouté dans les deps
   useEffect(() => {
     if (txId) { setShowTxToast(true); success('TX_SUBMITTED // OK') }
-  }, [txId])
+  }, [txId, success])
 
   useEffect(() => {
     if (error) setShowErrorToast(true)
   }, [error])
+
+  // suppression de dashStats non utilisé
+  void dashStats
+  void statsKey
 
   if (!mounted) return null
 
@@ -165,17 +167,14 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-black" style={MONO}>
 
-      {/* Onboarding */}
       <OnboardingWizard />
-
-      {/* Achievement system */}
       <AchievementManager unlockedIds={unlockedAchievements} />
 
-      {/* ══ HEADER ══════════════════════════════════════════════════ */}
       <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-black/80 backdrop-blur-xl">
         <div className="container mx-auto px-4 py-3">
           <nav className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/android-chrome-192x192.png" alt="B2S" className="w-9 h-9 rounded-xl" />
               <div>
                 <div className="text-white font-black text-sm tracking-tight leading-none">
@@ -216,20 +215,16 @@ export default function Page() {
         </div>
       </header>
 
-      {/* ══ HERO ANIMATED ════════════════════════════════════════════ */}
       <HeroAnimated
         onClaim={handleClaim}
         onStake={() => setShowStakeModal(true)}
         onConnect={connect}
       />
 
-      {/* ══ WALLET INFO (connecté) ════════════════════════════════════ */}
       {isConnected && address && (
         <section className="container mx-auto px-4 pb-8">
           <div className="max-w-3xl mx-auto space-y-4">
-
             {txId && lastClaimAmount && <ShareButtons type="claim" amount={lastClaimAmount} />}
-
             <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
@@ -246,12 +241,10 @@ export default function Page() {
                 </div>
               </div>
             </div>
-
             <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
               <p className="text-[9px] tracking-[0.3em] font-black text-white/25 mb-4">RECENT_TRANSACTIONS</p>
               <TransactionHistory address={address} />
             </div>
-
             <div>
               <p className="text-[9px] tracking-[0.3em] font-black text-white/25 mb-4">YOUR_STAKING</p>
               <StakingStats address={address} />
@@ -259,8 +252,6 @@ export default function Page() {
           </div>
         </section>
       )}
-
-      {/* ══ SECTIONS — connecté ══════════════════════════════════════ */}
 
       {isConnected && address && (
         <Section title="// YOUR_PROGRESSION" color="#ffd700" maxWidth="max-w-3xl" id="progression">
@@ -279,8 +270,6 @@ export default function Page() {
           <PortfolioSummary />
         </Section>
       )}
-
-      {/* ══ SECTIONS — publiques ══════════════════════════════════════ */}
 
       <Section title="// LIVE_ACTIVITY" color="#00ff9f" maxWidth="max-w-3xl">
         <LiveActivityFeed />
@@ -343,16 +332,15 @@ export default function Page() {
         <PredictionMarket />
       </Section>
 
-
       <Section title="// GALXE_QUESTS" color="#ffd700" maxWidth="max-w-5xl">
         <GalxeQuests userAddress={address} />
       </Section>
 
-      {/* ══ FOOTER ══════════════════════════════════════════════════ */}
       <footer className="border-t border-white/[0.06] mt-8">
         <div className="container mx-auto px-4 py-10">
           <div className="flex flex-col items-center gap-5 text-center">
             <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/android-chrome-192x192.png" alt="B2S" className="w-7 h-7 rounded-xl" />
               <span className="text-xs font-black tracking-[0.2em] text-white/40">BASE2STACKS_TRACKER</span>
             </div>
@@ -361,7 +349,8 @@ export default function Page() {
               <a href="https://github.com/wkalidev" target="_blank" rel="noopener noreferrer"
                 style={{ color: '#00d4ff' }} className="hover:opacity-80 transition-opacity">
                 WKALIDEV(ZCODEBASE)
-              </a>{' '}// MAINNET
+              </a>{' '}
+              {/* MAINNET */}
             </p>
             <div className="flex items-center gap-4 flex-wrap justify-center">
               {[
@@ -391,7 +380,6 @@ export default function Page() {
         </div>
       </footer>
 
-      {/* ══ STAKING MODAL ════════════════════════════════════════════ */}
       {showStakeModal && (
         <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
           onClick={() => setShowStakeModal(false)}>
@@ -430,7 +418,6 @@ export default function Page() {
         </div>
       )}
 
-      {/* ══ TOASTS ══════════════════════════════════════════════════ */}
       {showTxToast    && txId  && <TransactionToast txId={txId} onClose={() => setShowTxToast(false)}    />}
       {showErrorToast && error && <ErrorToast error={error}     onClose={() => setShowErrorToast(false)} />}
       <ToastContainer toasts={toasts} onRemove={removeToast} />

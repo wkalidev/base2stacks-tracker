@@ -105,6 +105,7 @@ function MiniTicker({ coins }: { coins: MultiCoin[] }) {
     <div className="flex gap-3 overflow-x-auto pb-1 mb-6 scrollbar-hide">
       {coins.map(c => (
         <div key={c.id} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] flex-shrink-0 hover:bg-white/[0.07] transition-all">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={c.image} alt={c.symbol} className="w-5 h-5 rounded-full" />
           <span className="text-white/60 text-xs font-semibold">{c.symbol}</span>
           <span className="text-white text-xs font-bold tabular-nums">
@@ -123,14 +124,15 @@ function TradingViewChart({ timeframe }: { timeframe: Timeframe }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    containerRef.current.innerHTML = '';
+    const container = containerRef.current; // ✅ copie locale pour le cleanup
+    if (!container) return;
+    container.innerHTML = '';
 
     const widget = document.createElement('div');
     widget.className = 'tradingview-widget-container__widget';
     widget.style.height = '100%';
     widget.style.width = '100%';
-    containerRef.current.appendChild(widget);
+    container.appendChild(widget);
 
     const script = document.createElement('script');
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
@@ -161,9 +163,10 @@ function TradingViewChart({ timeframe }: { timeframe: Timeframe }) {
         'paneProperties.backgroundType':                    'solid',
       },
     });
-    containerRef.current.appendChild(script);
+    container.appendChild(script);
 
-    return () => { if (containerRef.current) containerRef.current.innerHTML = ''; };
+    // ✅ utilise la variable locale, pas containerRef.current
+    return () => { if (container) container.innerHTML = ''; };
   }, [timeframe]);
 
   return (
@@ -172,12 +175,12 @@ function TradingViewChart({ timeframe }: { timeframe: Timeframe }) {
 }
 
 export default function MarketData() {
-  const [coin, setCoin]           = useState<CoinData | null>(null);
+  const [coin, setCoin]             = useState<CoinData | null>(null);
   const [multiCoins, setMultiCoins] = useState<MultiCoin[]>([]);
-  const [loading, setLoading]     = useState(true);
-  const [error, setError]         = useState(false);
-  const [timeframe, setTimeframe] = useState<Timeframe>('1W');
-  const [lastFetch, setLastFetch] = useState<Date | null>(null);
+  const [loading, setLoading]       = useState(true);
+  const [error, setError]           = useState(false);
+  const [timeframe, setTimeframe]   = useState<Timeframe>('1W');
+  const [lastFetch, setLastFetch]   = useState<Date | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -190,7 +193,6 @@ export default function MarketData() {
       setCoin(stxData);
       if (multiRes.ok) {
         const multiData = await multiRes.json();
-        // multiData est { stx, coins } — on veut coins sans STX (déjà affiché)
         const coins: MultiCoin[] = (multiData.coins || []).filter((c: MultiCoin) => c.id !== 'blockstack');
         setMultiCoins(coins);
       }
@@ -214,7 +216,6 @@ export default function MarketData() {
   return (
     <div className="market-data">
 
-      {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div>
           <h2 className="text-3xl font-bold text-white mb-1 flex items-center gap-3">
@@ -231,10 +232,8 @@ export default function MarketData() {
         </button>
       </div>
 
-      {/* Mini ticker BTC / ETH / SOL */}
       {multiCoins.length > 0 && <MiniTicker coins={multiCoins} />}
 
-      {/* Live Price */}
       <div className="mb-6 p-6 rounded-2xl bg-gradient-to-br from-violet-500/10 via-white/[0.02] to-cyan-500/10 border border-white/10">
         {loading ? (
           <div className="animate-pulse">
@@ -264,11 +263,9 @@ export default function MarketData() {
                 )}
               </div>
             </div>
-
-            {/* Change chips 24h / 7d / 30d */}
             <div className="flex gap-2">
-              <ChangeChip label="24h"  value={coin.change24h} />
-              <ChangeChip label="7d"   value={coin.change7d} />
+              <ChangeChip label="24h" value={coin.change24h} />
+              <ChangeChip label="7d"  value={coin.change7d} />
               {coin.change30d !== undefined && (
                 <ChangeChip label="30d" value={coin.change30d} />
               )}
@@ -277,17 +274,15 @@ export default function MarketData() {
         ) : null}
       </div>
 
-      {/* Stats Grid */}
       {coin && !loading && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          <StatCard label="Market Cap"   value={formatNum(coin.marketCap)}                                      sub="USD"   accent />
-          <StatCard label="Volume 24h"   value={formatNum(coin.volume24h)}                                      sub="USD"         />
-          <StatCard label="Circulating"  value={`${(coin.circulatingSupply / 1e6).toFixed(0)}M`}                sub="STX"         />
-          <StatCard label="Vol/MCap"     value={`${((coin.volume24h / coin.marketCap) * 100).toFixed(2)}%`}     sub="ratio" accent />
+          <StatCard label="Market Cap"  value={formatNum(coin.marketCap)}                                    sub="USD"   accent />
+          <StatCard label="Volume 24h"  value={formatNum(coin.volume24h)}                                    sub="USD"         />
+          <StatCard label="Circulating" value={`${(coin.circulatingSupply / 1e6).toFixed(0)}M`}              sub="STX"         />
+          <StatCard label="Vol/MCap"    value={`${((coin.volume24h / coin.marketCap) * 100).toFixed(2)}%`}   sub="ratio" accent />
         </div>
       )}
 
-      {/* TradingView Chart */}
       <div className="rounded-2xl overflow-hidden border border-white/10 bg-black/20 mb-4">
         <div className="flex items-center justify-between px-4 pt-4 pb-2 border-b border-white/[0.06]">
           <span className="text-white/30 text-xs">STXUSD · COINBASE</span>
@@ -312,7 +307,6 @@ export default function MarketData() {
         </div>
       </div>
 
-      {/* Footer */}
       <div className="flex items-center justify-between text-xs text-white/20">
         <span>Data: CoinGecko via /api/market · Chart: TradingView</span>
         <div className="flex gap-4">
@@ -320,7 +314,6 @@ export default function MarketData() {
           <a href="https://www.tradingview.com/symbols/STXUSD/"   target="_blank" rel="noopener noreferrer" className="hover:text-white/50 transition-colors">TradingView ↗</a>
         </div>
       </div>
-
     </div>
   );
 }
