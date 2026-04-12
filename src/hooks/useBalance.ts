@@ -6,7 +6,7 @@ import { callReadOnlyFunction, cvToJSON, standardPrincipalCV } from '@stacks/tra
 
 const network = new StacksMainnet()
 const contractAddress = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96' // mainnet SP...
-const contractName = 'b2s-token'
+const contractName = 'b2s-token-v4'
 
 export function useBalance(address: string) {
   const [balance, setBalance] = useState<number>(0)

@@ -1,7 +1,7 @@
 const ADDR = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 
 export const CONTRACTS = {
-  token:       `${ADDR}.b2s-token`,
+  token:       `${ADDR}.b2s-token-v4`,
   governance:  `${ADDR}.b2s-governance`,
   liquidity:   `${ADDR}.b2s-liquidity-pool-v5`,
   rewards:     `${ADDR}.b2s-rewards-distributor-v3`,

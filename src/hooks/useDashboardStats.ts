@@ -18,9 +18,9 @@ export function useDashboardStats() {
     const fetch_ = async () => {
       try {
         const [tx, holders, meta, pool, rewards] = await Promise.all([
-          hiroFetch(`/extended/v1/address/${CONTRACT}.b2s-token/transactions?limit=1`),
+          hiroFetch(`/extended/v1/address/${CONTRACT}.b2s-token-v4/transactions?limit=1`),
           hiroFetch(`/extended/v1/tokens/ft/${CONTRACT}.b2s-token-v4/holders?limit=1`),
-          hiroFetch(`/metadata/v1/ft/${CONTRACT}.b2s-token`),
+          hiroFetch(`/metadata/v1/ft/${CONTRACT}.b2s-token-v4`),
           hiroFetch(`/extended/v1/address/${CONTRACT}.b2s-liquidity-pool-v5/balances`),
           hiroFetch(`/extended/v1/address/${CONTRACT}.b2s-rewards-distributor-v3/transactions?limit=1`),
         ])

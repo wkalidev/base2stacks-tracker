@@ -14,7 +14,7 @@ const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 
 // ✅ Contrats réellement déployés sur mainnet (vérifiés sur explorer)
 const TOKEN_CONTRACT   = 'b2s-token-v4'  // claim-daily-reward
-const STAKING_CONTRACT = 'b2s-token'     // stake / unstake (confirmé sur explorer nonce 104)
+const STAKING_CONTRACT = 'b2s-token-v4'     // stake / unstake (confirmé sur explorer nonce 104)
 
 export function useContract() {
   const [loading, setLoading] = useState(false)
