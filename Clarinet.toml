@@ -6,8 +6,8 @@ telemetry = false
 cache_dir = "./.cache"
 requirements = []
 
-[contracts.b2s-token]
-path = "contracts/b2s-token.clar"
+[contracts.b2s-token-v4]
+path = "contracts/b2s-token-v4.clar"
 clarity_version = 2
 epoch = 2.5
 
