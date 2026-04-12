@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { openContractCall } from '@stacks/connect'
 import {
   uintCV, principalCV, noneCV,
@@ -12,18 +12,32 @@ import { StacksMainnet } from '@stacks/network'
 const network = new StacksMainnet()
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 
-// ✅ Contrats réellement déployés sur mainnet (vérifiés sur explorer)
-const TOKEN_CONTRACT   = 'b2s-token-v4'  // claim-daily-reward
-const STAKING_CONTRACT = 'b2s-token-v4'     // stake / unstake (confirmé sur explorer nonce 104)
+const TOKEN_CONTRACT   = 'b2s-token-v4'
+const STAKING_CONTRACT = 'b2s-token-v4'
 
 export function useContract() {
   const [loading, setLoading] = useState(false)
   const [error,   setError]   = useState<string | null>(null)
   const [txId,    setTxId]    = useState<string | null>(null)
+  const isPending = useRef(false) // 🛡️ guard anti double-call
+
+  const startCall = () => {
+    if (isPending.current) return false
+    isPending.current = true
+    setLoading(true); setError(null); setTxId(null)
+    return true
+  }
+
+  const endCall = (txid?: string, err?: string) => {
+    isPending.current = false
+    setLoading(false)
+    if (txid) setTxId(txid)
+    if (err)  setError(err)
+  }
 
   // ─── Claim daily reward ────────────────────────────────────────────────────
   const claimDailyReward = async () => {
-    setLoading(true); setError(null); setTxId(null)
+    if (!startCall()) return
     try {
       await openContractCall({
         network,
@@ -33,19 +47,17 @@ export function useContract() {
         functionArgs:    [],
         postConditionMode: PostConditionMode.Allow,
         anchorMode:        AnchorMode.Any,
-        onFinish: (data) => { setTxId(data.txId);   setLoading(false) },
-        onCancel: ()     => { setError('Cancelled'); setLoading(false) },
+        onFinish: (data) => endCall(data.txId),
+        onCancel: ()     => endCall(undefined, 'Cancelled'),
       })
     } catch (err: any) {
-      setError(err.message || 'Failed to claim')
-      setLoading(false)
+      endCall(undefined, err.message || 'Failed to claim')
     }
   }
 
-  // ─── Stake via b2s-token ───────────────────────────────────────────────────
-  // ✅ Confirmé sur mainnet : stake → b2s-token (nonce 104, result ok true)
+  // ─── Stake via b2s-token-v4 ───────────────────────────────────────────────
   const stake = async (amount: number) => {
-    setLoading(true); setError(null); setTxId(null)
+    if (!startCall()) return
     try {
       await openContractCall({
         network,
@@ -55,18 +67,17 @@ export function useContract() {
         functionArgs:    [uintCV(Math.floor(amount * 1_000_000))],
         postConditionMode: PostConditionMode.Allow,
         anchorMode:        AnchorMode.Any,
-        onFinish: (data) => { setTxId(data.txId);   setLoading(false) },
-        onCancel: ()     => { setError('Cancelled'); setLoading(false) },
+        onFinish: (data) => endCall(data.txId),
+        onCancel: ()     => endCall(undefined, 'Cancelled'),
       })
     } catch (err: any) {
-      setError(err.message || 'Failed to stake')
-      setLoading(false)
+      endCall(undefined, err.message || 'Failed to stake')
     }
   }
 
-  // ─── Unstake via b2s-token ─────────────────────────────────────────────────
+  // ─── Unstake via b2s-token-v4 ─────────────────────────────────────────────
   const unstake = async (amount: number) => {
-    setLoading(true); setError(null); setTxId(null)
+    if (!startCall()) return
     try {
       await openContractCall({
         network,
@@ -76,18 +87,17 @@ export function useContract() {
         functionArgs:    [uintCV(Math.floor(amount * 1_000_000))],
         postConditionMode: PostConditionMode.Allow,
         anchorMode:        AnchorMode.Any,
-        onFinish: (data) => { setTxId(data.txId);   setLoading(false) },
-        onCancel: ()     => { setError('Cancelled'); setLoading(false) },
+        onFinish: (data) => endCall(data.txId),
+        onCancel: ()     => endCall(undefined, 'Cancelled'),
       })
     } catch (err: any) {
-      setError(err.message || 'Failed to unstake')
-      setLoading(false)
+      endCall(undefined, err.message || 'Failed to unstake')
     }
   }
 
-  // ─── Transfer (b2s-token-v4) ───────────────────────────────────────────────
+  // ─── Transfer (b2s-token-v4) ──────────────────────────────────────────────
   const transfer = async (amount: number, sender: string, recipient: string) => {
-    setLoading(true); setError(null); setTxId(null)
+    if (!startCall()) return
     try {
       await openContractCall({
         network,
@@ -102,19 +112,17 @@ export function useContract() {
         ],
         postConditionMode: PostConditionMode.Allow,
         anchorMode:        AnchorMode.Any,
-        onFinish: (data) => { setTxId(data.txId);   setLoading(false) },
-        onCancel: ()     => { setError('Cancelled'); setLoading(false) },
+        onFinish: (data) => endCall(data.txId),
+        onCancel: ()     => endCall(undefined, 'Cancelled'),
       })
     } catch (err: any) {
-      setError(err.message || 'Failed to transfer')
-      setLoading(false)
+      endCall(undefined, err.message || 'Failed to transfer')
     }
   }
 
   // ─── Place bet ─────────────────────────────────────────────────────────────
-  // ✅ boolCV au lieu de { type: 4, value: vote } as any
   const placeBet = async (marketId: number, vote: boolean, amount: number) => {
-    setLoading(true); setError(null); setTxId(null)
+    if (!startCall()) return
     try {
       await openContractCall({
         network,
@@ -128,19 +136,17 @@ export function useContract() {
         ],
         postConditionMode: PostConditionMode.Allow,
         anchorMode:        AnchorMode.Any,
-        onFinish: (data) => { setTxId(data.txId);   setLoading(false) },
-        onCancel: ()     => { setError('Cancelled'); setLoading(false) },
+        onFinish: (data) => endCall(data.txId),
+        onCancel: ()     => endCall(undefined, 'Cancelled'),
       })
     } catch (err: any) {
-      setError(err.message || 'Failed to place bet')
-      setLoading(false)
+      endCall(undefined, err.message || 'Failed to place bet')
     }
   }
 
   // ─── Create market ─────────────────────────────────────────────────────────
-  // ✅ stringUtf8CV + stringAsciiCV au lieu de { type: 14 } as any
   const createMarket = async (question: string, category: string, deadlineBlocks: number) => {
-    setLoading(true); setError(null); setTxId(null)
+    if (!startCall()) return
     try {
       await openContractCall({
         network,
@@ -154,12 +160,11 @@ export function useContract() {
         ],
         postConditionMode: PostConditionMode.Allow,
         anchorMode:        AnchorMode.Any,
-        onFinish: (data) => { setTxId(data.txId);   setLoading(false) },
-        onCancel: ()     => { setError('Cancelled'); setLoading(false) },
+        onFinish: (data) => endCall(data.txId),
+        onCancel: ()     => endCall(undefined, 'Cancelled'),
       })
     } catch (err: any) {
-      setError(err.message || 'Failed to create market')
-      setLoading(false)
+      endCall(undefined, err.message || 'Failed to create market')
     }
   }
 
