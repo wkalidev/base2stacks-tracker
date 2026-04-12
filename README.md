@@ -123,7 +123,7 @@ Open [http://localhost:3000](http://localhost:3000)
 ```bash
 # .env.local (optional — all defaults work without any key)
 NEXT_PUBLIC_CONTRACT_ADDRESS=SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96
-NEXT_PUBLIC_CONTRACT_NAME=b2s-token
+NEXT_PUBLIC_CONTRACT_NAME=b2s-token-v4
 NEXT_PUBLIC_BASE_URL=https://base2stacks-tracker.vercel.app
 ```
 
@@ -224,4 +224,4 @@ MIT License — See [LICENSE](./LICENSE)
 
 ---
 
-**Built with ❤️ by wkalidev(zcodebase) for #StacksBuilderRewards March 2026 🏆**
+**Built with ❤️ by wkalidev(zcodebase) for #StacksBuilderRewards April 2026 🏆**
