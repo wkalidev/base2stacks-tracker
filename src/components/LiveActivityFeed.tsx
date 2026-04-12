@@ -35,7 +35,7 @@ const TX_MAP: Record<string, { color: string; icon: string; label: string }> = {
 async function fetchActivity(): Promise<ActivityItem[]> {
   try {
     const res  = await fetch(
-      `${hiroUrl(`/extended/v1/address/${CONTRACT_ADDRESS}.b2s-token/transactions?limit=20`)}`,
+      `${hiroUrl(`/extended/v1/address/${CONTRACT_ADDRESS}.b2s-token-v4/transactions?limit=20`)}`,
       { headers: { Accept: 'application/json' } }
     )
     if (!res.ok) return []
