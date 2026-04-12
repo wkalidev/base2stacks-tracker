@@ -56,7 +56,7 @@ export function useContract() {
   }
 
   // ─── Stake via b2s-token-v4 ───────────────────────────────────────────────
-  const stake = async (amount: number) => {
+  const stake = async (amount: number, lockBlocks: number = 0) => {
     if (!startCall()) return
     try {
       await openContractCall({
