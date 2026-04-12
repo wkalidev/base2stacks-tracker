@@ -13,7 +13,7 @@ const network = new StacksMainnet()
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 
 const TOKEN_CONTRACT   = 'b2s-token-v4'
-const STAKING_CONTRACT = 'b2s-token-v4'
+const STAKING_CONTRACT = 'b2s-staking-vault-v2'
 
 export function useContract() {
   const [loading, setLoading] = useState(false)
