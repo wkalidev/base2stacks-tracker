@@ -8,10 +8,6 @@ interface StakingStatsProps { address: string }
 
 const network          = new StacksMainnet()
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
-// ✅ b2s-staking-vault-v2
-// get-vault(principal) → (ok (optional { amount, locked-at, lock-blocks, multiplier }))
-// get-stats()          → (ok { total-staked, total-vaults })
-// get-pending-rewards(principal) → (ok uint) — via toolkit-math
 const STAKING_CONTRACT = 'b2s-staking-vault-v2'
 const DECIMALS         = 1_000_000
 const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
@@ -37,16 +33,13 @@ async function fetchVault(address: string): Promise<VaultInfo | null> {
       senderAddress: address,
     })
     const json = cvToJSON(result)
-    // get-vault → (ok (optional ...)) → json.value.value (le optional)
     const opt  = json?.value?.value
     if (!opt || opt.type === 'none') return null
 
-    // si le optional est some → opt.value
     const val = opt?.value ?? opt
     const amount     = Number(val?.amount?.value      ?? 0) / DECIMALS
     const lockedAt   = Number(val?.['locked-at']?.value  ?? 0)
     const lockBlocks = Number(val?.['lock-blocks']?.value ?? 0)
-    // multiplier stocké en bps : 100=1x, 150=1.5x, 200=2x, 300=3x
     const multRaw    = Number(val?.multiplier?.value ?? 100)
     const multiplier = multRaw / 100
 
@@ -62,7 +55,6 @@ async function fetchGlobalStats(): Promise<GlobalStats> {
       senderAddress: CONTRACT_ADDRESS,
     })
     const json = cvToJSON(result)
-    // get-stats → (ok { total-staked, total-vaults })
     const val  = json?.value?.value ?? json?.value ?? {}
     return {
       totalStaked: Number(val?.['total-staked']?.value ?? 0) / DECIMALS,
@@ -105,7 +97,6 @@ export function StakingStats({ address }: StakingStatsProps) {
     return () => clearInterval(t)
   }, [fetchData])
 
-  // APY de base = 12.5% (1250 bps dans le contrat)
   const BASE_APY      = 12.5
   const effectiveApy  = BASE_APY * (vault?.multiplier || 1)
   const dailyRewards  = vault?.amount ? (vault.amount * effectiveApy) / 365 / 100 : 0
@@ -121,10 +112,8 @@ export function StakingStats({ address }: StakingStatsProps) {
 
   return (
     <div style={{ ...MONO, color: '#fff' }}>
-
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px', marginBottom: '12px' }}>
 
-        {/* Staked */}
         <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,212,255,0.15)', borderRadius: '12px', padding: '14px 16px', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent)' }} />
           <div style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)', marginBottom: '6px' }}>YOUR_STAKE</div>
@@ -134,7 +123,6 @@ export function StakingStats({ address }: StakingStatsProps) {
           <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.2)', marginTop: '2px' }}>$B2S</div>
         </div>
 
-        {/* Daily rewards */}
         <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,255,159,0.15)', borderRadius: '12px', padding: '14px 16px', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(0,255,159,0.4), transparent)' }} />
           <div style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)', marginBottom: '6px' }}>DAILY_REWARDS</div>
@@ -144,7 +132,6 @@ export function StakingStats({ address }: StakingStatsProps) {
           <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.2)', marginTop: '2px' }}>$B2S / DAY</div>
         </div>
 
-        {/* Effective APY */}
         <div style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${multColor}22`, borderRadius: '12px', padding: '14px 16px', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: `linear-gradient(90deg, transparent, ${multColor}40, transparent)` }} />
           <div style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)', marginBottom: '6px' }}>
@@ -157,7 +144,6 @@ export function StakingStats({ address }: StakingStatsProps) {
         </div>
       </div>
 
-      {/* Global stats */}
       {globalStats && (globalStats.totalStaked > 0 || globalStats.totalVaults > 0) && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px', marginBottom: '10px' }}>
           <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', letterSpacing: '0.1em' }}>
@@ -182,8 +168,8 @@ export function StakingStats({ address }: StakingStatsProps) {
 
       {!vault?.amount && (
         <div style={{ padding: '10px 14px', background: 'rgba(0,212,255,0.04)', border: '1px solid rgba(0,212,255,0.12)', borderLeft: '3px solid rgba(0,212,255,0.5)', borderRadius: '8px', fontSize: '11px', color: 'rgba(255,255,255,0.4)' }}>
-          <span style={{ color: '#00d4ff' }}>TIP</span> — Stake $B2S pour gagner jusqu'à{' '}
-          <span style={{ color: '#00ff9f', fontWeight: 700 }}>37.5% APY</span> avec lock 14 jours.
+          <span style={{ color: '#00d4ff' }}>TIP</span> — Stake $B2S to earn up to{' '}
+          <span style={{ color: '#00ff9f', fontWeight: 700 }}>37.5% APY</span> with 14-day lock.
         </div>
       )}
     </div>
