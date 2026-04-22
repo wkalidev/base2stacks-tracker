@@ -13,13 +13,13 @@ const network = new StacksMainnet()
 const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
 
 const TOKEN_CONTRACT   = 'b2s-token-v4'
-const STAKING_CONTRACT = 'b2s-staking-vault-v2'
+const STAKING_CONTRACT = 'b2s-token'
 
 export function useContract() {
   const [loading, setLoading] = useState(false)
   const [error,   setError]   = useState<string | null>(null)
   const [txId,    setTxId]    = useState<string | null>(null)
-  const isPending = useRef(false) // 🛡️ guard anti double-call
+  const isPending = useRef(false)
 
   const startCall = () => {
     if (isPending.current) return false
@@ -35,7 +35,6 @@ export function useContract() {
     if (err)  setError(err)
   }
 
-  // ─── Claim daily reward ────────────────────────────────────────────────────
   const claimDailyReward = async () => {
     if (!startCall()) return
     try {
@@ -55,7 +54,6 @@ export function useContract() {
     }
   }
 
-  // ─── Stake via b2s-token-v4 ───────────────────────────────────────────────
   const stake = async (amount: number, lockBlocks: number = 0) => {
     if (!startCall()) return
     try {
@@ -64,7 +62,10 @@ export function useContract() {
         contractAddress: CONTRACT_ADDRESS,
         contractName:    STAKING_CONTRACT,
         functionName:    'stake',
-        functionArgs:    [uintCV(Math.floor(amount * 1_000_000))],
+        functionArgs:    [
+          uintCV(Math.floor(amount * 1_000_000)),
+          uintCV(lockBlocks),
+        ],
         postConditionMode: PostConditionMode.Allow,
         anchorMode:        AnchorMode.Any,
         onFinish: (data) => endCall(data.txId),
@@ -75,8 +76,7 @@ export function useContract() {
     }
   }
 
-  // ─── Unstake via b2s-token-v4 ─────────────────────────────────────────────
-  const unstake = async (amount: number) => {
+  const unstake = async () => {
     if (!startCall()) return
     try {
       await openContractCall({
@@ -84,7 +84,7 @@ export function useContract() {
         contractAddress: CONTRACT_ADDRESS,
         contractName:    STAKING_CONTRACT,
         functionName:    'unstake',
-        functionArgs:    [uintCV(Math.floor(amount * 1_000_000))],
+        functionArgs:    [],
         postConditionMode: PostConditionMode.Allow,
         anchorMode:        AnchorMode.Any,
         onFinish: (data) => endCall(data.txId),
@@ -95,7 +95,6 @@ export function useContract() {
     }
   }
 
-  // ─── Transfer (b2s-token-v4) ──────────────────────────────────────────────
   const transfer = async (amount: number, sender: string, recipient: string) => {
     if (!startCall()) return
     try {
@@ -120,7 +119,6 @@ export function useContract() {
     }
   }
 
-  // ─── Place bet ─────────────────────────────────────────────────────────────
   const placeBet = async (marketId: number, vote: boolean, amount: number) => {
     if (!startCall()) return
     try {
@@ -144,7 +142,6 @@ export function useContract() {
     }
   }
 
-  // ─── Create market ─────────────────────────────────────────────────────────
   const createMarket = async (question: string, category: string, deadlineBlocks: number) => {
     if (!startCall()) return
     try {
