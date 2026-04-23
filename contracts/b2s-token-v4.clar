@@ -12,6 +12,7 @@
 (define-constant err-invalid-amount (err u103))
 (define-constant err-already-claimed (err u104))
 (define-constant err-already-verified (err u105))
+(define-constant err-invalid-multiplier (err u106))
 
 ;; Data Variables
 (define-data-var token-name (string-ascii 32) "Base2Stacks Token")
@@ -57,6 +58,11 @@
 (define-map tracker-reputation
   { tracker: principal }
   { score: uint }
+)
+
+(define-map tracker-multipliers
+  { tracker: principal }
+  { current-multiplier: uint }
 )
 
 (define-data-var total-staked uint u0)
@@ -107,6 +113,28 @@
 
 (define-read-only (get-reputation (tracker principal))
   (default-to { score: u0 } (map-get? tracker-reputation { tracker: tracker }))
+)
+
+(define-read-only (calculate-reward-multiplier (tracker principal))
+  (let
+    (
+      (rep (get-reputation tracker))
+      (stake (get-staked-balance tracker))
+      (rep-score (get score rep))
+      (staked-amount (get amount stake))
+      (base-multiplier u100) ;; 100% = 1x
+    )
+    ;; +5% per reputation point (max +50%)
+    ;; +10% per 100,000 staked tokens (max +50%)
+    (let
+      (
+        (rep-bonus (min u50 (* rep-score u5)))
+        (stake-bonus (min u50 (/ (* staked-amount u10) u100000)))
+        (total-multiplier (+ base-multiplier rep-bonus stake-bonus))
+      )
+      (ok total-multiplier)
+    )
+  )
 )
 
 ;; Public Functions
@@ -174,7 +202,9 @@
     (
       (tx-data (unwrap! (map-get? bridge-transactions { tx-hash: tx-hash }) (err u404)))
       (tracker (get tracker tx-data))
-      (reward-amount u10000000) ;; 10 $B2S per verified transaction
+      (base-reward u10000000)
+      (multiplier (unwrap! (calculate-reward-multiplier tracker) err-invalid-multiplier))
+      (reward-amount (/ (* base-reward multiplier) u100))
     )
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)
 
