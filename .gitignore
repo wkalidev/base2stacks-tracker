@@ -44,3 +44,4 @@ yarn-error.log*.next/
 .eslintrc.json
 tsconfig.tsbuildinfo
 .next/
+secrets.txt
