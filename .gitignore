@@ -43,3 +43,4 @@ yarn-error.log*.next/
 .next/
 .eslintrc.json
 tsconfig.tsbuildinfo
+.next/
