@@ -13,7 +13,6 @@ const TRACKED_CONTRACTS: Record<string, string> = {
   'b2s-staking-vault-v2':       'stake',
   'b2s-rewards-distributor-v3': 'claim',
   'b2s-liquidity-pool-v6':      'swap',
-  'b2s-liquidity-pool-v6':      'swap',
   'b2s-prediction-market':      'bet',
   'b2s-governance':             'governance',
   'b2s-airdrop-v2':             'airdrop',

@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: [
+    serverExternalPackages: [
       '@coinbase/agentkit',
       '@coinbase/agentkit-langchain',
       '@langchain/langgraph',
