@@ -61,6 +61,7 @@ const nextConfig = {
                 'https://api.coingecko.com',
                 'https://pro-api.coingecko.com',
                 'https://api.groq.com',
+                'https://base2stacks-tracker-production-8e00.up.railway.app',
                 'wss://api.mainnet.hiro.so',
                 'wss://api.testnet.hiro.so',
               ].join(' '),
