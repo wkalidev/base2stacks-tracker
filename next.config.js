@@ -65,7 +65,7 @@ const nextConfig = {
                 'wss://api.testnet.hiro.so',
               ].join(' '),
               // Frames : aucune
-              "frame-src 'none'",
+              "frame-src 'self' https://s.tradingview.com https://www.tradingview.com",
               // Objets (Flash, etc.) : aucun
               "object-src 'none'",
               // Base URI : limiter au domaine courant
