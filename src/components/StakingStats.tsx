@@ -7,7 +7,7 @@ import { StacksMainnet } from '@stacks/network'
 interface StakingStatsProps { address: string }
 
 const network          = new StacksMainnet()
-const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
+const CONTRACT_ADDRESS = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N'
 const STAKING_CONTRACT = 'b2s-staking-vault-v2'
 const DECIMALS         = 1_000_000
 const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }

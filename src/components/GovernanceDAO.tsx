@@ -12,7 +12,7 @@ import { openContractCall } from '@stacks/connect'
 import { StacksMainnet } from '@stacks/network'
 
 const network          = new StacksMainnet()
-const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
+const CONTRACT_ADDRESS = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N'
 const GOV_CONTRACT     = 'b2s-governance'
 const STAKING_CONTRACT = 'b2s-staking-vault-v2'
 const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`

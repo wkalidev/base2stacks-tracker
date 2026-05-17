@@ -32,7 +32,7 @@ import DailyStreak from '@/components/DailyStreak'
 import LiveActivityFeed from '@/components/LiveActivityFeed'
 import { AchievementManager } from '@/components/AchievementUnlock'
 
-const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
+const CONTRACT_ADDRESS = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N'
 const APP_URL          = 'https://base2stacks-tracker.vercel.app'
 const MONO             = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 

@@ -1,5 +1,5 @@
 const hiroUrl = (path: string) => `/api/hiro?path=${encodeURIComponent(path)}`
-const CONTRACT = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
+const CONTRACT = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N'
 
 export async function getNFTHoldings(address: string, assetId: string) {
   const res = await fetch(hiroUrl(`/extended/v1/tokens/nft/holdings?principal=${address}&asset_identifiers=${assetId}`))

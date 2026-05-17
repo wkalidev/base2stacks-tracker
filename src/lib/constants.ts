@@ -4,7 +4,7 @@ export const APP_TWITTER   = '@willycodexwar'
 export const APP_GITHUB    = 'https://github.com/wkalidev/base2stacks-tracker'
 export const APP_FARCASTER = 'https://warpcast.com/willywarrior'
 
-export const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
+export const CONTRACT_ADDRESS = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N'
 export const HIRO_API         = '/api/hiro'
 
 export const DAILY_REWARD = 5

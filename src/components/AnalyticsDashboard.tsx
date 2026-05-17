@@ -6,9 +6,9 @@ import {
 } from 'recharts';
 
 const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`
-const CONTRACT        = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96';
+const CONTRACT        = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N';
 const TOKEN_CONTRACT  = `${CONTRACT}.b2s-token-v4`;
-const POOL_CONTRACT   = `${CONTRACT}.b2s-liquidity-pool-v5`;
+const POOL_CONTRACT   = `${CONTRACT}.b2s-liquidity-pool-v6`;
 const REWARDS_CONTRACT= `${CONTRACT}.b2s-rewards-distributor-v3`;
 
 const NEON = ['#00ff9f','#00d4ff','#ff00ff','#ffd700','#ff6600','#9945ff'];

@@ -6,7 +6,7 @@ import { callReadOnlyFunction, cvToJSON, standardPrincipalCV } from '@stacks/tra
 import { StacksMainnet } from '@stacks/network'
 
 const network          = new StacksMainnet()
-const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
+const CONTRACT_ADDRESS = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N'
 const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`
 const DECIMALS         = 1_000_000
 const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
@@ -187,7 +187,7 @@ async function fetchPortfolio(address: string): Promise<Portfolio> {
     const lpResult = await callReadOnlyFunction({
       network,
       contractAddress: CONTRACT_ADDRESS,
-      contractName:    'b2s-liquidity-pool-v5',
+      contractName:    'b2s-liquidity-pool-v6',
       functionName:    'get-lp-tokens',
       functionArgs:    [standardPrincipalCV(address)],
       senderAddress:   address,

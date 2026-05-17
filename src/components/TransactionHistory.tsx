@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { exportToCSV, exportToJSON } from '@/utils/exportCSV'
 
 const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`
-const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
+const CONTRACT_ADDRESS = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N'
 const DECIMALS         = 1_000_000
 
 const TRACKED_CONTRACTS: Record<string, string> = {
@@ -12,7 +12,7 @@ const TRACKED_CONTRACTS: Record<string, string> = {
   'b2s-token-v4':               'claim',
   'b2s-staking-vault-v2':       'stake',
   'b2s-rewards-distributor-v3': 'claim',
-  'b2s-liquidity-pool-v5':      'swap',
+  'b2s-liquidity-pool-v6':      'swap',
   'b2s-liquidity-pool-v6':      'swap',
   'b2s-prediction-market':      'bet',
   'b2s-governance':             'governance',

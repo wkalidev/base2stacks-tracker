@@ -28,7 +28,7 @@ const LEVELS = [
 ]
 
 const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`
-const CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96'
+const CONTRACT_ADDRESS = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N'
 const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 
 // ── XP Calculation from onchain activity ──────────────────────────────────────
