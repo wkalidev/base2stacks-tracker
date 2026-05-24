@@ -45,3 +45,6 @@ yarn-error.log*.next/
 tsconfig.tsbuildinfo
 .next/
 secrets.txt
+
+.vercel
+.env*.local
