@@ -1,10 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
-import dynamic from 'next/dynamic'
-
-// ✅ Fix: AgentChat utilise useState/useEffect → doit être chargé côté client uniquement
-const AgentChat = dynamic(() => import('@/components/AgentChat'), { ssr: false })
+import AgentChatWrapper from '@/components/AgentChatWrapper'
 
 const inter         = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' })
@@ -87,7 +84,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="min-h-screen bg-black">
           {children}
         </div>
-        <AgentChat />
+        <AgentChatWrapper />
       </body>
     </html>
   )
