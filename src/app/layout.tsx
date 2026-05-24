@@ -1,9 +1,12 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
-import AgentChat from '@/components/AgentChat'
+import dynamic from 'next/dynamic'
 
-const inter        = Inter({ subsets: ['latin'], variable: '--font-inter' })
+// ✅ Fix: AgentChat utilise useState/useEffect → doit être chargé côté client uniquement
+const AgentChat = dynamic(() => import('@/components/AgentChat'), { ssr: false })
+
+const inter         = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' })
 
 export const viewport: Viewport = {
