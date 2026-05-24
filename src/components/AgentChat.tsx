@@ -21,7 +21,7 @@ export default function AgentChat() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role:      'agent',
-      content:   '👋 Hey! I\'m **B2S Agent**, powered by Claude AI.\n\nI can help you:\n• 💰 Check wallet balances (STX + $B2S)\n• 📈 Get live crypto prices\n• 🏅 Check your NFT badges\n• 🌉 Track bridge activity\n• 💎 Calculate staking rewards\n• 🚀 Get DeFi strategy advice\n\nWhat would you like to do?',
+      content:   '👋 Hey! I\'m **B2S Agent**, powered by Groq AI.\n\nI can help you:\n• 💰 Check wallet balances (STX + $B2S)\n• 📈 Get live crypto prices\n• 🏅 Check your NFT badges\n• 🌉 Track bridge activity\n• 💎 Calculate staking rewards\n• 🚀 Get DeFi strategy advice\n\nWhat would you like to do?',
       timestamp: new Date(),
     },
   ]);
@@ -107,7 +107,8 @@ export default function AgentChat() {
         const updated = [...prev];
         updated[updated.length - 1] = {
           ...agentMsg,
-          content: '❌ Agent error. Please check your `ANTHROPIC_API_KEY` in Vercel env variables.',
+          // ✅ Fix: était ANTHROPIC_API_KEY, l'agent utilise Groq
+          content: '❌ Agent error. Please check your `GROQ_API_KEY` in Vercel env variables.',
         };
         return updated;
       });
@@ -267,8 +268,9 @@ export default function AgentChat() {
                 {loading ? '⏳' : '↑'}
               </button>
             </div>
+            {/* ✅ Fix: était "Powered by Claude · Anthropic", l'agent utilise Groq */}
             <div className="text-center text-xs mt-2" style={{ color: '#334155' }}>
-              Powered by Claude · Anthropic
+              Powered by Groq · Kimi K2
             </div>
           </div>
         </div>
