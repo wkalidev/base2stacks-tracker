@@ -124,7 +124,7 @@ function TradingViewChart({ timeframe }: { timeframe: Timeframe }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const container = containerRef.current; // ✅ copie locale pour le cleanup
+    const container = containerRef.current;
     if (!container) return;
     container.innerHTML = '';
 
@@ -136,8 +136,8 @@ function TradingViewChart({ timeframe }: { timeframe: Timeframe }) {
 
     const script = document.createElement('script');
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
-    script.async = true;
-    script.innerHTML = JSON.stringify({
+    script.type = 'text/javascript';
+    script.text = JSON.stringify({
       autosize: true,
       symbol: 'COINBASE:STXUSD',
       interval: TV_INTERVALS[timeframe],
@@ -165,7 +165,6 @@ function TradingViewChart({ timeframe }: { timeframe: Timeframe }) {
     });
     container.appendChild(script);
 
-    // ✅ utilise la variable locale, pas containerRef.current
     return () => { if (container) container.innerHTML = ''; };
   }, [timeframe]);
 
