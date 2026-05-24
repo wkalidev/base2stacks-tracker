@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY || ''
 const GROQ_URL     = 'https://api.groq.com/openai/v1/chat/completions'
-const MODEL        = 'moonshotai/kimi-k2-instruct'
+const MODEL        = 'llama3-70b-8192'
 
 const SYSTEM_PROMPT = `You are B2S Agent, an AI assistant for the Base2Stacks DeFi ecosystem on Stacks mainnet.
 
