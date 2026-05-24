@@ -58,7 +58,8 @@ const nextConfig = {
                 'wss://data.tradingview.com',
                 'https://data.tradingview.com',
               ].join(' '),
-              "frame-src 'self' https://s.tradingview.com https://www.tradingview.com",
+              // ✅ Ajout de tradingview-widget.com pour corriger l'erreur CSP frame-src
+              "frame-src 'self' https://s.tradingview.com https://www.tradingview.com https://www.tradingview-widget.com",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
