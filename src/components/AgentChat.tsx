@@ -107,7 +107,7 @@ export default function AgentChat() {
         const updated = [...prev];
         updated[updated.length - 1] = {
           ...agentMsg,
-          // ✅ Fix: était ANTHROPIC_API_KEY, l'agent utilise Groq
+          // ✅ Fix: était GROQ_API_KEY, l'agent utilise Groq
           content: '❌ Agent error. Please check your `GROQ_API_KEY` in Vercel env variables.',
         };
         return updated;
