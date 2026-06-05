@@ -8,6 +8,7 @@ import {
 const hiroUrl = (p: string) => `/api/hiro?path=${encodeURIComponent(p)}`
 const CONTRACT        = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N';
 const TOKEN_CONTRACT  = `${CONTRACT}.b2s-token-v4`;
+const TOKEN_ASSET     = `${TOKEN_CONTRACT}::b2s-token`;
 const POOL_CONTRACT   = `${CONTRACT}.b2s-liquidity-pool-v6`;
 const REWARDS_CONTRACT= `${CONTRACT}.b2s-rewards-distributor-v3`;
 
@@ -48,7 +49,7 @@ export const AnalyticsDashboard: React.FC<{ refreshInterval?: number }> = ({ ref
     try {
       const [tokenTx, holderRes, poolTx, rewardsTx] = await Promise.all([
         fetch(`${hiroUrl(`/extended/v1/address/${TOKEN_CONTRACT}/transactions?limit=1`)}`),
-        fetch(`${hiroUrl(`/extended/v1/tokens/ft/${TOKEN_CONTRACT}/holders?limit=1`)}`),
+        fetch(`${hiroUrl(`/extended/v1/tokens/ft/${TOKEN_ASSET}/holders?limit=1`)}`),
         fetch(`${hiroUrl(`/extended/v1/address/${POOL_CONTRACT}/transactions?limit=1`)}`),
         fetch(`${hiroUrl(`/extended/v1/address/${REWARDS_CONTRACT}/transactions?limit=1`)}`),
       ]);
@@ -73,7 +74,7 @@ export const AnalyticsDashboard: React.FC<{ refreshInterval?: number }> = ({ ref
 
   const fetchHolderDistribution = useCallback(async () => {
     try {
-      const res  = await fetch(`${hiroUrl(`/extended/v1/tokens/ft/${TOKEN_CONTRACT}/holders?limit=200`)}`);
+      const res  = await fetch(`${hiroUrl(`/extended/v1/tokens/ft/${TOKEN_ASSET}/holders?limit=200`)}`);
       const data = await res.json();
       const buckets: Record<string, number> = { '0–100': 0, '100–1K': 0, '1K–10K': 0, '10K–100K': 0, '100K+': 0 };
       (data.results || []).forEach((h: any) => {
