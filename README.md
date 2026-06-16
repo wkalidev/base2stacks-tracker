@@ -1,188 +1,185 @@
-# 🌉 Base2Stacks Bridge Tracker
+# Base2Stacks Tracker
 
-[![Mainnet](https://img.shields.io/badge/Network-Stacks%20Mainnet-green?style=for-the-badge&logo=ethereum)](https://explorer.hiro.so/?chain=mainnet)
+[![Mainnet](https://img.shields.io/badge/Network-Stacks%20Mainnet-green?style=for-the-badge)](https://explorer.hiro.so/?chain=mainnet)
 [![Next.js](https://img.shields.io/badge/Built%20with-Next.js%2016-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![Stacks](https://img.shields.io/badge/Blockchain-Stacks-5546FF?style=for-the-badge&logo=stacks)](https://www.stacks.co/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](./LICENSE)
 [![Builder Rewards](https://img.shields.io/badge/Stacks-Builder%20Rewards%20May%202026-orange?style=for-the-badge)](https://stacks.org)
-[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com)
 
-## 🌐 Live App
+## Live App
 
 **[https://base2stacks-tracker.vercel.app](https://base2stacks-tracker.vercel.app)**
 
----
-
-## 📋 Overview
-
-Base2Stacks is a full-stack DeFi platform on Stacks **mainnet**. Track cross-chain bridges between Base & Stacks, earn $B2S tokens, swap, stake, vote, and bet on real-world outcomes — all powered by real on-chain data.
+Full DeFi platform on Stacks mainnet — swap, stake, bridge, govern, and bet. Powered by real on-chain data.
 
 ---
 
-## 📦 Smart Contracts (Mainnet — SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N)
+## MCP Server
 
-| Contract | Description |
-|---|---|
-| `b2s-token-v4` | SIP-010 $B2S token, 6 decimals |
-| `b2s-staking-vault-v2` | Staking with APY multipliers (12.5–37.5%) |
+**Endpoint:** `https://base2stacks-tracker.vercel.app/api/mcp`
+
+Compatible with Claude, Cursor, and any MCP client.
+
+| Tool | Description |
+|------|-------------|
+| `get_b2s_stats` | Live $B2S token price, supply, holders, market data |
+| `get_staking_info` | APY tiers (12.5% / 25% / 37.5%), TVL, lock durations |
+| `get_bridge_routes` | Bridge routes Base → Stacks with fees and times |
+| `get_swap_quote` | Swap quote for STX/B2S/USDCx (0.25% AMM fee) |
+| `get_leaderboard` | Top stakers and earners on Base2Stacks |
+| `get_nft_badges` | 567-badge collection info across 3 series |
+
+**MCP Discovery (GET):** Returns tool list, contract addresses, server version.
+
+---
+
+## A2A Agent Card
+
+**Endpoint:** `https://base2stacks-tracker.vercel.app/api/agent-card`
+**Well-known:** `https://base2stacks-tracker.vercel.app/.well-known/agent-card.json`
+
+| Skill | Description |
+|-------|-------------|
+| `swap` | AMM swap STX/B2S/USDCx with 0.25% fee |
+| `stake` | Stake $B2S for 12.5% to 37.5% APY |
+| `bridge` | Bridge tokens between Base and Stacks |
+| `governance` | Vote on proposals with staked $B2S |
+| `nft_badges` | Buy/sell 567 unique NFT badges |
+| `portfolio` | Real-time balances and positions on Stacks |
+| `prediction` | Bet on real-world outcomes |
+
+---
+
+## Smart Contracts
+
+**Owner:** `SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N`
+
+| Contract | Purpose |
+|----------|---------|
+| `b2s-token-v4` | SIP-010 $B2S token, 6 decimals, 10M max supply |
+| `b2s-staking-vault-v2` | Staking, 12.5%–37.5% APY, lock multipliers |
 | `b2s-staking-vault-v3` | Latest staking vault |
-| `b2s-liquidity-pool-v6` | AMM pool, 0.25% fee, STX/B2S + USDCx |
-| `b2s-governance` | On-chain DAO voting |
-| `b2s-prediction-market` | AMM-style prediction markets |
+| `b2s-liquidity-pool-v6` | AMM, 0.25% fee, STX/B2S + USDCx pairs |
+| `b2s-governance` | DAO voting, 10K B2S to propose, 7-day periods |
+| `b2s-prediction-market` | AMM-style prediction markets, 5 categories, 2% fee |
 | `b2s-price-oracle` | On-chain price feeds |
-| `b2s-fee-router` | Bridge fee collection & distribution |
+| `b2s-fee-router` | Bridge fee collection, 0.3% — 50% treasury/50% stakers |
 | `b2s-rewards-distributor` | Daily reward distribution |
 | `b2s-airdrop` | Token airdrop distribution |
-| `toolkit-math` | Clarity math utilities |
+| `b2s-marketplace` | NFT badge marketplace, 2.5% fee |
 
 ---
 
-## ✨ Features
+## Features
 
-### 🔗 Wallet & Rewards
-- Connect with **Leather** or **Xverse**
-- Claim **5 $B2S** daily rewards
-- Real-time balance tracking from mainnet
+### Wallet & Rewards
+- Connect with Leather or Xverse
+- Claim 5 $B2S daily rewards on-chain
+- Real-time balance tracking from Stacks mainnet
 
-### 📊 Live Market Data
-- STX/USD price via **CoinGecko API**
-- **TradingView** Advanced Chart — candlesticks + RSI
-- Timeframes: 1D / 1W / 1M / 3M / 1Y
+### Live Market Data
+- STX/USD price via CoinGecko, auto-refresh 60s
+- TradingView Advanced Chart — candlesticks, RSI, MACD
 - Market cap, volume, ATH, circulating supply
-- Auto-refresh every 60s with server-side cache
 
-### 💧 AMM Liquidity Pool
-- B2S ↔ STX swaps with **0.25% fee**
-- Uniswap v2-style constant product formula (x\*y=k)
-- LP token minting and liquidity provision
-- Configurable slippage (0.5% / 1% / 2%)
+### AMM & Swaps
+- STX/B2S/USDCx swaps, 0.25% fee
+- Constant product formula (x*y=k)
+- LP token minting, configurable slippage
 
-### 💰 Staking & Rewards
-- Stake $B2S to earn **12.5% base APY**
-- APY multipliers: 1.5x / 2x / 3x based on lock duration
-- Real-time pending rewards from `b2s-staking-vault-v2`
+### Staking
+- 12.5% base APY (flexible), 25% (70 days), 37.5% (365 days)
+- Real-time pending rewards from on-chain vault
+- Compound daily
 
-### 🌉 Cross-Chain Bridge
-- 7 bridges: Stargate, deBridge, Across, Celer, Orbiter, Rango, Jupiter
-- On-chain fee recording via `b2s-fee-router`
-- 0.3% fee — 50% treasury / 50% stakers
+### Cross-Chain Bridge
+- Routes: Stargate, deBridge, Across, Celer, Orbiter, Rango, Jupiter
+- 0.3% on-chain fee recorded via `b2s-fee-router`
 
-### 🏛️ Governance DAO
-- On-chain proposals from `b2s-governance` contract
-- 1 token = 1 vote — voting power from staked balance
-- 7-day voting period, quorum enforcement
+### Governance DAO
+- On-chain proposals and voting
+- 1 staked B2S = 1 vote, 7-day periods, quorum enforcement
 
-### 🛒 NFT Badge Marketplace
-- **567 unique badges** across 3 series
+### NFT Badges
+- 567 unique badges — Infosec (#1–170), Glitch Art (#201–500), Galactic (#501–600)
 - 5 rarity tiers: Common → Legendary
-- All images on IPFS via Pinata, multi-gateway fallback
-- 2.5% platform fee
+- IPFS via Pinata, multi-gateway fallback
 
-### 🔮 Prediction Market
+### Prediction Market
 - 5 categories: Price / Stacks / Governance / Sport / Crisis Alert
-- AMM-style odds based on bet pool
-- 2% platform fee on winnings
+- AMM-style odds, 2% platform fee
 
-### 📈 Analytics & Leaderboard
-- Top stakers from real `b2s-staking-vault-v2` transactions
-- Live stats: total staked, total vaults, block height
-- Transaction history with CSV/JSON export
-
-### 🤖 AI DeFi Assistant
-- On-chain AI agent powered by **Groq**
-- Natural language queries for contract data
-- Market analysis and strategy suggestions
+### AI DeFi Assistant
+- Powered by Groq (llama-3.3-70b-versatile)
+- Natural language DeFi queries, market analysis
+- Streaming responses
 
 ---
 
-## 🚀 Quick Start
+## Builder Rewards Checklist
 
-### Prerequisites
-- Node.js 18+
-- Leather or Xverse wallet
-
-### Installation
-```bash
-git clone https://github.com/wkalidev/base2stacks-tracker.git
-cd base2stacks-tracker
-npm install
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000)
-
-### Environment Variables
-```bash
-NEXT_PUBLIC_CONTRACT_ADDRESS=SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N
-NEXT_PUBLIC_CONTRACT_NAME=b2s-token-v4
-NEXT_PUBLIC_NETWORK=mainnet
-NEXT_PUBLIC_STACKS_NETWORK=mainnet
-NEXT_PUBLIC_STACKS_API_URL=https://api.mainnet.hiro.so
-NEXT_PUBLIC_BASE_RPC_URL=https://mainnet.base.org
-COINGECKO_API_KEY=your_key
-GROQ_API_KEY=your_key
-```
+- [x] Deployed on Stacks mainnet
+- [x] SIP-010 fungible token ($B2S)
+- [x] Multiple Clarity smart contracts (11 total)
+- [x] Live app with wallet connection (Leather + Xverse)
+- [x] AI agent with MCP server (6 tools)
+- [x] A2A agent card with 7 skills
+- [x] On-chain governance (DAO voting)
+- [x] Cross-chain bridge integration
+- [x] NFT marketplace (567 assets on IPFS)
+- [x] npm package: `@wkalidev/b2s-contracts`
+- [x] Social sharing (Twitter + Farcaster)
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
-|---|---|
-| Frontend | Next.js 16, React, TypeScript |
+|-------|------------|
+| Frontend | Next.js 16, React 19, TypeScript |
 | Styling | Tailwind CSS |
 | Blockchain | Stacks, Clarity 2 |
-| Wallet | @stacks/connect |
+| Wallet | @stacks/connect v8 |
 | Blockchain API | Hiro Mainnet API |
 | Market Data | CoinGecko API |
 | Charts | TradingView Advanced Chart |
 | NFT Storage | Pinata IPFS |
-| AI Agent | Groq API |
+| AI Agent | Groq (llama-3.3-70b-versatile) |
 | Deployment | Vercel |
 
 ---
 
-## 🔗 Related Repos
+## Environment Variables
 
-| Repo | Description |
-|---|---|
-| [b2s-token-contract](https://github.com/wkalidev/b2s-token-contract) | All Clarity smart contracts |
-| [b2s-analytics-dashboard](https://github.com/wkalidev/b2s-analytics-dashboard) | Analytics dashboard |
-| [b2s-nft-badges](https://github.com/wkalidev/b2s-nft-badges) | NFT badge generation + 567 assets |
-| [b2s-staking-interface](https://github.com/wkalidev/b2s-staking-interface) | Staking UI components |
-| [stacks-clarity-toolkit](https://github.com/wkalidev/stacks-clarity-toolkit) | Clarity dev toolkit |
-
----
-
-## 💰 Passive Revenue Streams
-
-| Source | Link | Commission |
-|---|---|---|
-| 🌉 deBridge | [Referral](https://app.debridge.com/r/32893) | % bridged volume |
-| ⚡ Rango | [Referral](https://rango.vip/a/o9pwCm) | % swaps |
-| ☀️ Jupiter | [Referral](https://jup.ag/?ref=j5ft3v5m26eu) | referral fees |
-| 🔗 b2s-fee-router | on-chain | 0.3% bridges |
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_CONTRACT_ADDRESS` | Contract owner address |
+| `NEXT_PUBLIC_CONTRACT_NAME` | Primary contract name |
+| `NEXT_PUBLIC_NETWORK` | `mainnet` |
+| `NEXT_PUBLIC_STACKS_API_URL` | Hiro API base URL |
+| `NEXT_PUBLIC_BASE_RPC_URL` | Base network RPC |
+| `COINGECKO_API_KEY` | CoinGecko API key (server-side) |
+| `GROQ_API_KEY` | Groq API key (server-side) |
 
 ---
 
-## 🤝 Contributing
+## Quick Start
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md)
-
-## 📜 License
-
-MIT License — See [LICENSE](./LICENSE)
-
----
-
-## 👨‍💻 Author
-
-**wkalidev (zcodebase)**
-
-- 🐦 [Twitter](https://twitter.com/willycodexwar)
-- 🟪 [Farcaster](https://warpcast.com/willywarrior)
-- 🐙 [GitHub](https://github.com/wkalidev)
+```bash
+git clone https://github.com/wkalidev/base2stacks-tracker.git
+cd base2stacks-tracker
+npm install
+cp .env.example .env.local  # fill in your keys
+npm run dev
+```
 
 ---
 
-**Built with ❤️ by wkalidev(zcodebase) for #StacksBuilderRewards May 2026 🏆**
+## Related Projects
+
+- [Stacks Quest](https://stacks-quest-ten.vercel.app) — Daily blockchain puzzle game + DeFi agent
+- [@wkalidev/b2s-contracts](https://www.npmjs.com/package/@wkalidev/b2s-contracts) — npm SDK
+- [b2s-nft-badges](https://github.com/wkalidev/b2s-nft-badges) — 567 NFT badge assets
+
+---
+
+**Built by [wkalidev (zcodebase)](https://github.com/wkalidev) for Stacks Builder Rewards May 2026**
