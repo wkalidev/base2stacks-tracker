@@ -1,5 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  poweredByHeader: false,
+  compress: true,
+
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'gateway.pinata.cloud' },
+      { protocol: 'https', hostname: 'ipfs.io' },
+      { protocol: 'https', hostname: 'cloudflare-ipfs.com' },
+    ],
+  },
+
+  async rewrites() {
+    return [
+      { source: '/.well-known/agent-card.json', destination: '/api/agent-card' },
+    ]
+  },
+
   serverExternalPackages: [
     '@coinbase/agentkit',
     '@coinbase/agentkit-langchain',

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import dynamic from 'next/dynamic'
 import { useWallet } from '@/hooks/useWallet'
 import { useContract } from '@/hooks/useContract'
 import { useBalance } from '@/hooks/useBalance'
@@ -16,21 +17,22 @@ import { ToastContainer } from '@/components/Toast'
 import { TransactionToast, ErrorToast } from '@/components/TransactionToast'
 import { AnalyticsDashboard } from '@/components/AnalyticsDashboard'
 import RewardsDistributor from '@/components/RewardsDistributor'
-import GovernanceDAO from '@/components/GovernanceDAO'
-import NFTMarketplace from '@/components/NFTMarketplace'
-import LiquidityPool from '@/components/LiquidityPool'
-import SBTCDashboard from '@/components/SBTCDashboard'
-import PredictionMarket from '@/components/PredictionMarket'
 import MarketData from '@/components/MarketData'
 import BridgeRouter from '@/components/BridgeRouter'
 import XPSystem from '@/components/XPSystem'
 import OnboardingWizard from '@/components/OnboardingWizard'
-import GalxeQuests from '@/components/GalxeQuests'
 import HeroAnimated from '@/components/HeroAnimated'
 import PortfolioSummary from '@/components/PortfolioSummary'
 import DailyStreak from '@/components/DailyStreak'
 import LiveActivityFeed from '@/components/LiveActivityFeed'
 import { AchievementManager } from '@/components/AchievementUnlock'
+
+const GovernanceDAO    = dynamic(() => import('@/components/GovernanceDAO'),    { ssr: false })
+const PredictionMarket = dynamic(() => import('@/components/PredictionMarket'), { ssr: false })
+const NFTMarketplace   = dynamic(() => import('@/components/NFTMarketplace'),   { ssr: false })
+const LiquidityPool    = dynamic(() => import('@/components/LiquidityPool'),    { ssr: false })
+const GalxeQuests      = dynamic(() => import('@/components/GalxeQuests'),      { ssr: false })
+const SBTCDashboard    = dynamic(() => import('@/components/SBTCDashboard'),    { ssr: false })
 
 const CONTRACT_ADDRESS = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N'
 const APP_URL          = 'https://base2stacks-tracker.vercel.app'
