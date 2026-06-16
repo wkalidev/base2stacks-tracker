@@ -1,0 +1,21 @@
+{
+  "name": "B2S DeFi Agent",
+  "description": "Non-custodial DeFi agent on Stacks mainnet. Swap STX/B2S/USDCx, stake for up to 37.5% APY, bridge Base to Stacks, vote on DAO proposals, trade 567 NFT badges.",
+  "url": "https://base2stacks-tracker.vercel.app",
+  "version": "1.0.0",
+  "skills": [
+    { "id": "swap",       "name": "Token Swap",         "description": "AMM swap STX/B2S/USDCx with 0.25% fee" },
+    { "id": "stake",      "name": "Staking",            "description": "Stake $B2S for 12.5% to 37.5% APY" },
+    { "id": "bridge",     "name": "Cross-chain Bridge", "description": "Bridge tokens between Base and Stacks" },
+    { "id": "governance", "name": "DAO Voting",          "description": "Vote on proposals with staked $B2S" },
+    { "id": "nft_badges", "name": "NFT Badges",         "description": "Buy/sell 567 unique NFT badges" },
+    { "id": "portfolio",  "name": "Portfolio Tracking", "description": "Real-time balances and positions on Stacks" },
+    { "id": "prediction", "name": "Prediction Market",  "description": "Bet on real-world outcomes" }
+  ],
+  "x402": { "supported": false },
+  "mcp": "https://base2stacks-tracker.vercel.app/api/mcp",
+  "oasf": {
+    "skills":  ["tool_interaction", "analytical_skills", "agent_orchestration"],
+    "domains": ["technology/blockchain", "technology/blockchain/defi", "finance_and_business/finance"]
+  }
+}
