@@ -322,7 +322,7 @@ export default function HeroAnimated({ onClaim, onStake, onConnect, loading = fa
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '20px', border: '1px solid rgba(0,255,159,0.2)', background: 'rgba(0,255,159,0.06)', marginBottom: '28px', animation: 'fadeUp 0.5s ease' }}>
             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00ff9f', boxShadow: '0 0 8px #00ff9f', animation: 'blink 2s infinite', flexShrink: 0 }} />
             <span style={{ fontSize: '9px', letterSpacing: '0.25em', color: '#00ff9f' }}>
-              STACKS_MAINNET // BUILDER_REWARDS_MARCH_2026
+              STACKS_MAINNET // BUILDER_REWARDS_2026
             </span>
           </div>
 
