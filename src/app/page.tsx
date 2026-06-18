@@ -27,11 +27,7 @@ import DailyStreak from '@/components/DailyStreak'
 import LiveActivityFeed from '@/components/LiveActivityFeed'
 import { AchievementManager } from '@/components/AchievementUnlock'
 
-const GovernanceDAO    = dynamic(() => import('@/components/GovernanceDAO'),    { ssr: false })
-const PredictionMarket = dynamic(() => import('@/components/PredictionMarket'), { ssr: false })
 const NFTMarketplace   = dynamic(() => import('@/components/NFTMarketplace'),   { ssr: false })
-const LiquidityPool    = dynamic(() => import('@/components/LiquidityPool'),    { ssr: false })
-const GalxeQuests      = dynamic(() => import('@/components/GalxeQuests'),      { ssr: false })
 const SBTCDashboard    = dynamic(() => import('@/components/SBTCDashboard'),    { ssr: false })
 
 const CONTRACT_ADDRESS = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N'
@@ -313,29 +309,16 @@ export default function Page() {
         <RewardsDistributor />
       </Section>
 
-      <Section title="// GOVERNANCE_DAO" color="#cc00ff" maxWidth="max-w-6xl">
-        <GovernanceDAO />
-      </Section>
-
       <Section title="// NFT_BADGE_MARKETPLACE" color="#ff6600" maxWidth="max-w-7xl" id="nft">
         <NFTMarketplace />
       </Section>
 
-      <Section title="// LIQUIDITY_POOL" color="#00ff9f" maxWidth="max-w-7xl">
-        <LiquidityPool />
+      <Section title="// SBTC_DASHBOARD" color="#f7931a" maxWidth="max-w-5xl">
         <SBTCDashboard userAddress={address} />
       </Section>
 
       <Section title="// CROSS_CHAIN_BRIDGE" color="#00d4ff" maxWidth="max-w-6xl">
         <BridgeRouter />
-      </Section>
-
-      <Section title="// PREDICTION_MARKET" color="#ff4444" maxWidth="max-w-6xl">
-        <PredictionMarket />
-      </Section>
-
-      <Section title="// GALXE_QUESTS" color="#ffd700" maxWidth="max-w-5xl">
-        <GalxeQuests userAddress={address} />
       </Section>
 
       <footer className="border-t border-white/[0.06] mt-8">

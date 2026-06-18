@@ -12,7 +12,7 @@ import { StacksMainnet } from '@stacks/network'
 
 const network          = new StacksMainnet()
 const CONTRACT_ADDRESS = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N'
-const CONTRACT_NAME    = 'b2s-rewards-distributor'
+const CONTRACT_NAME    = 'b2s-rewards-distributor-v3'
 const DECIMALS         = 1_000_000
 const MONO = { fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace" }
 
