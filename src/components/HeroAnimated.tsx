@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useWallet } from '@/hooks/useWallet'
-import { useContract } from '@/hooks/useContract'
 import { useDashboardStats } from '@/hooks/useDashboardStats'
 const TYPEWRITER_TEXTS = ['EARN $B2S DAILY', 'STAKE & EARN 37.5% APY', 'BRIDGE BASE → STACKS', 'VOTE ON GOVERNANCE', 'COLLECT NFT BADGES']
 
@@ -223,11 +222,11 @@ interface HeroAnimatedProps {
   onClaim?: () => void
   onStake?: () => void
   onConnect?: () => void
+  loading?: boolean
 }
 
-export default function HeroAnimated({ onClaim, onStake, onConnect }: HeroAnimatedProps) {
+export default function HeroAnimated({ onClaim, onStake, onConnect, loading = false }: HeroAnimatedProps) {
   const { isConnected, address, connect } = useWallet()
-  const { claimDailyReward, loading }     = useContract()
   const dashStats                         = useDashboardStats()
   const [blockHeight, setBlockHeight]     = useState(0)
   const [blockLoading, setBlockLoading]   = useState(true)
@@ -247,11 +246,6 @@ export default function HeroAnimated({ onClaim, onStake, onConnect }: HeroAnimat
     const t = setInterval(fetchBlock, 10_000)
     return () => clearInterval(t)
   }, [fetchBlock])
-
-  const handleClaim = async () => {
-    try { await claimDailyReward(); onClaim?.() }
-    catch (e) { console.error(e) }
-  }
 
   const shortAddr = (a: string) => `${a.slice(0, 6)}···${a.slice(-4)}`
 
@@ -376,7 +370,7 @@ export default function HeroAnimated({ onClaim, onStake, onConnect }: HeroAnimat
             {isConnected ? (
               <>
                 <button
-                  onClick={handleClaim}
+                  onClick={onClaim}
                   disabled={loading}
                   className="hero-btn"
                   style={{

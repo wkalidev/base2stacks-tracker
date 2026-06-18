@@ -217,6 +217,7 @@ export default function Page() {
         onClaim={handleClaim}
         onStake={() => setShowStakeModal(true)}
         onConnect={connect}
+        loading={loading}
       />
 
       {isConnected && address && (
