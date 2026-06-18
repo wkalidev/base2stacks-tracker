@@ -66,7 +66,11 @@ export default function AgentChat() {
         body:    JSON.stringify({ message: msg, history }),
       });
 
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        const errMsg  = errData?.error || `HTTP ${res.status}`;
+        throw new Error(errMsg);
+      }
 
       const reader  = res.body!.getReader();
       const decoder = new TextDecoder();
@@ -102,13 +106,13 @@ export default function AgentChat() {
           } catch {}
         }
       }
-    } catch (err) {
+    } catch (err: any) {
+      const msg = err?.message?.includes('ANTHROPIC_API_KEY')
+        ? `❌ ${err.message}`
+        : '❌ Agent unavailable. Check `ANTHROPIC_API_KEY` in Vercel env variables.';
       setMessages(prev => {
         const updated = [...prev];
-        updated[updated.length - 1] = {
-          ...agentMsg,
-          content: '❌ Agent error. Please check your `ANTHROPIC_API_KEY` in Vercel env variables.',
-        };
+        updated[updated.length - 1] = { ...agentMsg, content: msg };
         return updated;
       });
     } finally {
