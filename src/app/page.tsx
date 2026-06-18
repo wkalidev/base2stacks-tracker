@@ -179,7 +179,7 @@ export default function Page() {
                   BASE<span style={{ color: '#00d4ff' }}>2</span>STACKS
                 </div>
                 <div className="text-[9px] tracking-[0.3em] font-black" style={{ color: 'rgba(255,255,255,0.2)' }}>
-                  MAINNET
+                  BITCOIN L2 // STACKS
                 </div>
               </div>
             </div>
@@ -281,9 +281,9 @@ export default function Page() {
       <Section title="// HOW_IT_WORKS" color="#ff00ff" maxWidth="max-w-4xl" id="how-it-works">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {[
-            { n: '01', title: 'CONNECT_WALLET', desc: 'Leather or Xverse wallet',  color: '#00d4ff' },
-            { n: '02', title: 'CLAIM_REWARDS',  desc: 'Claim 5 $B2S tokens daily', color: '#00ff9f' },
-            { n: '03', title: 'STAKE_AND_EARN', desc: 'Earn up to 37.5% APY',      color: '#ffd700' },
+            { n: '01', title: 'CONNECT_WALLET', desc: 'Leather or Xverse — native Stacks wallets',  color: '#00d4ff' },
+            { n: '02', title: 'CLAIM_REWARDS',  desc: 'Claim 5 $B2S tokens daily on Stacks mainnet', color: '#00ff9f' },
+            { n: '03', title: 'STAKE_AND_EARN', desc: 'Stake $B2S · Earn Bitcoin yield up to 37.5% APY', color: '#f7931a' },
           ].map((s, i) => (
             <div key={i} className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 text-center hover:border-white/[0.12] transition-all">
               <p className="text-4xl font-black mb-3" style={{ color: s.color, textShadow: `0 0 20px ${s.color}40` }}>{s.n}</p>
@@ -314,7 +314,12 @@ export default function Page() {
         <NFTMarketplace />
       </Section>
 
-      <Section title="// SBTC_DASHBOARD" color="#f7931a" maxWidth="max-w-5xl">
+      <Section title="// SBTC — BITCOIN ON STACKS" color="#f7931a" maxWidth="max-w-5xl">
+        <div className="mb-4 text-center">
+          <p className="text-[10px] tracking-[0.2em] font-black" style={{ color: 'rgba(247,147,26,0.5)' }}>
+            sBTC IS BITCOIN BRIDGED TO STACKS L2 · 1:1 BTC PEG · SECURED BY PROOF OF TRANSFER
+          </p>
+        </div>
         <SBTCDashboard userAddress={address} />
       </Section>
 
@@ -356,6 +361,22 @@ export default function Page() {
                 style={{ background: 'rgba(249,115,22,0.12)', color: '#f97316', border: '1px solid rgba(249,115,22,0.25)' }}>
                 🏆 TALENT.APP
               </a>
+            </div>
+
+            <div className="flex items-center gap-3 flex-wrap justify-center mt-1">
+              <span className="text-[8px] tracking-[0.2em] text-white/15">STACKS ECOSYSTEM</span>
+              {[
+                { label: 'HIRO EXPLORER', href: 'https://explorer.hiro.so', color: '#00d4ff' },
+                { label: 'LEATHER WALLET', href: 'https://leather.io', color: '#f7931a' },
+                { label: 'XVERSE WALLET', href: 'https://xverse.app', color: '#9945ff' },
+                { label: 'STACKS.CO', href: 'https://stacks.co', color: '#00ff9f' },
+              ].map(l => (
+                <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer"
+                  className="text-[9px] font-black tracking-[0.15em] hover:opacity-80 transition-opacity"
+                  style={{ color: l.color }}>
+                  {l.label} ↗
+                </a>
+              ))}
             </div>
             <ShareButtons type="app" />
             <div className="flex items-center gap-2">

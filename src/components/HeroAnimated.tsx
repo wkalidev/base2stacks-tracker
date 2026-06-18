@@ -347,15 +347,19 @@ export default function HeroAnimated({ onClaim, onStake, onConnect, loading = fa
 
           {/* Headline */}
           <div style={{ fontSize: '11px', letterSpacing: '0.3em', color: 'rgba(255,255,255,0.3)', marginBottom: '8px', animation: 'fadeUp 0.5s ease 0.2s both' }}>
-            THE BITCOIN DEFI PROTOCOL
+            BITCOIN DEFI ON STACKS L2
           </div>
           <h1 style={{ fontSize: 'clamp(28px, 7vw, 44px)', fontWeight: 700, lineHeight: 1.1, marginBottom: '8px', animation: 'fadeUp 0.5s ease 0.3s both' }}>
-            TRACK CROSS-CHAIN
+            BASE → STACKS
             <br />
             <span style={{ color: '#00d4ff', textShadow: '0 0 40px rgba(0,212,255,0.4)' }}>
-              BRIDGES
+              BRIDGE TRACKER
             </span>
           </h1>
+
+          <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', marginBottom: '20px', letterSpacing: '0.05em', animation: 'fadeUp 0.5s ease 0.35s both', lineHeight: 1.6 }}>
+            Track Base Network → Stacks bridges · Stake $B2S · Earn Bitcoin yield
+          </div>
 
           {/* Typewriter */}
           <div style={{ fontSize: '13px', marginBottom: '28px', minHeight: '24px', animation: 'fadeUp 0.5s ease 0.4s both' }}>
