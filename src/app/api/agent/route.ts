@@ -27,7 +27,7 @@ You help users with:
 - sBTC: Bitcoin on Stacks — the flagship Stacks asset, pegged 1:1 to BTC
 - NFT badges: 567 badges in 3 series (Infosec #1-170, Glitch Art #201-500, Galactic #501-600)
 - Bridge: Base Network → Stacks cross-chain bridge tracking
-- Rewards: b2s-rewards-distributor-v3, claim staking rewards
+- Rewards: b2s-rewards-distributor, claim staking rewards
 - Live app: https://base2stacks-tracker.vercel.app
 - npm package: @wkalidev/b2s-contracts
 - Hiro Explorer: https://explorer.hiro.so
@@ -57,7 +57,10 @@ export async function POST(req: NextRequest) {
     }
 
     if (!process.env.ANTHROPIC_API_KEY) {
-      return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+      return NextResponse.json(
+        { error: 'B2S Agent is not configured — ANTHROPIC_API_KEY is missing. Set it in Vercel environment variables.' },
+        { status: 503 }
+      )
     }
 
     const body = await req.json()

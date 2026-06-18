@@ -16,7 +16,7 @@ export function useClaimRewards() {
       await openContractCall({
         network,
         contractAddress:   CONTRACT,
-        contractName:      'b2s-rewards-distributor-v3',
+        contractName:      'b2s-rewards-distributor',
         functionName:      'claim-rewards',
         functionArgs:      [],
         postConditionMode: PostConditionMode.Allow,

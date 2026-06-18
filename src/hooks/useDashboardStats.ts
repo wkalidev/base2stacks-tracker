@@ -22,7 +22,7 @@ export function useDashboardStats() {
           hiroFetch(`/extended/v1/tokens/ft/${CONTRACT}.b2s-token-v4::b2s-token/holders?limit=1`),
           hiroFetch(`/metadata/v1/ft/${CONTRACT}.b2s-token-v4`),
           hiroFetch(`/extended/v1/address/${CONTRACT}.b2s-liquidity-pool-v6/balances`),
-          hiroFetch(`/extended/v1/address/${CONTRACT}.b2s-rewards-distributor-v3/transactions?limit=1`),
+          hiroFetch(`/extended/v1/address/${CONTRACT}.b2s-rewards-distributor/transactions?limit=1`),
         ])
         setStats({
           totalTxCount:    tx.total || 0,

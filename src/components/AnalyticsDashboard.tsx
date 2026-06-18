@@ -10,7 +10,7 @@ const CONTRACT        = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N';
 const TOKEN_CONTRACT  = `${CONTRACT}.b2s-token-v4`;
 const TOKEN_ASSET     = `${TOKEN_CONTRACT}::b2s-token`;
 const POOL_CONTRACT   = `${CONTRACT}.b2s-liquidity-pool-v6`;
-const REWARDS_CONTRACT= `${CONTRACT}.b2s-rewards-distributor-v3`;
+const REWARDS_CONTRACT= `${CONTRACT}.b2s-rewards-distributor`;
 
 const NEON = ['#00ff9f','#00d4ff','#ff00ff','#ffd700','#ff6600','#9945ff'];
 
