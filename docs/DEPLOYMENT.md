@@ -6,7 +6,7 @@
 3. Deploy
 
 ## Environment Variables
-- ANTHROPIC_API_KEY
+- ANTHROPIC_API_KEY (required — B2S Agent powered by Claude Haiku)
 - NEXT_PUBLIC_CONTRACT_ADDRESS
 - NEXT_PUBLIC_CONTRACT_NAME
-- GROQ_API_KEY (optional)
+- COINGECKO_API_KEY (optional)

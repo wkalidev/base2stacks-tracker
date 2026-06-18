@@ -63,7 +63,7 @@ Compatible with Claude, Cursor, and any MCP client.
 | `b2s-prediction-market` | AMM-style prediction markets, 5 categories, 2% fee |
 | `b2s-price-oracle` | On-chain price feeds |
 | `b2s-fee-router` | Bridge fee collection, 0.3% — 50% treasury/50% stakers |
-| `b2s-rewards-distributor` | Daily reward distribution |
+| `b2s-rewards-distributor-v3` | Daily reward distribution |
 | `b2s-airdrop` | Token airdrop distribution |
 | `b2s-marketplace` | NFT badge marketplace, 2.5% fee |
 
@@ -109,7 +109,7 @@ Compatible with Claude, Cursor, and any MCP client.
 - AMM-style odds, 2% platform fee
 
 ### AI DeFi Assistant
-- Powered by Groq (llama-3.3-70b-versatile)
+- Powered by Claude Haiku (Anthropic)
 - Natural language DeFi queries, market analysis
 - Streaming responses
 
@@ -143,7 +143,7 @@ Compatible with Claude, Cursor, and any MCP client.
 | Market Data | CoinGecko API |
 | Charts | TradingView Advanced Chart |
 | NFT Storage | Pinata IPFS |
-| AI Agent | Groq (llama-3.3-70b-versatile) |
+| AI Agent | Claude Haiku (Anthropic) |
 | Deployment | Vercel |
 
 ---
@@ -158,7 +158,7 @@ Compatible with Claude, Cursor, and any MCP client.
 | `NEXT_PUBLIC_STACKS_API_URL` | Hiro API base URL |
 | `NEXT_PUBLIC_BASE_RPC_URL` | Base network RPC |
 | `COINGECKO_API_KEY` | CoinGecko API key (server-side) |
-| `GROQ_API_KEY` | Groq API key (server-side) |
+| `ANTHROPIC_API_KEY` | Anthropic API key for B2S Agent (server-side) |
 
 ---
 

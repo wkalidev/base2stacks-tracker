@@ -27,7 +27,7 @@ You help users with:
 - sBTC: Bitcoin on Stacks — the flagship Stacks asset, pegged 1:1 to BTC
 - NFT badges: 567 badges in 3 series (Infosec #1-170, Glitch Art #201-500, Galactic #501-600)
 - Bridge: Base Network → Stacks cross-chain bridge tracking
-- Rewards: b2s-rewards-distributor, claim staking rewards
+- Rewards: b2s-rewards-distributor-v3, claim staking rewards
 - Live app: https://base2stacks-tracker.vercel.app
 - npm package: @wkalidev/b2s-contracts
 - Hiro Explorer: https://explorer.hiro.so

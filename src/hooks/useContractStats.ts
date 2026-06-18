@@ -13,7 +13,7 @@ export function useContractStats() {
   useEffect(() => {
     Promise.all([
       fetch(`${HIRO}/extended/v1/address/${CONTRACT}.b2s-staking-vault-v2/transactions?limit=1`).then(r => r.json()),
-      fetch(`${HIRO}/extended/v1/address/${CONTRACT}.b2s-rewards-distributor/transactions?limit=1`).then(r => r.json()),
+      fetch(`${HIRO}/extended/v1/address/${CONTRACT}.b2s-rewards-distributor-v3/transactions?limit=1`).then(r => r.json()),
     ])
       .then(([s, r]) => setStats({
         stakingTxs: s.total || 0,

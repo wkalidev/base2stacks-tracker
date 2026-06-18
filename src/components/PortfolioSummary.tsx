@@ -174,7 +174,7 @@ async function fetchPortfolio(address: string): Promise<Portfolio> {
     const rewardsResult = await callReadOnlyFunction({
       network,
       contractAddress: CONTRACT_ADDRESS,
-      contractName:    'b2s-rewards-distributor',
+      contractName:    'b2s-rewards-distributor-v3',
       functionName:    'get-pending-rewards',
       functionArgs:    [standardPrincipalCV(address)],
       senderAddress:   address,

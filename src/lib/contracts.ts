@@ -4,7 +4,7 @@ export const CONTRACTS = {
   token:       `${ADDR}.b2s-token-v4`,
   governance:  `${ADDR}.b2s-governance`,
   liquidity:   `${ADDR}.b2s-liquidity-pool-v6`,
-  rewards:     `${ADDR}.b2s-rewards-distributor`,
+  rewards:     `${ADDR}.b2s-rewards-distributor-v3`,
   badges:      `${ADDR}.b2s-badges`,
   marketplace: `${ADDR}.b2s-marketplace`,
   staking:     `${ADDR}.b2s-staking-vault-v2`,

@@ -22,7 +22,7 @@ Researchers who responsibly disclose vulnerabilities will be credited in release
 
 | Variable | Location | Risk if leaked |
 |----------|----------|----------------|
-| `GROQ_API_KEY` | Server-side only | AI cost abuse — HIGH |
+| `ANTHROPIC_API_KEY` | Server-side only | AI cost abuse — HIGH |
 | `COINGECKO_API_KEY` | Server-side only | Rate limit bypass — LOW |
 | `HIRO_API_KEY` (if added) | Server-side only | Rate limit bypass — MEDIUM |
 

@@ -31,7 +31,7 @@ This roadmap reflects the current state of Base2Stacks on Stacks mainnet and the
 - ✅ Cross-Chain Bridge Router — 7 bridges + fee router
 - ✅ Prediction Market (AMM-style odds, 5 categories)
 - ✅ TradingView chart integration
-- ✅ AI DeFi assistant (Groq, 10 tools)
+- ✅ AI DeFi assistant (Claude Haiku, streaming)
 - ✅ Analytics dashboard
 - ✅ WebSocket real-time updates
 - ✅ 11 smart contracts on mainnet

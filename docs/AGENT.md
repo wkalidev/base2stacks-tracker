@@ -16,4 +16,4 @@ Powered by Claude (Anthropic) with 10 blockchain tools.
 10. get_network_status — Stacks network
 
 ## Model
-claude-sonnet-4-6 (Anthropic)
+claude-haiku-4-5-20251001 (Anthropic)

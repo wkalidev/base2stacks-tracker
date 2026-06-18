@@ -7,7 +7,7 @@
 - ✅ 11 smart contracts deployed on Stacks mainnet (`SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96`)
 - ✅ 567 NFT badges across 3 series (Infosec / Glitch Art / Galactic)
 - ✅ 7 cross-chain bridges integrated
-- ✅ AI DeFi agent (10 tools, Groq)
+- ✅ AI DeFi agent (Claude Haiku, streaming)
 - ✅ Governance DAO live
 - ✅ Prediction market deployed
 
