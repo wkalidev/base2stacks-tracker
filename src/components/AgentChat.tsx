@@ -21,7 +21,7 @@ export default function AgentChat() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role:      'agent',
-      content:   '👋 Hey! I\'m **B2S Agent**, powered by Groq AI.\n\nI can help you:\n• 💰 Check wallet balances (STX + $B2S)\n• 📈 Get live crypto prices\n• 🏅 Check your NFT badges\n• 🌉 Track bridge activity\n• 💎 Calculate staking rewards\n• 🚀 Get DeFi strategy advice\n\nWhat would you like to do?',
+      content:   '👋 Hey! I\'m **B2S Agent**, powered by Claude.\n\nI can help you:\n• 💰 Check wallet balances (STX + $B2S)\n• 📈 Get live crypto prices\n• 🏅 Check your NFT badges\n• 🌉 Track bridge activity\n• 💎 Calculate staking rewards\n• 🚀 Get DeFi strategy advice\n\nWhat would you like to do?',
       timestamp: new Date(),
     },
   ]);
@@ -107,8 +107,7 @@ export default function AgentChat() {
         const updated = [...prev];
         updated[updated.length - 1] = {
           ...agentMsg,
-          // ✅ Fix: était GROQ_API_KEY, l'agent utilise Groq
-          content: '❌ Agent error. Please check your `GROQ_API_KEY` in Vercel env variables.',
+          content: '❌ Agent error. Please check your `ANTHROPIC_API_KEY` in Vercel env variables.',
         };
         return updated;
       });
@@ -175,7 +174,7 @@ export default function AgentChat() {
             <div className="flex-1 min-w-0">
               <div className="font-bold text-sm text-white">B2S Agent</div>
               <div className="text-xs truncate" style={{ color: '#64748b' }}>
-                AI-powered blockchain assistant
+                B2S Agent powered by Claude
               </div>
             </div>
             <div className="flex items-center gap-1.5">
@@ -268,9 +267,8 @@ export default function AgentChat() {
                 {loading ? '⏳' : '↑'}
               </button>
             </div>
-            {/* ✅ Fix: était "Powered by Claude · Anthropic", l'agent utilise Groq */}
             <div className="text-center text-xs mt-2" style={{ color: '#334155' }}>
-              Powered by Groq · Kimi K2
+              Powered by Anthropic · Claude Haiku
             </div>
           </div>
         </div>
