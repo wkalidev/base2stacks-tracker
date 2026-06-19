@@ -112,6 +112,27 @@ Compatible with Claude, Cursor, and any MCP client.
 - 5 categories: Price / Stacks / Governance / Sport / Crisis Alert
 - AMM-style odds, 2% platform fee
 
+### Pool Liquidity Requests
+- Community members signal intent to provide STX/B2S liquidity via a public request form
+- Submissions stored in Railway PostgreSQL (`pool_requests` table)
+- Request list shows wallet (truncated), amounts, status badge, and date — visible to everyone
+- Status workflow: `pending` → `approved` / `rejected` (managed by owner via Railway dashboard)
+- `POST /api/pool/request` — validates Stacks SP address, saves to DB
+- `GET /api/pool/requests` — public, sorted newest-first
+- Run the following SQL in Railway to create the table:
+  ```sql
+  CREATE TABLE IF NOT EXISTS pool_requests (
+    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    wallet_address text NOT NULL,
+    stx_amount numeric NOT NULL,
+    b2s_amount numeric NOT NULL,
+    message text,
+    status text DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
+    created_at timestamptz DEFAULT now()
+  );
+  ```
+- Requires `DATABASE_URL` env var (Railway PostgreSQL connection string)
+
 ### AI DeFi Assistant
 - Powered by Claude Haiku (Anthropic)
 - Natural language DeFi queries, market analysis

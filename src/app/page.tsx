@@ -20,6 +20,7 @@ import RewardsDistributor from '@/components/RewardsDistributor'
 import MarketData from '@/components/MarketData'
 import BridgeRouter from '@/components/BridgeRouter'
 import SwapInterface from '@/components/SwapInterface'
+import PoolRequest from '@/components/PoolRequest'
 import XPSystem from '@/components/XPSystem'
 import OnboardingWizard from '@/components/OnboardingWizard'
 import HeroAnimated from '@/components/HeroAnimated'
@@ -299,8 +300,9 @@ export default function Page() {
         <AnalyticsDashboard refreshInterval={60000} />
       </Section>
 
-      <Section title="// AMM_SWAP // b2s-liquidity-pool-v6" color="#9945ff" maxWidth="max-w-xl" id="swap">
+      <Section title="// AMM_SWAP // b2s-liquidity-pool-v6" color="#9945ff" maxWidth="max-w-3xl" id="swap">
         <SwapInterface />
+        <PoolRequest />
       </Section>
 
       <Section title="// TOP_STAKERS" color="#ffd700" maxWidth="max-w-4xl">
