@@ -1,7 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { deserializeCV, cvToJSON } from '@stacks/transactions'
 
-const APP_URL  = 'https://base2stacks-tracker.vercel.app'
-const CONTRACT = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N'
+const APP_URL   = 'https://base2stacks-tracker.vercel.app'
+const CONTRACT  = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N'
+const HIRO_API  = 'https://api.mainnet.hiro.so'
+const DECIMALS  = 1_000_000
+
+async function getPoolReserves(): Promise<{ b2s: number; stx: number } | null> {
+  try {
+    const res = await fetch(
+      `${HIRO_API}/v2/contracts/call-read/${CONTRACT}/b2s-liquidity-pool-v6/get-reserves`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sender: CONTRACT, arguments: [] }),
+        next: { revalidate: 30 },
+      }
+    )
+    if (!res.ok) return null
+    const { okay, result: hex } = await res.json()
+    if (!okay || !hex) return null
+    const cv  = deserializeCV(hex)
+    const val = cvToJSON(cv)?.value?.value ?? {}
+    return {
+      b2s: Number(val?.['b2s-stx-b']?.value ?? 0) / DECIMALS,
+      stx: Number(val?.['b2s-stx-s']?.value ?? 0) / DECIMALS,
+    }
+  } catch {
+    return null
+  }
+}
 
 const TOOLS = [
   {
@@ -171,26 +199,55 @@ export async function POST(req: NextRequest) {
       }
 
       if (name === 'get_swap_quote') {
-        const validTokens = ['STX', 'B2S', 'USDCx']
+        const validPairs: Record<string, string> = { STX: 'B2S', B2S: 'STX' }
         const { tokenIn = 'STX', tokenOut = 'B2S', amount = 10 } = args || {}
-        if (!validTokens.includes(tokenIn) || !validTokens.includes(tokenOut)) {
-          return NextResponse.json({ jsonrpc: '2.0', id, error: { code: -32602, message: 'Invalid token pair' } })
+        if (!validPairs[tokenIn] || validPairs[tokenIn] !== tokenOut) {
+          return NextResponse.json({ jsonrpc: '2.0', id, error: { code: -32602, message: 'Only STX↔B2S pairs supported on b2s-liquidity-pool-v6' } })
         }
-        if (typeof amount !== 'number' || amount <= 0 || amount > 1000000) {
-          return NextResponse.json({ jsonrpc: '2.0', id, error: { code: -32602, message: 'Invalid amount' } })
+        if (typeof amount !== 'number' || amount <= 0 || amount > 1_000_000) {
+          return NextResponse.json({ jsonrpc: '2.0', id, error: { code: -32602, message: 'Amount must be a positive number ≤ 1,000,000' } })
         }
+        const reserves = await getPoolReserves()
+        const empty    = !reserves || reserves.stx === 0 || reserves.b2s === 0
+        if (empty) {
+          return NextResponse.json({
+            jsonrpc: '2.0', id,
+            result: {
+              content: [{
+                type: 'text',
+                text: JSON.stringify({
+                  tokenIn, tokenOut, amountIn: amount,
+                  status:   'POOL_EMPTY',
+                  amountOut: 0,
+                  reserves: { STX: 0, B2S: 0 },
+                  amm:      `${CONTRACT}.b2s-liquidity-pool-v6`,
+                  note:     'Pool has no liquidity. Swaps are disabled until reserves are seeded.',
+                }, null, 2),
+              }],
+            },
+          })
+        }
+        // x*y=k AMM with 0.25% fee (25 bps)
+        const [ri, ro] = tokenIn === 'STX'
+          ? [reserves.stx, reserves.b2s]
+          : [reserves.b2s, reserves.stx]
+        const withFee   = amount * 9975 / 10000
+        const amountOut = (withFee * ro) / (ri + withFee)
+        const impact    = (amount / ri) * 100
         return NextResponse.json({
           jsonrpc: '2.0', id,
           result: {
             content: [{
               type: 'text',
               text: JSON.stringify({
-                tokenIn, tokenOut, amountIn: amount,
-                fee:     '0.25%',
-                amm:     `${CONTRACT}.b2s-liquidity-pool-v6`,
-                formula: 'x*y=k (constant product)',
-                note:    'Exact output depends on current pool reserves. Connect wallet for live quote.',
-                app:     `${APP_URL}/#swap`,
+                tokenIn, tokenOut,
+                amountIn:    amount,
+                amountOut:   Number(amountOut.toFixed(6)),
+                fee:         '0.25%',
+                priceImpact: `${impact.toFixed(2)}%`,
+                reserves:    { STX: reserves.stx, B2S: reserves.b2s },
+                amm:         `${CONTRACT}.b2s-liquidity-pool-v6`,
+                formula:     'x*y=k (constant product)',
               }, null, 2),
             }],
           },

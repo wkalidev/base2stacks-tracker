@@ -82,9 +82,13 @@ Compatible with Claude, Cursor, and any MCP client.
 - Market cap, volume, ATH, circulating supply
 
 ### AMM & Swaps
-- STX/B2S/USDCx swaps, 0.25% fee
-- Constant product formula (x*y=k)
-- LP token minting, configurable slippage
+- STX ↔ B2S swaps via `b2s-liquidity-pool-v6` — 0.25% fee, constant product (x*y=k)
+- Live pool reserve reads (`get-reserves`) on every page load, polled every 30s
+- Instant client-side quote as you type; on-chain execution via `swap-stx-for-b2s` / `swap-b2s-for-stx`
+- Configurable slippage (0.5% / 1% / 2%), price impact warning above 5%
+- Xverse or Leather signs via `openContractCall` + `PostConditionMode.Allow`
+- Empty pool detection: UI shows "No liquidity yet" when reserves are 0 instead of a broken swap
+- **Note:** `b2s-liquidity-pool-v6` reserves are currently 0. To seed, call `add-b2s-stx(b2s_amount, stx_amount)` on the contract.
 
 ### Staking
 - 12.5% base APY (flexible), 25% (70 days), 37.5% (365 days)
