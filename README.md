@@ -116,10 +116,11 @@ Compatible with Claude, Cursor, and any MCP client.
 - Community members signal intent to provide STX/B2S liquidity via a public request form
 - Submissions stored in Railway PostgreSQL (`pool_requests` table)
 - Request list shows wallet (truncated), amounts, status badge, and date — visible to everyone
-- Status workflow: `pending` → `approved` / `rejected` (managed by owner via Railway dashboard)
-- `POST /api/pool/request` — validates Stacks SP address, saves to DB
+- Status workflow: `pending` → `approved` / `rejected` (managed via admin panel)
+- `POST /api/pool/request` — validates Stacks SP address, saves to DB, creates GitHub issue
 - `GET /api/pool/requests` — public, sorted newest-first
-- Run the following SQL in Railway to create the table:
+- `PATCH /api/pool/requests/:id` — admin-only approve/reject, updates DB + GitHub issue
+- Run the following SQL in Railway to create the table (add `github_issue_number` column if upgrading):
   ```sql
   CREATE TABLE IF NOT EXISTS pool_requests (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -128,10 +129,28 @@ Compatible with Claude, Cursor, and any MCP client.
     b2s_amount numeric NOT NULL,
     message text,
     status text DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
+    github_issue_number integer,
     created_at timestamptz DEFAULT now()
   );
+  -- If upgrading an existing table:
+  ALTER TABLE pool_requests ADD COLUMN IF NOT EXISTS github_issue_number integer;
   ```
 - Requires `DATABASE_URL` env var (Railway PostgreSQL connection string)
+
+### Admin Panel
+- URL: `/admin/requests`
+- Access: wallet-gated — only `SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N` can see the panel
+- Lists all pool requests with Approve/Reject buttons per row
+- On decision: updates DB status + posts a comment and closes the linked GitHub issue
+- Non-admin wallets see an `ACCESS_DENIED` screen
+
+### GitHub Issues Integration
+- Each new pool request automatically creates a GitHub Issue in `wkalidev/base2stacks-tracker`
+- Issue title: `Pool Request — {wallet_short} wants {stx} STX + {b2s} $B2S`
+- Issue body: formatted table with wallet, amounts, message, timestamp, DB id
+- Labels applied: `pool-request` + `pending` (create these labels in the repo first)
+- When admin approves/rejects: a decision comment is added, the decision label (`approved`/`rejected`) is added, and the issue is closed
+- Requires `GITHUB_TOKEN` env var — fine-grained PAT with Issues read+write on this repo
 
 ### AI DeFi Assistant
 - Powered by Claude Haiku (Anthropic)
