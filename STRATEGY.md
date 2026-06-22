@@ -1,10 +1,10 @@
-# 📈 Base2Stacks — Strategy & Roadmap
+﻿# 📈 Base2Stacks — Strategy & Roadmap
 
 ## 🏆 Current Status (March 2026)
 
 ### Live on Mainnet
 - ✅ Full-stack DeFi platform deployed at [base2stacks-tracker.vercel.app](https://base2stacks-tracker.vercel.app)
-- ✅ 11 smart contracts deployed on Stacks mainnet (`SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96`)
+- ✅ 11 smart contracts deployed on Stacks mainnet (`SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N`)
 - ✅ 567 NFT badges across 3 series (Infosec / Glitch Art / Galactic)
 - ✅ 7 cross-chain bridges integrated
 - ✅ AI DeFi agent (Claude Haiku, streaming)

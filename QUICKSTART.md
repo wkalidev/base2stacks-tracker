@@ -1,4 +1,4 @@
-# 🚀 Quick Start Guide
+﻿# 🚀 Quick Start Guide
 
 Get Base2Stacks Tracker running locally in 5 minutes!
 
@@ -27,8 +27,8 @@ Default values work out of the box — no API keys required.
 
 ```bash
 # .env.local (all optional)
-NEXT_PUBLIC_CONTRACT_ADDRESS=SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96
-NEXT_PUBLIC_CONTRACT_NAME=b2s-token
+NEXT_PUBLIC_CONTRACT_ADDRESS=SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N
+NEXT_PUBLIC_CONTRACT_NAME=b2s-token-v4
 NEXT_PUBLIC_BASE_URL=https://base2stacks-tracker.vercel.app
 ```
 
@@ -59,7 +59,7 @@ Live app: **[https://base2stacks-tracker.vercel.app](https://base2stacks-tracker
 
 ## 🔧 Smart Contract Development (Optional)
 
-All contracts are already deployed on **Stacks mainnet** at `SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96`.
+All contracts are already deployed on **Stacks mainnet** at `SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N`.
 
 If you want to modify or redeploy contracts locally:
 

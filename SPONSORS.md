@@ -1,4 +1,4 @@
-# 💖 Sponsors & Support
+﻿# 💖 Sponsors & Support
 
 Thank you for considering supporting Base2Stacks!
 
@@ -43,7 +43,7 @@ Your support helps us:
 
 **Stacks (STX) — Mainnet:**
 ```
-SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96
+SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N
 ```
 
 **Bitcoin:**
