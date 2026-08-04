@@ -31,6 +31,31 @@ async function getPoolReserves(): Promise<{ b2s: number; stx: number } | null> {
   }
 }
 
+// get-stats() on b2s-fee-router returns a direct tuple (no (ok ...) wrapper) —
+// see the same note in src/components/BridgeRouter.tsx — so cvToJSON(cv).value
+// is already the tuple's fields, one hop shallower than getPoolReserves() above.
+async function getFeeRouterStats(): Promise<{ feeBps: number } | null> {
+  try {
+    const res = await fetch(
+      `${HIRO_API}/v2/contracts/call-read/${CONTRACT}/b2s-fee-router/get-stats`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sender: CONTRACT, arguments: [] }),
+        next: { revalidate: 30 },
+      }
+    )
+    if (!res.ok) return null
+    const { okay, result: hex } = await res.json()
+    if (!okay || !hex) return null
+    const cv  = deserializeCV(hex)
+    const val = cvToJSON(cv)?.value ?? {}
+    return { feeBps: Number(val?.['fee-bps']?.value ?? 30) }
+  } catch {
+    return null
+  }
+}
+
 const TOOLS = [
   {
     name: 'get_b2s_stats',
@@ -44,7 +69,7 @@ const TOOLS = [
   },
   {
     name: 'get_bridge_routes',
-    description: 'Get available bridge routes between Base Network and Stacks with fees and estimated times.',
+    description: 'Get the supported bridge routes between Base Network and Stacks (Stargate, deBridge, Across, Celer cBridge, Orbiter, Jupiter) plus the global b2s-fee-router fee rate (fee_bps). No per-bridge fee or ETA is tracked on-chain.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -162,10 +187,12 @@ export async function POST(req: NextRequest) {
             content: [{
               type: 'text',
               text: JSON.stringify({
+                note: 'Lock tiers match the LOCK_OPTIONS implemented in src/components/RewardsDistributor.tsx. APY/multiplier are frontend constants, not read live on-chain — this app never calls a get-apy-style read-only function on b2s-rewards-distributor-v3.',
                 tiers: [
-                  { apy: '12.5%', lock: 'None',     multiplier: '1x', vault: `${CONTRACT}.b2s-staking-vault-v2` },
-                  { apy: '25%',   lock: '70 days',  multiplier: '2x', vault: `${CONTRACT}.b2s-staking-vault-v2` },
-                  { apy: '37.5%', lock: '365 days', multiplier: '3x', vault: `${CONTRACT}.b2s-staking-vault-v2` },
+                  { apy: '12.5%',  lock_blocks: 0,    lock_days: 0,    multiplier: '1x',   vault: `${CONTRACT}.b2s-rewards-distributor-v3` },
+                  { apy: '18.75%', lock_blocks: 525,  lock_days: 3.65, multiplier: '1.5x', vault: `${CONTRACT}.b2s-rewards-distributor-v3` },
+                  { apy: '25%',    lock_blocks: 1050, lock_days: 7.3,  multiplier: '2x',   vault: `${CONTRACT}.b2s-rewards-distributor-v3` },
+                  { apy: '37.5%',  lock_blocks: 2100, lock_days: 14.6, multiplier: '3x',   vault: `${CONTRACT}.b2s-rewards-distributor-v3` },
                 ],
                 compound_frequency: 'daily',
                 min_stake:          '1 B2S',
@@ -177,7 +204,9 @@ export async function POST(req: NextRequest) {
       }
 
       if (name === 'get_bridge_routes') {
-        const direction = args?.direction || 'base_to_stacks'
+        const direction    = args?.direction || 'base_to_stacks'
+        const routerStats  = await getFeeRouterStats()
+        const feeBps       = routerStats?.feeBps ?? 30
         return NextResponse.json({
           jsonrpc: '2.0', id,
           result: {
@@ -185,11 +214,13 @@ export async function POST(req: NextRequest) {
               type: 'text',
               text: JSON.stringify({
                 direction,
-                routes: [
-                  { name: 'Stargate',  fee: '0.3%', time: '5-10 min',  supported_tokens: ['USDC', 'ETH'] },
-                  { name: 'deBridge', fee: '0.3%', time: '2-5 min',   supported_tokens: ['USDC', 'ETH', 'MATIC'] },
-                  { name: 'Across',    fee: '0.2%', time: '1-3 min',   supported_tokens: ['USDC', 'ETH', 'WBTC'] },
-                ],
+                // b2s-fee-router charges one global fee rate, not a per-bridge fee/time —
+                // see src/components/BridgeRouter.tsx BRIDGE_LIST for the live list.
+                bridges: ['Stargate', 'deBridge', 'Across', 'Celer cBridge', 'Orbiter', 'Jupiter'],
+                fee_bps: feeBps,
+                fee_pct: `${(feeBps / 100).toFixed(2)}%`,
+                fee_split: '50% treasury / 50% stakers',
+                note: 'Bridge externally via one of the routes above, then call record-bridge on b2s-fee-router to log the transfer and pay the fee. No per-bridge fee or ETA is tracked on-chain.',
                 bridge_fee_contract: `${CONTRACT}.b2s-fee-router`,
                 app: `${APP_URL}/#bridge`,
               }, null, 2),
